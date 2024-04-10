@@ -1,0 +1,10 @@
+{
+    "name": "antoinelrk/customer-relationship-website",
+    "authors": [
+        {
+            "name": "Antoine LRK",
+            "email": "admin@antoinelrk.com"
+        }
+    ],
+    "require": {}
+}

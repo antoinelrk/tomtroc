@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  crw_app:
+    image: registry.akela.app/php-8.3:latest
+    container_name: crw_app
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8080:80"
+    networks:
+      - local
+
+networks:
+  local:
+    name: local
+    external: true
