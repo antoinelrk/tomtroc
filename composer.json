@@ -1,9 +1,13 @@
 {
     "name": "antoinelrk/customer-relationship-website",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
     "authors": [
         {
-            "name": "Antoine LRK",
-            "email": "admin@antoinelrk.com"
+            "name": "Antoine LRK"
         }
     ],
     "require": {}
