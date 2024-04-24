@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use PDOStatement;
+use PDOStatement; // TODO: Add ext-pdo
 
 class Model
 {
