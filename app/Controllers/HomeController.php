@@ -3,12 +3,12 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\Facades\ViewFacade;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): void
     {
-        echo 'ok';
+        // TODO: WIP! Return View manager OR Http response manager (For api usage)
+        echo 'It\'s works!';
     }
 }
