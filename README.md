@@ -4,7 +4,7 @@
 
 Todolist:
 
-- ~ Mettre le router en place
+[] Mettre le router en place
 - Mettre le dispatcher en place
 - Finir le système de facades
 - Mettre l'ORM en place
