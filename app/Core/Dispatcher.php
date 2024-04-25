@@ -4,6 +4,9 @@ namespace App\Core;
 
 readonly class Dispatcher
 {
+    /**
+     * @param Router $router
+     */
     public function __construct(
         private Router $router
     ) {}
@@ -19,13 +22,13 @@ readonly class Dispatcher
         $method = $_SERVER['REQUEST_METHOD'];
         $controllerAction = $this->router->getControllerAction($method, $url);
 
-        if (!empty($controller)) {
-            [$controllerClassName, $action] = explode('@', $controllerAction);
-            $controller = new $controllerClassName();
+        if (!empty($controllerAction)) {
+            [$controllerClass, $action] = $controllerAction;
+            $controller = new $controllerClass();
             $controller->$action();
         } else {
-            // TODO: Return to error route (404)
-            echo '404';
+            // TODO: WIP! Return generic errors page
+            echo '404 - Page not found';
         }
     }
 }
