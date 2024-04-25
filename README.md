@@ -6,7 +6,7 @@ Todolist:
 
 - ✅ Mettre le router en place 
 - ✅ Mettre le dispatcher en place
-- ⬜ inir le système de facades
+- ⬜ Finir le système de facades
 - ⬜ Mettre l'ORM en place
 - ⬜ Installer pest
 - ⬜ Mettre le système de migration automatisée en place
