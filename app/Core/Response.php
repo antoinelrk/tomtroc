@@ -74,13 +74,12 @@ class Response
      * Return formatted data with http code.
      *
      * @param mixed $data
-     * @param int|null $httpStatusCode
-     * @return false|string
+     * @param int|null $code
      */
-    public static function json(mixed $data, int $httpStatusCode = null): false|string
+    public static function json(mixed $data, int $code = null): void
     {
-        http_response_code($httpStatusCode ?? self::HTTP_OK);
+        http_response_code($code ?? self::HTTP_OK);
         header('Content-Type: application/json');
-        return json_encode($data);
+        echo json_encode($data);
     }
 }
