@@ -2,12 +2,13 @@
 
 namespace App\Core\Facades;
 
-use App\Core\View;
+use App\Core\ViewRenderer;
 
-class ViewFacade {
-    private static View $view;
+class View {
+    private static ViewRenderer $view;
 
-    public static function init(View $view) {
+    public static function init(ViewRenderer $view): void
+    {
         self::$view = $view;
     }
 
