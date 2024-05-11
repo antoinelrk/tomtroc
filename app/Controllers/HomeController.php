@@ -12,9 +12,6 @@ class HomeController extends Controller
     {
         return View::layout('layouts.app')
             ->view('pages.home')
-            ->withData([
-                'title' => 'Homepage'
-            ])
             ->render();
     }
 

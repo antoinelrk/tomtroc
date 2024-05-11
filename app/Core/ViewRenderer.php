@@ -8,7 +8,9 @@ use Exception;
 class ViewRenderer {
     protected static $layout;
     protected static $view;
-    protected static $data = [];
+    protected static $data = [
+        'title' => 'Tomtroc'
+    ];
 
     /**
      * Return static layout.
@@ -43,9 +45,7 @@ class ViewRenderer {
     public function withData($data = [])
     {
         self::$data = [
-            ...[
-                'title' => 'Default title',
-            ],
+            ...self::$data,
             ...$data
         ];
         return $this;

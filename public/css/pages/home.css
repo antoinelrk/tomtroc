@@ -17,7 +17,7 @@ main.home-page {
         section.hero {
             display: flex;
             height: var(--page-with-header);
-            width: var(--centered);
+            width: calc(var(--centered) - 20%);
 
             article.hero-content {
                 display: flex;
