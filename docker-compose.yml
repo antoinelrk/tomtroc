@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   crw_app:
     image: registry.akela.app/laravel:10-alpine

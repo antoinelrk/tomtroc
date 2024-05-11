@@ -10,9 +10,12 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        // TODO: WIP! Return ViewRenderer manager OR Http response manager (For api usage)
-
-        return View::render('pages.home');
+        return View::layout('layouts.app')
+            ->view('pages.home')
+            ->withData([
+                'title' => 'Homepage'
+            ])
+            ->render();
     }
 
     /**

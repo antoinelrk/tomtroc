@@ -1,3 +1,3 @@
-<?php
-
-echo 'Its a view!';
+<main>
+    <h1>Homepage</h1>
+</main>
