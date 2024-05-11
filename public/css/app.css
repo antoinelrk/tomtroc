@@ -1,3 +1,5 @@
-* {
-    color: pink !important;
-}
+@import './fontfaces.css';
+@import './root.css';
+@import './default.css';
+
+@import './pages/home.css';
