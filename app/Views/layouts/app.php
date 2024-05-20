@@ -27,7 +27,7 @@
                 <nav>
                     <ul>
                         <li>
-                            <a class="active" href="">Accueil</a>
+                            <a class="active" href="/">Accueil</a>
                         </li>
                         <li>
                             <a href="">Nos livres à l'échange</a>
@@ -51,8 +51,8 @@
                                 </div>
                                 Messagerie
                                 <span>
-                    0
-                  </span>
+                                    0
+                              </span>
                             </a>
                         </li>
                         <li>
@@ -72,7 +72,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">Connexion</a>
+                            <a href="/login">Connexion</a>
                         </li>
                     </ul>
                 </nav>
