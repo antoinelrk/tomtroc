@@ -1,6 +1,5 @@
 <?php
 
-use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 use App\Core\Router;
 
