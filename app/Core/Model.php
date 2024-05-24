@@ -2,60 +2,73 @@
 
 namespace App\Core;
 
-use PDOStatement; // TODO: Add ext-pdo
-
 class Model
 {
-    /**
-     * TODO: Move into Database class. Find link with Model.
-     */
+    protected $table;
+    protected string $primaryKey = 'id';
+    protected \PDO $connection;
 
-    protected static array $whereConditions = [];
-
-    public static function where(string $column, $value): static
+    public function __construct()
     {
-        static::$whereConditions[$column] = $value;
-        return new static();
+        $this->connection = Database::getInstance()
+            ->getConnection();
     }
 
-    public static function getWhereConditions(): array {
-        return static::$whereConditions;
-    }
-
-    public static function clearWhereConditions(): void {
-        static::$whereConditions = [];
-    }
-
-    public static function buildWhereClause(): string
+    public function all(): false|array
     {
-        $whereClause = '';
-        $conditions = static::getWhereConditions();
+        $stmt = $this->connection->prepare("SELECT * FROM {$this->table}");
+        $stmt->execute();
 
-        if (!empty($conditions)) {
-            $whereClause = " WHERE ";
+        return $stmt->fetchAll();
+    }
 
-            foreach ($conditions as $column => $value) {
-                $whereClause .= "$column = :$column AND ";
-            }
+    public function find($id) {
+        $stmt = $this->connection->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
 
-            $whereClause = rtrim($whereClause, 'AND ');
+        return $stmt->fetch();
+    }
+
+    public function create(array $data) {
+        $keys = implode(',', array_keys($data));
+        $values = ':' . implode(',:', array_keys($data));
+        $stmt = $this->connection->prepare("INSERT INTO {$this->table} ($keys) VALUES ($values)");
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":$key", $value);
         }
 
-        return $whereClause;
+        $stmt->execute();
+
+        return $this->find($this->connection->lastInsertId());
     }
 
-    public static function executeQuery(string $sql, array $params = []): PDOStatement
+    public function update($id, array $data) {
+        $set = [];
+
+        foreach ($data as $key => $value) {
+            $set[] = "$key = :$key";
+        }
+
+        $set = implode(',', $set);
+        $stmt = $this->connection->prepare("UPDATE {$this->table} SET $set WHERE {$this->primaryKey} = :id");
+        $stmt->bindParam(':id', $id);
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        $stmt->execute();
+
+        return $this->find($id);
+    }
+
+    public function delete($id): void
     {
-        $sql .= static::buildWhereClause();
-        $statement = Database::getInstance()->prepare($sql);
+        $stmt = $this->connection->prepare("DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id");
+        $stmt->bindParam(':id', $id);
 
-        $statement->execute([
-            ...$params,
-            ...static::$whereConditions,
-        ]);
-
-        static::clearWhereConditions();
-
-        return $statement;
+        $stmt->execute();
     }
 }
