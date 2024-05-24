@@ -3,26 +3,46 @@
 namespace App\Core;
 
 use PDO;
-use PDOStatement;
 
 class Database
 {
-    private static ?PDO $instance = null;
+    private static ?Database $instance = null;
+    private PDO $pdo;
 
-    /**
-     * Create new instance of database.
-     * TODO: Setup .env file.
-     *
-     * @return PDO
-     */
-    public static function getInstance(): PDO {
+    private function __construct()
+    {
+        // TODO: Wait slack response for using dotenv
+        $config = [
+            'driver'    => 'mysql',
+            'host'      => 'database',
+            'database'  => 'tomtroc',
+            'username'  => 'root',
+            'password'  => 'local',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix'    => '',
+        ];
+
+        // TODO: Optimize this
+        $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";
+
+        // TODO: Wait slack response for using dotenv
+        $this->pdo = new PDO($dsn, $config['username'], $config['password']);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    }
+
+    public static function getInstance(): ?Database
+    {
         if (self::$instance === null) {
-            $dsn = 'mysql:host=localhost;dbname=test;charset=utf8';
-            $username = 'username';
-            $password = 'password';
-            self::$instance = new PDO($dsn, $username, $password);
-            self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$instance = new self();
         }
+
         return self::$instance;
+    }
+
+    public function getConnection(): PDO
+    {
+        return $this->pdo;
     }
 }
