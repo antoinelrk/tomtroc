@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Core\Facades\View;
 
+class AuthController extends Controller
 {
     public function login(): View
     {
