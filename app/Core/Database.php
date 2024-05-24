@@ -2,7 +2,9 @@
 
 namespace App\Core;
 
+use App\Helpers\Log;
 use PDO;
+use PDOException;
 
 class Database
 {
@@ -44,5 +46,15 @@ class Database
     public function getConnection(): PDO
     {
         return $this->pdo;
+    }
+
+    public static function debug(): void
+    {
+        try {
+            $db = self::getInstance()->getConnection();
+            Log::dd('Connection successfully!');
+        } catch (PDOException $e) {
+            Log::dd("Connection failed: " . $e->getMessage());
+        }
     }
 }
