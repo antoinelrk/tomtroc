@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Core\Facades\View;
+
 readonly class Dispatcher
 {
     /**
@@ -14,9 +16,9 @@ readonly class Dispatcher
     /**
      * Dispatch routes methods.
      *
-     * @return void
+     * @return View|null
      */
-    public function dispatch(): void
+    public function dispatch(): View|null
     {
         $url = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
@@ -27,8 +29,17 @@ readonly class Dispatcher
             $controller = new $controllerClass();
             $controller->$action();
         } else {
-            // TODO: WIP! Return generic errors page
-            echo '404 - Page not found';
+            return View::layout('layouts.empty')
+                ->withData([
+                    'error' => [
+                        'code' => 404,
+                        'message' => 'Page not found'
+                    ],
+                ])
+                ->view('errors.http-errors')
+                ->render();
         }
+
+        return null;
     }
 }
