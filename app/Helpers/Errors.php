@@ -12,9 +12,9 @@ class Errors
      * @param string $message
      * @param int $code
      *
-     * @return View
+     * @return View|null
      */
-    public static function set(string $message, int $code = 400): View
+    public static function set(string $message, int $code = 400): ?View
     {
         return self::render(
             $message,
@@ -25,9 +25,9 @@ class Errors
     /**
      * Return 404 default page.
      *
-     * @return View
+     * @return View|null
      */
-    public static function notFound(): View
+    public static function notFound(): ?View
     {
         return self::render(
             'Not found',
@@ -38,9 +38,9 @@ class Errors
     /**
      * Return xsrf expired error page.
      *
-     * @return View
+     * @return View|null
      */
-    public function expired(): View
+    public function expired(): ?View
     {
         return self::render(
             'Page expired',
@@ -54,9 +54,10 @@ class Errors
      * @param string $message
      * @param int $code
      *
-     * @return View
+     * @return View|null
      */
-    protected static function render(string $message, int $code): View {
+    protected static function render(string $message, int $code): ?View
+    {
         return View::layout('layouts.empty')
             ->withData([
                 'error' => [
