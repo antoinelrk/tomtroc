@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\Facades\View;
+use App\Helpers\Errors;
 
 readonly class Dispatcher
 {
@@ -29,15 +30,7 @@ readonly class Dispatcher
             $controller = new $controllerClass();
             $controller->$action();
         } else {
-            return View::layout('layouts.empty')
-                ->withData([
-                    'error' => [
-                        'code' => 404,
-                        'message' => 'Page not found'
-                    ],
-                ])
-                ->view('errors.http-errors')
-                ->render();
+            return Errors::notFound();
         }
 
         return null;
