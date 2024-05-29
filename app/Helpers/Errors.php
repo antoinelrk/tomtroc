@@ -36,6 +36,19 @@ class Errors
     }
 
     /**
+     * Return xsrf expired error page.
+     *
+     * @return View
+     */
+    public function expired(): View
+    {
+        return self::render(
+            'Page expired',
+            419
+        );
+    }
+
+    /**
      * Return formatted error page
      *
      * @param string $message
