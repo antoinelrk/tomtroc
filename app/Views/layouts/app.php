@@ -72,7 +72,10 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/login">Connexion</a>
+                            <a href="/auth/login">Connexion</a>
+                        </li>
+                        <li>
+                            <a href="/auth/register">Inscription</a>
                         </li>
                     </ul>
                 </nav>

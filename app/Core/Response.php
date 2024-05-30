@@ -82,4 +82,9 @@ class Response
         header('Content-Type: application/json');
         echo json_encode($data);
     }
+
+    public static function redirect(string $path): void
+    {
+        header('Location: ' . $path);
+    }
 }

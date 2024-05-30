@@ -3,3 +3,4 @@
 @import './default.css';
 
 @import './pages/home.css';
+@import './pages/auth/register.css';

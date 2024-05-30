@@ -3,9 +3,17 @@
         <article>
             <div class="form-wrapper">
                 <h1>
-                    Connection
+                    Inscription
                 </h1>
-                <form action="">
+
+                <form action="" method="POST">
+                    <!-- TODO: Add xsrf protection in hidden input -->
+
+                    <div class="form-group">
+                        <label for="username">Pseudo</label>
+                        <input type="text" name="username" id="username">
+                    </div>
+
                     <div class="form-group">
                         <label for="email">Adresse email</label>
                         <input type="email" name="email" id="email">
@@ -22,7 +30,7 @@
                 </form>
 
                 <p>
-                    Pas de compte ? <a href="/auth/register">Inscrivez-vous</a>
+                    Déjà inscrit ? <a href="/auth/login">Connectez-vous</a>
                 </p>
             </div>
         </article>
@@ -32,4 +40,3 @@
         </aside>
     </section>
 </main>
-

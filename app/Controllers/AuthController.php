@@ -6,6 +6,9 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
 use App\Core\Validator;
+use App\Helpers\Diamond;
+use App\Helpers\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -13,9 +16,9 @@ class AuthController extends Controller
      * Login method.
      *  TODO: Add middleware for already authenticated users.
      *
-     * @return View
+     * @return ?View
      */
-    public function loginForm(): View
+    public function loginForm(): ?View
     {
         return View::layout('layouts.app')
             ->withData([
@@ -29,9 +32,9 @@ class AuthController extends Controller
      * Registering method.
      * TODO: Add middleware for already authenticated users.
      *
-     * @return View
+     * @return ?View
      */
-    public function registerForm(): View
+    public function registerForm(): ?View
     {
         return View::layout('layouts.app')
             ->withData([
@@ -48,12 +51,10 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        $isValidate = Validator::check($_POST, [
+        $request = $_POST;
+
+        $isValidate = Validator::check($request, [
             'username' => [
-                'string' => true,
-                'required' => true,
-            ],
-            'displayName' => [
                 'string' => true,
                 'required' => true,
             ],
@@ -67,23 +68,15 @@ class AuthController extends Controller
             ],
             // TODO: Add password_confirmation verification.
         ]);
-//
-//        Log::dd($result);
-//
-//        $data = [
-//            'username' => 'kiwodd',
-//            'display_name' => 'Kiwodd',
-//            'email' => 'contact@kiwodd.com',
-//            'password' => Hash::make('P@ss1234'),
-//            'created_at' => Charbon::now(),
-//            'updated_at' => Charbon::now(),
-//        ];
-//
-//        $result = (new User())->create($data);
-//
-//        $data = [
-//            'foo' => 'bar',
-//        ];
+
+        (new User())->create([
+            'username' => $request['username'],
+            'display_name' => ucfirst($request['username']),
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+            'created_at' => Diamond::now(),
+            'updated_at' => Diamond::now(),
+        ]);
 
         Response::redirect('/');
     }
