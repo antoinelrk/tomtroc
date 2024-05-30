@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class Charbon
+class Diamond
 {
     /**
      * Return now date
