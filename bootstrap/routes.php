@@ -19,4 +19,12 @@ $router->addRoute('POST', '/auth/register', [AuthController::class, 'register'])
 $router->addRoute('POST', '/auth/login', [AuthController::class, 'login']);
 $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout']);
 
+// API routes
+
+$router->addRoute('GET', '/' . API_PREFIX . '/users', [UserController::class, 'index']);
+/**
+ * TODO: Create abstract methods (get(), post(), put() ...)
+ * TODO: Create fluent methods for group, prefix, controller and middleware
+ */
+
 return $router;
