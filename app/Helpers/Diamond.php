@@ -5,12 +5,14 @@ namespace App\Helpers;
 class Diamond
 {
     /**
-     * Return now date
+     * Return now date.
+     *
+     * @param ?string $format
      *
      * @return string
      */
-    public static function now(): string
+    public static function now(string $format = null): string
     {
-        return date('Y-m-d h:i:s');
+        return date($format ?? DEFAULT_DATE_FORMAT);
     }
 }
