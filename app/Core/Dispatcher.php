@@ -26,9 +26,21 @@ readonly class Dispatcher
         $controllerAction = $this->router->getControllerAction($method, $url);
 
         if (!empty($controllerAction)) {
-            [$controllerClass, $action] = $controllerAction;
-            $controller = new $controllerClass();
-            $controller->$action();
+            [$controllerClass, $action] = $controllerAction['controllerAction'];
+            $middlewares = $controllerAction['middlewares'];
+
+            $middlewareManager = new MiddlewareManager();
+
+            foreach ($middlewares as $middleware) {
+                $middlewareManager->add(new $middleware);
+            }
+
+            $processedRequest = $middlewareManager->handle($url);
+
+            if ($processedRequest) {
+                $controller = new $controllerClass();
+                $controller->$action();
+            }
         } else {
             return Errors::notFound();
         }

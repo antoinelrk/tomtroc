@@ -15,11 +15,16 @@ class Router
      * @param string $method
      * @param string $route
      * @param array $controllerAction
+     * @param array $middlewares
+     *
      * @return void
      */
-    public function addRoute(string $method, string $route, array $controllerAction): void
+    public function addRoute(string $method, string $route, array $controllerAction, array $middlewares = []): void
     {
-        $this->routes[$method][$route] = $controllerAction;
+        $this->routes[$method][$route] = [
+            'controllerAction' => $controllerAction,
+            'middlewares' => $middlewares,
+        ];
     }
 
     /**

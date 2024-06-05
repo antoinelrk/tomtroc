@@ -87,4 +87,14 @@ class Response
     {
         header('Location: ' . $path);
     }
+
+    /**
+     * Return to login path.
+     *
+     * @return void
+     */
+    public static function redirectUnauthorized(): void
+    {
+        header('Location: ' . LOGIN_ROUTE);
+    }
 }
