@@ -45,7 +45,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Create a new user
+     * Register a new user.
      *
      * @return void
      */
@@ -53,6 +53,10 @@ class AuthController extends Controller
     {
         $request = $_POST;
 
+        /*
+         * TODO: Wip, Add checking password/confirmation and create new object for retrieve validatedData to push in
+         * TODO: model creation.
+         */
         $isValidate = Validator::check($request, [
             'username' => [
                 'string' => true,
@@ -66,7 +70,6 @@ class AuthController extends Controller
                 'email' => true,
                 'required' => true,
             ],
-            // TODO: Add password_confirmation verification.
         ]);
 
         (new User())->create([

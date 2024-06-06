@@ -3,14 +3,15 @@
 namespace App\Console;
 
 abstract class Command {
+
     /**
      * Command executor
      *
-     * @param array $arguments
+     * @param array $args
      *
      * @return void
      */
-    abstract public function execute(array $arguments): void;
+    abstract public function execute(array $args): void;
 
     /**
      * Get command description.

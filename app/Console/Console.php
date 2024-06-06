@@ -37,11 +37,6 @@ class Console
 
         if (!$commandName || !isset($this->commands[$commandName])) {
             Console::line("Command $commandName not found!", 'error');
-
-            /**
-             * TODO: Wip, format list of commands with console coloration.
-             * $this->listCommands();
-             */
             exit(1);
         }
 
@@ -75,6 +70,7 @@ class Console
     }
 
     /**
+     * TODO: Wip!
      * Return list of commands.
      *
      * @return void
@@ -98,44 +94,32 @@ class Console
      */
     public static function line(string $string, string $status = null): void
     {
-        switch ($status) {
-            case 'info':
-                echo ColorsEnum::BG_LIGHT_BLUE->value .
-                    " INFO " .
-                    ColorsEnum::RESET->value .
-                    " " .
-                    $string .
-                    "\n";
-                break;
-
-            case 'error':
-                echo ColorsEnum::BG_DARK_RED->value .
-                    " ERROR " .
-                    ColorsEnum::RESET->value .
-                    " " .
-                    $string .
-                    "\n";
-                break;
-
-            case 'success':
-                echo ColorsEnum::BG_LIGHT_GREEN->value .
-                    " SUCCESS " .
-                    ColorsEnum::RESET->value .
-                    " " .
-                    $string .
-                    "\n";
-                break;
-
-            case 'debug':
-                echo ColorsEnum::BG_LIGHT_MAGENTA->value .
-                    " DEBUG " .
-                    ColorsEnum::RESET->value .
-                    " " .
-                    $string .
-                    "\n";
-                break;
-
-            default: echo $string;
-        }
+        echo match ($status) {
+            'info' => ColorsEnum::BG_LIGHT_BLUE->value .
+                " INFO " .
+                ColorsEnum::RESET->value .
+                " " .
+                $string .
+                "\n",
+            'error' => ColorsEnum::BG_DARK_RED->value .
+                " ERROR " .
+                ColorsEnum::RESET->value .
+                " " .
+                $string .
+                "\n",
+            'success' => ColorsEnum::BG_LIGHT_GREEN->value .
+                " SUCCESS " .
+                ColorsEnum::RESET->value .
+                " " .
+                $string .
+                "\n",
+            'debug' => ColorsEnum::BG_LIGHT_MAGENTA->value .
+                " DEBUG " .
+                ColorsEnum::RESET->value .
+                " " .
+                $string .
+                "\n",
+            default => $string,
+        };
     }
 }

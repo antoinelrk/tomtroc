@@ -8,6 +8,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    /**
+     * Return list of users, just for API tests.
+     *
+     * @return void
+     */
     public function index(): void
     {
         $users = (new User())->all();

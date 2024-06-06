@@ -10,6 +10,7 @@ class Log
      * Return dump of data and die process.
      *
      * @param mixed $data
+     *
      * @return void
      */
     #[NoReturn]

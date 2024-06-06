@@ -6,9 +6,15 @@ use App\Core\Model;
 
 class User extends Model
 {
-    protected $table = 'users';
+    /**
+     * @var string $table
+     */
+    protected string $table = 'users';
 
-    protected $hidden = [
+    /**
+     * @var array|string[] $hidden
+     */
+    protected array $hidden = [
         'password'
     ];
 }

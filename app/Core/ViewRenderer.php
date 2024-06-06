@@ -6,9 +6,21 @@ use App\Helpers\Log;
 use Exception;
 
 class ViewRenderer {
-    protected static $layout;
-    protected static $view;
-    protected static $data = [
+
+    /**
+     * @var string $layout
+     */
+    protected static string $layout;
+
+    /**
+     * @var string $view
+     */
+    protected static string $view;
+
+    /**
+     * @var array $data
+     */
+    protected static array $data = [
         'title' => 'Tomtroc'
     ];
 
@@ -16,9 +28,10 @@ class ViewRenderer {
      * Return static layout.
      *
      * @param $layout
+     *
      * @return self
      */
-    public static function layout($layout = null)
+    public static function layout($layout = null): self
     {
         self::$layout = $layout;
         return new self();
@@ -28,9 +41,10 @@ class ViewRenderer {
      * Return view instance by static var.
      *
      * @param $view
-     * @return $this
+     *
+     * @return self
      */
-    public function view($view)
+    public function view($view): self
     {
         self::$view = $view;
         return $this;
@@ -40,9 +54,10 @@ class ViewRenderer {
      * Attach data to view
      *
      * @param $data
+     *
      * @return $this
      */
-    public function withData($data = [])
+    public function withData($data = []): self
     {
         self::$data = [
             ...self::$data,
@@ -55,6 +70,7 @@ class ViewRenderer {
      * Convert templates keys to filepath.
      *
      * @param string $templateKey
+     *
      * @return string
      */
     private function parseTemplate(string $templateKey): string
@@ -65,10 +81,11 @@ class ViewRenderer {
     /**
      * Main render.
      *
-     * @return void
      * @throws Exception
+     *
+     * @return void
      */
-    public function render()
+    public function render(): void
     {
         $layoutFile = $this->parseTemplate(self::$layout) ?? '';
         $viewFile = $this->parseTemplate(self::$view);

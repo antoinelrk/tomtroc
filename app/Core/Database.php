@@ -8,9 +8,18 @@ use PDOException;
 
 class Database
 {
+    /**
+     * @var Database|null
+     */
     private static ?Database $instance = null;
+    /**
+     * @var PDO 
+     */
     private PDO $pdo;
 
+    /**
+     * Create new instance of Database
+     */
     private function __construct()
     {
         // TODO: Wait slack response for using dotenv
@@ -34,6 +43,11 @@ class Database
         $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get database instance.
+     *
+     * @return Database|null
+     */
     public static function getInstance(): ?Database
     {
         if (self::$instance === null) {
@@ -43,11 +57,21 @@ class Database
         return self::$instance;
     }
 
+    /**
+     * Return database instance of PDO.
+     *
+     * @return PDO
+     */
     public function getConnection(): PDO
     {
         return $this->pdo;
     }
 
+    /**
+     * Return state of database for debugging.
+     *
+     * @return void
+     */
     public static function debug(): void
     {
         try {

@@ -32,6 +32,7 @@ class Router
      *
      * @param string $method
      * @param string $route
+     *
      * @return array
      */
     public function getControllerAction(string $method, string $route): array

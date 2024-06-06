@@ -75,6 +75,8 @@ class Response
      *
      * @param mixed $data
      * @param int|null $code
+     *
+     * @return void
      */
     public static function json(mixed $data, int $code = null): void
     {
@@ -89,7 +91,7 @@ class Response
     }
 
     /**
-     * Return to login path.
+     * Return to log in path.
      *
      * @return void
      */

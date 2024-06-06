@@ -2,16 +2,37 @@
 
 namespace App\Core;
 
+use PDO;
+
 class Model
 {
-    protected $table;
+    /**
+     * @var string $table
+     */
+    protected string $table;
 
+    /**
+     * Define default identification key.
+     *
+     * @var string $primaryKey
+     */
     protected string $primaryKey = 'id';
 
-    protected $hidden = [];
+    /**
+     * Extract column to fetch (example: password)
+     *
+     * @var array $hidden
+     */
+    protected array $hidden = [];
 
-    protected \PDO $connection;
+    /**
+     * @var PDO
+     */
+    protected PDO $connection;
 
+    /**
+     * Object constructor.
+     */
     public function __construct()
     {
         $this->connection = Database::getInstance()
@@ -55,6 +76,7 @@ class Model
      * Fetch specific data on specific table
      *
      * @param $id
+     *
      * @return false|array
      */
     public function find($id): false|array
@@ -68,6 +90,7 @@ class Model
 
     /**
      * Create new model type entry in database
+     *
      * @param array $data
      *
      * @return false|array
