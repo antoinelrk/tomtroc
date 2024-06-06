@@ -8,9 +8,12 @@ Todolist:
 - ✅ Mettre le dispatcher en place
 - ✅ Mettre le système de view/layout
 - ✅ Finir le système de facades
-- ✅ Mettre l'ORM en place
-- ⬜ Création de compte & authentification
-- ⬜ CRUD pour les livres
+- ✅ Création de compte
+- ✅ Mettre l'ORM en place (Connection & Création)
+- ⬜ Authentification
+- ⬜ Mettre l'ORM en place (Fetching & Relations)
+- ⬜ Ajout des profils utilisateurs
+- ⬜ Gestion des livres
 - ⬜ Système de messagerie
 
 ### Hors MVP
