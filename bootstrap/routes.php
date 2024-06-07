@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\MessagesController;
 use App\Core\Router;
 
 use App\Controllers\AuthController;
@@ -21,7 +22,7 @@ $router->addRoute('GET', '/auth/login', [AuthController::class, 'loginForm']);
 $router->addRoute('POST', '/auth/register', [AuthController::class, 'register']);
 $router->addRoute('POST', LOGIN_ROUTE, [AuthController::class, 'login']);
 
-$router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout']);
+$router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ AuthMiddleware::class ]);
 
 // ---------- AUTHENTICATED ----------
 
@@ -30,6 +31,12 @@ $router->addRoute(
     '/me',
     [UserController::class, 'me'],
     [ AuthMiddleware::class ]
+);
+
+$router->addRoute(
+    'GET',
+    '/messages',
+    [MessagesController::class, 'index'],
 );
 
 // ---------- API ----------
