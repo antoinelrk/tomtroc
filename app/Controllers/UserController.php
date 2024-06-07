@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Core\Auth\Auth;
 use App\Core\Controller;
+use App\Core\Facades\View;
 use App\Core\Response;
 use App\Models\User;
 
@@ -18,5 +20,22 @@ class UserController extends Controller
         $users = (new User())->all();
 
         Response::json($users, Response::HTTP_OK);
+    }
+
+    /**
+     * Return private profil page.
+     * TODO: Passe auth-user data here..
+     *
+     * @return void
+     */
+    public function me(): void
+    {
+        View::layout('layouts.app')
+            ->withData([
+                'title' => 'Mon compte',
+                'user' => Auth::user(),
+            ])
+            ->view('pages.me')
+            ->render();
     }
 }

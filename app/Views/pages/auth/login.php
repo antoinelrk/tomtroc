@@ -5,7 +5,7 @@
                 <h1>
                     Connection
                 </h1>
-                <form action="">
+                <form action="/auth/login" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="email">Adresse email</label>
                         <input type="email" name="email" id="email">

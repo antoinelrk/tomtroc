@@ -95,7 +95,7 @@ class Response
      *
      * @return void
      */
-    public static function redirectUnauthorized(): void
+    public static function redirectToLogin(): void
     {
         header('Location: ' . LOGIN_ROUTE);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
@@ -14,7 +15,6 @@ class AuthController extends Controller
 {
     /**
      * Login method.
-     *  TODO: Add middleware for already authenticated users.
      *
      * @return ?View
      */
@@ -29,8 +29,25 @@ class AuthController extends Controller
     }
 
     /**
+     * Login a user.
+     *
+     * @return void
+     */
+    public function login(): void
+    {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        if (Auth::attempt($email, $password)) {
+            Response::redirect('/me');
+            exit;
+        }
+
+        Response::redirectToLogin();
+    }
+
+    /**
      * Registering method.
-     * TODO: Add middleware for already authenticated users.
      *
      * @return ?View
      */
@@ -82,5 +99,17 @@ class AuthController extends Controller
         ]);
 
         Response::redirect('/');
+    }
+
+    /**
+     * Log out the user and redirect to log in form.
+     *
+     * @return void
+     */
+    public function logout(): void
+    {
+        Auth::logout();
+
+        Response::redirect('/auth/login');
     }
 }

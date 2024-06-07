@@ -20,7 +20,7 @@ class AuthMiddleware implements Middleware
     {
         if (!isset($_SESSION['user']))
         {
-            Response::redirectUnauthorized();
+            Response::redirectToLogin();
             exit;
         }
 

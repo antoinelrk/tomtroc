@@ -45,7 +45,7 @@ class Model
      *
      * @return array
      */
-    protected function withoutHidden(array $data): array
+    public function withoutHidden(array $data): array
     {
         foreach ($this->hidden as $hiddenColumn) {
             if (isset($data[$hiddenColumn])) {
@@ -86,6 +86,23 @@ class Model
         $statement->execute();
 
         return $this->withoutHidden($statement->fetch());
+    }
+
+    /**
+     * Fetch data with where :column condition.
+     *
+     * @param $column
+     * @param $operator
+     * @param $value
+     *
+     * @return array|false
+     */
+    public function where($column, $operator, $value) {
+        $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} :value";
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':value', $value);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
