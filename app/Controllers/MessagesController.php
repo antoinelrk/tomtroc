@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Models\Conversation;
 
 class MessagesController extends Controller
 {
@@ -14,7 +16,13 @@ class MessagesController extends Controller
      */
     public function index(): ?View
     {
+        $user = Auth::user();
+        $conversations = (new Conversation())->getConversations($user['id']);
+
         return View::layout('layouts.app')
+            ->withData([
+                'conversations' => $conversations,
+            ])
             ->view('pages.messages.index')
             ->render();
     }

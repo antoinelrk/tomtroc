@@ -97,7 +97,8 @@ class Model
      *
      * @return array|false
      */
-    public function where($column, $operator, $value) {
+    public function where($column, $operator, $value)
+    {
         $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} :value";
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':value', $value);

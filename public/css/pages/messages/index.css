@@ -1,0 +1,20 @@
+main.messages-pages {
+    section.conversations-wrapper {
+        display: flex;
+        width: 100%;
+
+        section.left {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            background-color: orange;
+        }
+
+        section.right {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            background-color: blue;
+        }
+    }
+}
