@@ -1,10 +1,11 @@
 <main class="messages-pages">
     <section class="conversations-wrapper">
         <section class="left">
+            <h1>Messagerie</h1>
             <ul>
                 <?php foreach ($conversations as $conversation): ?>
                     <li>
-                        <?= $conversation['id'] ?>
+                        <pre><?php var_dump($conversation) ?></pre>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -12,7 +13,7 @@
 
         <section class="right">
             <ul>
-                <?php foreach ($conversations[0] as $conversation): ?>
+                <?php foreach ($conversations as $conversation): ?>
                     <li>
                         <pre><?php var_dump($conversation) ?></pre>
                     </li>
