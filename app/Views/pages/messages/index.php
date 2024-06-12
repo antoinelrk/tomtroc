@@ -5,7 +5,7 @@
             <ul>
                 <?php foreach ($conversations as $conversation): ?>
                     <li>
-                        <pre><?php var_dump($conversation) ?></pre>
+                        <?= $conversation['uuid'] ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -15,7 +15,7 @@
             <ul>
                 <?php foreach ($conversations as $conversation): ?>
                     <li>
-                        <pre><?php var_dump($conversation) ?></pre>
+                        <pre><?php var_dump($conversation['messages']) ?></pre>
                     </li>
                 <?php endforeach; ?>
             </ul>
