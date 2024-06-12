@@ -30,7 +30,7 @@
                             <a class="active" href="/">Accueil</a>
                         </li>
                         <li>
-                            <a href="">Nos livres à l'échange</a>
+                            <a href="/our-books">Nos livres à l'échange</a>
                         </li>
                     </ul>
                 </nav>

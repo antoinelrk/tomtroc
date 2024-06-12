@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\BooksController;
 use App\Controllers\MessagesController;
 use App\Core\Router;
 
@@ -23,6 +24,10 @@ $router->addRoute('POST', '/auth/register', [AuthController::class, 'register'])
 $router->addRoute('POST', LOGIN_ROUTE, [AuthController::class, 'login']);
 
 $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ AuthMiddleware::class ]);
+
+// ---------- BOOKS ----------
+
+$router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
 
 // ---------- AUTHENTICATED ----------
 
