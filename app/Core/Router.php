@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Helpers\Log;
+
 class Router
 {
     /**
@@ -24,6 +26,7 @@ class Router
         $this->routes[$method][$route] = [
             'controllerAction' => $controllerAction,
             'middlewares' => $middlewares,
+            'parameters' => [],
         ];
     }
 
@@ -37,6 +40,33 @@ class Router
      */
     public function getControllerAction(string $method, string $route): array
     {
+        foreach ($this->routes[$method] as $definedRoute => $action) {
+            if ($parameters = $this->match($definedRoute, $route)) {
+                return [
+                    'controllerAction' => $action['controllerAction'],
+                    'middlewares' => $action['middlewares'],
+                    'parameters' => $parameters,
+                ];
+            }
+        }
         return $this->routes[$method][$route] ?? [];
+    }
+
+    private function match(string $definedRoute, string $requestedRoute)
+    {
+        // Extraire les clés des accolades
+        /*
+        preg_match_all('/\{([^}]+)}/', $definedRoute, $keys);
+        $keys = $keys[1];
+        */
+
+        $pattern = preg_replace('/\{[^}]+}/', '([^/]+)', $definedRoute);
+        $pattern = "@^{$pattern}$@";
+        if (preg_match($pattern, $requestedRoute, $matches)) {
+            array_shift($matches); // Remove the full match
+
+            return $matches;
+        }
+        return false;
     }
 }

@@ -14,7 +14,7 @@ class MessagesController extends Controller
      *
      * @return ?View
      */
-    public function index(): ?View
+    public function index($uuid): ?View
     {
         $user = Auth::user();
         $conversations = (new Conversation())->getConversations($user['id']);

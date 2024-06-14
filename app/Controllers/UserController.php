@@ -6,6 +6,7 @@ use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
+use App\Helpers\Log;
 use App\Models\User;
 
 class UserController extends Controller
@@ -37,5 +38,11 @@ class UserController extends Controller
             ])
             ->view('pages.me')
             ->render();
+    }
+
+    public function show($slug, $id): void
+    {
+        echo 'slug: ' . $slug;
+        echo 'id: ' . $id;
     }
 }

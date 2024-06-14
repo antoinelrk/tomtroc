@@ -40,8 +40,14 @@ $router->addRoute(
 
 $router->addRoute(
     'GET',
-    '/messages',
+    '/messages/{uuid}',
     [MessagesController::class, 'index'],
+);
+
+$router->addRoute(
+    'GET',
+    '/user-name/{slug}/edit/{id}',
+    [UserController::class, 'show']
 );
 
 // ---------- API ----------

@@ -39,7 +39,13 @@ readonly class Dispatcher
 
             if ($processedRequest) {
                 $controller = new $controllerClass();
-                $controller->$action();
+
+                call_user_func_array(
+                    [$controller, $action],
+                    $controllerAction['parameters'] ?? []
+                );
+
+                // $controller->$action();
             }
         } else {
             return Errors::notFound();
