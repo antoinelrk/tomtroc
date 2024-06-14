@@ -25,7 +25,7 @@
                     </div>
 
                     <button>
-                        Se connecter
+                        S'inscrire
                     </button>
                 </form>
 
