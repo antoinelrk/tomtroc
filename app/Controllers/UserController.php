@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Log;
+use App\Models\Book;
 use App\Models\User;
 
 class UserController extends Controller
@@ -31,10 +32,14 @@ class UserController extends Controller
      */
     public function me(): void
     {
+        $relatedBooks = (new Book())->users()->whereTest('user_id', Auth::user()['id'])->get();
+
         View::layout('layouts.app')
             ->withData([
                 'title' => 'Mon compte',
                 'user' => Auth::user(),
+                'books' => $relatedBooks,
+                'quantity' => count($relatedBooks),
             ])
             ->view('pages.me')
             ->render();

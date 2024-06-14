@@ -2,7 +2,9 @@
 
 namespace App\Core;
 
+use App\Helpers\Log;
 use PDO;
+use PDOStatement;
 
 class Model
 {
@@ -10,6 +12,8 @@ class Model
      * @var string $table
      */
     protected string $table;
+
+    private array $pushToBind;
 
     /**
      * Define default identification key.
@@ -25,10 +29,16 @@ class Model
      */
     protected array $hidden = [];
 
+    protected array $only = [];
+
     /**
      * @var PDO
      */
     protected PDO $connection;
+
+    protected string $query;
+
+    public string $selectable;
 
     /**
      * Object constructor.
@@ -37,6 +47,9 @@ class Model
     {
         $this->connection = Database::getInstance()
             ->getConnection();
+
+        $this->query = "";
+        $this->selectable = "";
     }
 
     /**
@@ -106,6 +119,32 @@ class Model
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function whereTest($column, $value): self
+    {
+        $this->query .= " WHERE {$this->table}.{$column} = :value";
+        $this->pushToBind[] = [ 'value' => $value ];
+
+        return $this;
+    }
+
+    public function only(): self
+    {
+        $this->only = array_map(function($arg) {
+            return $this->table . "." . $arg;
+        }, func_get_args());
+
+        return $this;
+    }
+
+    public function get(): false|array
+    {
+        $this->query = "SELECT {$this->table}.{$this->applyOnly()}, {$this->selectable} FROM {$this->table}$this->query;";
+        $statement = $this->bindAll();
+//        Log::dd($statement);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * Create new model type entry in database
      *
@@ -171,5 +210,31 @@ class Model
         $statement->bindParam(':id', $id);
 
         $statement->execute();
+    }
+
+    private function bindAll(): false|PDOStatement
+    {
+        $statement = $this->connection->prepare($this->query);
+
+        foreach ($this->pushToBind as $value) {
+            $statement->bindValue(':value', $value['value']);
+        }
+
+        return $statement;
+    }
+
+    private function applyOnly(): string
+    {
+        if (count($this->only) === 0)
+        {
+            return "*";
+        }
+
+        return implode(", ", $this->only);
+    }
+
+    public function getInstance(): self
+    {
+        return $this;
     }
 }

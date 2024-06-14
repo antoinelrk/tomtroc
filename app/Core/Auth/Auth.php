@@ -47,6 +47,11 @@ class Auth
         return false;
     }
 
+    public static function refresh(): void
+    {
+        $_SESSION['user'] = (new User())->withoutHidden(self::fetchUser(Auth::user()['id']));
+    }
+
     /**
      * @return bool
      */
