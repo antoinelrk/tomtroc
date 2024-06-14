@@ -15,13 +15,14 @@ class BooksController extends Controller
      */
     public function index(): ?View
     {
-        $books = (new Book())->where('available', '=', '1');
+        // $books = (new Book())->where('available', '=', '1');
+        $books = (new Book())->getBooks();
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
-//            ->withData([
-//                'books' => $books
-//            ])
+            ->withData([
+                'books' => $books
+            ])
             ->render();
     }
 }
