@@ -58,7 +58,7 @@ class Model
      *
      * @return array
      */
-    public function withoutHidden(array $data): array
+    public function withoutHidden(mixed $data): array
     {
         foreach ($this->hidden as $hiddenColumn) {
             if (isset($data[$hiddenColumn])) {
@@ -121,7 +121,7 @@ class Model
 
     public function whereTest($column, $value): self
     {
-        $this->query .= " WHERE {$this->table}.{$column} = :value";
+        $this->query .= " WHERE {$this->table}.{$column} = :value ";
         $this->pushToBind[] = [ 'value' => $value ];
 
         return $this;
@@ -165,6 +165,20 @@ class Model
         $statement->execute();
 
         return $this->find($this->connection->lastInsertId());
+    }
+
+    public function first()
+    {
+        $this->query = "SELECT {$this->table}.{$this->applyOnly()}{$this->selectable} FROM {$this->table}$this->query;";
+        $statement = $this->bindAll();
+        $statement->execute();
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (is_array($data)) {
+            return $this->withoutHidden($data);
+        }
+
+        return false;
     }
 
     /**

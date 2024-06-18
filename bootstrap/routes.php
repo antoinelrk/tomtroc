@@ -37,6 +37,12 @@ $router->addRoute(
     [UserController::class, 'me'],
     [ AuthMiddleware::class ]
 );
+$router->addRoute(
+    'GET',
+    '/users/{username}',
+    [UserController::class, 'show'],
+    [ AuthMiddleware::class ]
+);
 
 $router->addRoute(
     'GET',

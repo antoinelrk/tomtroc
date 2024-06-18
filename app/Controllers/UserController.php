@@ -6,6 +6,7 @@ use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
+use App\Helpers\Errors;
 use App\Helpers\Log;
 use App\Models\Book;
 use App\Models\User;
@@ -45,9 +46,13 @@ class UserController extends Controller
             ->render();
     }
 
-    public function show($slug, $id): void
+    public function show($username)
     {
-        echo 'slug: ' . $slug;
-        echo 'id: ' . $id;
+        $user = (new User())->whereTest('username', $username)->first();
+        if ($user) {
+            Response::json($user, Response::HTTP_OK);
+        } else {
+            return Errors::notFound();
+        }
     }
 }
