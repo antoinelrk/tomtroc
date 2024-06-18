@@ -3,7 +3,8 @@
     <div class="account-hero">
         <section class="left">
             <div class="profile-picture">
-                <img src="./storage/avatars/<?= $user['avatar'] ?>" alt="">
+                <!-- Replace in DB: ./storage/avatars/ -->
+                <img src="<?= $user['avatar'] ?>" alt="">
                 <a class="edit-image" href="">modifier</a>
             </div>
 
