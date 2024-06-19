@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Auth\Auth;
 use App\Core\Model;
+use App\Helpers\Log;
 use PDO;
 
 class Book extends Model
@@ -15,11 +16,17 @@ class Book extends Model
         parent::__construct();
     }
 
-    public function users(): Model
+    public function users(...$argv): Model
     {
-        // TODO: Go in array
-        $this->getInstance()->selectable .= "users.display_name, users.avatar";
-        $this->getInstance()->query .= " INNER JOIN users ON users.id = books.user_id";
+        // TODO: Si argv est null, on ajoute étoile à la query.
+        $model = 'users';
+        $mapped = array_map(function($element) use ($model) {
+            return $model . '.' . $element;
+        }, $argv);
+
+        $this->getInstance()->selectable .= ", " . implode(', ', $mapped);
+
+        $this->getInstance()->query .= " INNER JOIN {$model} ON users.id = books.user_id";
         return $this->getInstance();
     }
 

@@ -121,7 +121,7 @@ class Model
 
     public function whereTest($column, $value): self
     {
-        $this->query .= " WHERE {$this->table}.{$column} = :value ";
+        $this->query .= " WHERE {$this->table}.{$column} = :value";
         $this->pushToBind[] = [ 'value' => $value ];
 
         return $this;
@@ -138,9 +138,9 @@ class Model
 
     public function get(): false|array
     {
-        $this->query = "SELECT {$this->table}.{$this->applyOnly()}, {$this->selectable} FROM {$this->table}$this->query;";
+        $this->query = "SELECT {$this->table}.{$this->applyOnly()}{$this->selectable} FROM {$this->table}$this->query;";
         $statement = $this->bindAll();
-//        Log::dd($statement);
+        // Log::dd($statement);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -244,7 +244,7 @@ class Model
             return "*";
         }
 
-        return implode(", ", $this->only);
+        return ", " . implode(", ", $this->only);
     }
 
     public function getInstance(): self

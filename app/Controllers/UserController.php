@@ -33,7 +33,13 @@ class UserController extends Controller
      */
     public function me(): void
     {
-        $relatedBooks = (new Book())->users()->whereTest('user_id', Auth::user()['id'])->get();
+        $relatedBooks = (new Book())
+            ->users(
+                'display_name',
+                'avatar'
+            )
+            ->whereTest('user_id', Auth::user()['id'])
+            ->get();
 
         View::layout('layouts.app')
             ->withData([
