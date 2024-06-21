@@ -3,21 +3,17 @@
         <section class="left">
             <h1>Messagerie</h1>
             <ul>
-                <?php foreach ($conversations as $conversation): ?>
-                    <li>
-                        <?= $conversation['uuid'] ?>
-                    </li>
-                <?php endforeach; ?>
+                <li>
+                    <pre><?php var_dump($conversations) ?></pre>
+                </li>
             </ul>
         </section>
 
         <section class="right">
             <ul>
-                <?php foreach ($conversations as $conversation): ?>
-                    <li>
-                        <pre><?php var_dump($conversation['messages']) ?></pre>
-                    </li>
-                <?php endforeach; ?>
+                <li>
+                    <pre><?php var_dump($currentConversation); ?></pre>
+                </li>
             </ul>
         </section>
     </section>

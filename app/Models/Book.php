@@ -26,7 +26,7 @@ class Book extends Model
 
         $this->getInstance()->selectable .= ", " . implode(', ', $mapped);
 
-        $this->getInstance()->query .= " INNER JOIN {$model} ON users.id = books.user_id";
+        $this->getInstance()->query .= " INNER JOIN {$model} ON {$model}.id = {$this->table}.user_id";
         return $this->getInstance();
     }
 

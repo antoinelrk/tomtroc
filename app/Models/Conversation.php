@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Models;
 
+use App\Core\Auth\Auth;
 use App\Core\Model;
 use App\Helpers\Log;
 use PDO;
@@ -9,6 +9,120 @@ use PDO;
 class Conversation extends Model
 {
     protected string $table = 'conversations';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function getConversationsNew()
+    {
+        $query = "SELECT ";
+        $query .= "
+                conversations.id AS conversation_id,
+                conversations.uuid,
+                conversations.owner_id,
+                conversations.target_id,
+                    owner.username AS owner_username,
+                    owner.avatar AS owner_avatar,
+                    target.username AS target_username,
+                    target.avatar AS target_avatar,
+                messages.id AS message_id,
+                messages.content,
+                messages.created_at,
+                messages.user_id,
+                    message_user.username AS message_username
+            FROM 
+                conversations
+            LEFT JOIN 
+                users AS owner ON conversations.owner_id = owner.id
+            LEFT JOIN 
+                users AS target ON conversations.target_id = target.id
+            LEFT JOIN 
+                messages ON conversations.id = messages.conversation_id
+            LEFT JOIN 
+                users AS message_user ON messages.user_id = message_user.id
+            WHERE conversations.owner_id = :owner_id OR conversations.target_id = :owner_id
+            ORDER BY 
+                conversations.id, messages.created_at";
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':owner_id', Auth::user()['id']);
+        $statement->execute();
+
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $conversations = [];
+
+        foreach ($results as $row) {
+            $conversation_id = $row['conversation_id'];
+
+            // Si la conversation n'existe pas encore dans le tableau, l'ajouter
+            if (!isset($conversations[$conversation_id])) {
+                $conversations[$conversation_id] = [
+                    'id' => $row['conversation_id'],
+                    'uuid' => $row['uuid'],
+                    'users' => [
+                        'owner' => [
+                            'id' => $row['owner_id'],
+                            'username' => $row['owner_username']
+                        ],
+                        'target' => [
+                            'id' => $row['target_id'],
+                            'username' => $row['target_username']
+                        ]
+                    ],
+                    'messages' => []
+                ];
+            }
+
+            // Ajouter le message à la conversation correspondante
+            if ($row['message_id']) {
+                $conversations[$conversation_id]['messages'][] = [
+                    'id' => $row['message_id'],
+                    'content' => $row['content'],
+                    'created_at' => $row['created_at'],
+                    'user' => [
+                        'id' => $row['user_id'],
+                        'username' => $row['message_username']
+                    ]
+                ];
+            }
+        }
+
+        return $conversations;
+    }
+
+    public function messages(...$argv)
+    {
+        $model = 'messages';
+        $mapped = array_map(function($element) use ($model) {
+            return 'm.' . $element;
+        }, $argv);
+
+        $this->getInstance()->selectable .= ", " . implode(', ', $mapped);
+
+        $this->getInstance()->query .= " INNER JOIN {$model} m ON {$this->table}.id = m.conversation_id ";
+        return $this->getInstance();
+    }
+
+    public function users(...$argv)
+    {
+        $model = 'users';
+        $pivot = 'conversation_user';
+
+        $mapped = array_map(function($element) use ($model) {
+            return $model . '.' . $element;
+        }, $argv);
+
+        $this->getInstance()->selectable .= ", " . implode(', ', $mapped);
+
+        $this->getInstance()->query .= " JOIN {$pivot} ON {$this->table}.id = {$pivot}.conversation_id";
+
+        $this->getInstance()->query .= " JOIN {$model} ON users.id = {$pivot}.user_id";
+
+        return $this->getInstance();
+    }
 
     /**
      * TODO: WIP!

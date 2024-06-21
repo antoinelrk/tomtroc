@@ -13,7 +13,7 @@ class Model
      */
     protected string $table;
 
-    private array $pushToBind;
+    private array $pushToBind = [];
 
     /**
      * Define default identification key.
@@ -119,9 +119,17 @@ class Model
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function whereTest($column, $value): self
+    public function orderBy($column, $direction)
     {
-        $this->query .= " WHERE {$this->table}.{$column} = :value";
+        $this->query .= " ORDER BY {$column} {$direction} ";
+
+        return $this;
+    }
+
+    public function whereTest($column, $value, $table = null): self
+    {
+        $table = $table ?? $this->table;
+        $this->query .= " WHERE {$table}.{$column} = :value";
         $this->pushToBind[] = [ 'value' => $value ];
 
         return $this;
