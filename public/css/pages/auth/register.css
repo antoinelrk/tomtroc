@@ -1,0 +1,86 @@
+main.auth-page {
+    section.auth {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        min-height: var(--page-size);
+
+        aside {
+            position: relative;
+            width: 50%;
+            height: var(--page-size);
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        article {
+            display: flex;
+            flex-direction: column;
+            max-width: 50%;
+            width: 100%;
+            row-gap: 2em;
+            padding: 4em 8em;
+            background-color: #FAF9F7;
+            justify-content: center;
+            align-items: center;
+
+            .form-wrapper {
+                display: flex;
+                flex-direction: column;
+                row-gap: 4em;
+                width: 60%;
+
+                h1 {
+                    font-size: 36px;
+                    font-family: "PlayfairDisplay Regular", sans-serif;
+                    font-weight: 400;
+                }
+
+                form {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    row-gap: 2em;
+
+                    .form-group {
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        row-gap: .7em;
+
+                        label {
+                            color: #A6A6A6;
+                            font-family: var(--s-serif), sans-serif;
+                        }
+
+                        input {
+                            height: 50px;
+                            border-radius: 6px;
+                            border: 1px solid #F0F0F0;
+                            padding: 0 1em;
+                        }
+                    }
+
+                    button {
+                        background-color: var(--tonic-100);
+                        border-radius: 6px;
+                        padding: 1.5em 0;
+                        font-size: 1.1em;
+                        color: white;
+                        font-weight: 600;
+                    }
+                }
+
+                p a:hover {
+                    text-decoration: underline;
+                }
+            }
+
+        }
+    }
+}

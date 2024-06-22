@@ -1,0 +1,15 @@
+services:
+  crw_app:
+    image: registry.akela.app/laravel:10-alpine
+    container_name: crw_app
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8080:80"
+    networks:
+      - local
+
+networks:
+  local:
+    name: local
+    external: true

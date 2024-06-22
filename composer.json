@@ -1,0 +1,16 @@
+{
+    "name": "antoinelrk/customer-relationship-website",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Antoine LRK"
+        }
+    ],
+    "require": {
+      "ext-pdo": "*"
+    }
+}
