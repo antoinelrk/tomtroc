@@ -23,15 +23,22 @@ class Conversation extends Model
                 conversations.uuid,
                 conversations.owner_id,
                 conversations.target_id,
+                conversations.created_at,
+                conversations.updated_at,
                     owner.username AS owner_username,
+                    owner.display_name AS owner_display_name,
                     owner.avatar AS owner_avatar,
                     target.username AS target_username,
+                    target.display_name AS target_display_name,
                     target.avatar AS target_avatar,
                 messages.id AS message_id,
                 messages.content,
                 messages.created_at,
+                messages.updated_at,
                 messages.user_id,
-                    message_user.username AS message_username
+                    message_user.username AS message_username,
+                    message_user.display_name AS message_display_name,
+                    message_user.avatar AS message_avatar
             FROM 
                 conversations
             LEFT JOIN 
@@ -44,7 +51,7 @@ class Conversation extends Model
                 users AS message_user ON messages.user_id = message_user.id
             WHERE conversations.owner_id = :owner_id OR conversations.target_id = :owner_id
             ORDER BY 
-                conversations.id, messages.created_at";
+                conversations.updated_at DESC, messages.created_at ASC";
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':owner_id', Auth::user()['id']);
@@ -65,13 +72,19 @@ class Conversation extends Model
                     'users' => [
                         'owner' => [
                             'id' => $row['owner_id'],
-                            'username' => $row['owner_username']
+                            'username' => $row['owner_username'],
+                            'display_name' => $row['owner_display_name'],
+                            'avatar' => $row['owner_avatar']
                         ],
                         'target' => [
                             'id' => $row['target_id'],
-                            'username' => $row['target_username']
+                            'username' => $row['target_username'],
+                            'display_name' => $row['target_display_name'],
+                            'avatar' => $row['target_avatar']
                         ]
                     ],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
                     'messages' => []
                 ];
             }
@@ -81,11 +94,13 @@ class Conversation extends Model
                 $conversations[$conversation_id]['messages'][] = [
                     'id' => $row['message_id'],
                     'content' => $row['content'],
-                    'created_at' => $row['created_at'],
                     'user' => [
                         'id' => $row['user_id'],
-                        'username' => $row['message_username']
-                    ]
+                        'username' => $row['message_username'],
+                        'avatar' => $row['message_avatar'],
+                    ],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
                 ];
             }
         }

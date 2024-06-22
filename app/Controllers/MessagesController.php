@@ -40,15 +40,15 @@ class MessagesController extends Controller
         } else {
             // Sur cette liste de conversation on récupère uniquement celle qui correspond à l'UUID passé en paramètre.
 
-            $currentConversation = array_filter($conversations, function ($conversation) use ($uuid) {
+            $currentConversation = array_values(array_filter($conversations, function ($conversation) use ($uuid) {
                 return $conversation['uuid'] === $uuid;
-            });
+            }));
         }
 
         return View::layout('layouts.app')
             ->withData([
                 'conversations' => $conversations,
-                'currentConversation' => $currentConversation,
+                'currentConversation' => $currentConversation[0],
             ])
             ->view('pages.messages.index')
             ->render();
