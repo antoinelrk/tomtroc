@@ -1,0 +1,165 @@
+main.page-public-profile {
+    display: flex;
+    background-color: var(--bg-100);
+    padding-bottom: 80px;
+    row-gap: 2em;
+
+    section.profile {
+        display: flex;
+        flex-direction: row;
+        margin: 8em 0;
+        width: var(--centered);
+        column-gap: 2em;
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 30%;
+            background-color: var(--white);
+            border-radius: 2em;
+            padding: 4em 0;
+            row-gap: 5em;
+
+            img {
+                width: 40%;
+                aspect-ratio: 1/1;
+                border-radius: 9999px;
+            }
+
+            .separator {
+                width: 50%;
+                height: 1px;
+                background-color: var(--light-gray);
+            }
+
+            figure.icon {
+                width: 16px;
+                height: 16px;
+            }
+
+            .user-info {
+                display: flex;
+                flex-direction: column;
+
+                .title-secondary {
+                    margin-top: 16px;
+                    font-family: var(--s-serif), sans-serif;
+                    font-size: 14px;
+                    color: var(--gray);
+                }
+
+                h4.secondary-title {
+                    margin: 1em 0;
+                    text-transform: uppercase;
+                    font-size: 10px;
+                    font-family: var(--s-serif), sans-serif;
+                    font-weight: 800;
+                }
+
+                .text-with-icon {
+                    display: flex;
+                    column-gap: .3em;
+                    font-family: var(--s-serif), sans-serif;
+                    font-size: 14px;
+
+                    figure {
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+            }
+
+            a.write-message {
+                display: flex;
+                border: solid 2px;
+                border-color: var(--tonic-100);
+                border-radius: 8px;
+                padding: 1.2em 2em;
+                font-size: 1em;
+                color: var(--tonic-100);
+                font-family: "Inter", sans-serif;
+                font-weight: 600;
+            }
+        }
+
+        article {
+            display: flex;
+            width: 70%;
+            background-color: var(--white);
+            border-radius: 2em;
+
+            table.list-of-books {
+                display: flex;
+                flex-direction: column;
+                margin-top: 48px;
+                width: 100%;
+                border-collapse: collapse;
+
+                tr {
+                    display: flex;
+                    width: 100%;
+
+                    &.title {
+                        display: flex;
+                        border-bottom: solid 2px var(--light-gray);
+                        width: 100%;
+                        padding: .5em 4em;
+
+                        th {
+                            display: flex;
+                            text-transform: uppercase;
+                            font-size: 11px;
+                            font-family: var(--s-serif), sans-serif;
+                            width: 25%;
+                            letter-spacing: .135em;
+                        }
+                    }
+
+                    &.line {
+                        padding: 0 4em;
+                        height: 150px;
+                        row-gap: 2em;
+
+                        &:nth-child(odd) {
+                            background-color: #edf2f6;
+                        }
+
+                        td {
+                            display: flex;
+                            width: 25%;
+                            align-items: center;
+                            font-family: var(--s-serif), sans-serif;
+
+                            img.book-icon {
+                                width: 78px;
+                                height: 78px;
+                                aspect-ratio: 1/1;
+                            }
+
+                            &.text {
+                                display: block;
+                                margin: auto 0;
+                                height: 50%;
+                                overflow: hidden;
+
+                                p {
+                                    display: -webkit-box;
+                                    line-height: 1.3;
+                                    font-weight: 400;
+                                    font-style: italic;
+                                    font-size: 14px;
+                                    width: 100%;
+                                    -webkit-line-clamp: 4;
+                                    -webkit-box-orient: vertical;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

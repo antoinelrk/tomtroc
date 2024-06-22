@@ -68,7 +68,7 @@
             <?php foreach ($books as $book) : ?>
                 <tr class="line">
                     <td>
-                        <img class="book-icon" src="./storage/books/<?= $book['cover'] ?>" alt="">
+                        <img class="book-icon" src="<?= $book['cover'] ?>" alt="">
                     </td>
                     <td><?= $book['title'] ?></td>
                     <td><?= $book['author'] ?></td>

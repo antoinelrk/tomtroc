@@ -55,8 +55,23 @@ class UserController extends Controller
     public function show($username)
     {
         $user = (new User())->whereTest('username', $username)->first();
+
+        $relatedBooks = (new Book())
+            ->users(
+                'display_name',
+                'avatar'
+            )
+            ->whereTest('user_id', $user['id'])
+            ->get();
+
         if ($user) {
-            Response::json($user, Response::HTTP_OK);
+            View::layout('layouts.app')
+                ->withData([
+                    'user' => $user,
+                    'books' => $relatedBooks,
+                ])
+                ->view('pages.users.profile')
+                ->render();
         } else {
             return Errors::notFound();
         }

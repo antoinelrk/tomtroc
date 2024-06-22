@@ -103,7 +103,7 @@ main.conversations-page {
             .conversations-messages {
                 display: flex;
                 flex-direction: column;
-                overflow: scroll;
+                overflow: auto;
                 width: 100%;
                 height: calc(var(--page-size) - 300px);
 
