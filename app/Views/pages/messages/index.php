@@ -9,7 +9,6 @@
             <ul>
                 <?php foreach ($conversations as $conversation): ?>
                     <li>
-                        <!-- <pre><?php var_dump($conversation); ?></pre> -->
                         <a href="/messages/<?= $conversation['uuid'] ?>">
                             <img src="<?= $conversation['users']['target']['avatar'] ?>" alt="" class="profile-picture">
 
@@ -20,7 +19,7 @@
                                     </span>
                                     <span>
                                         <!-- TODO: Formatter la date en fonction de l'offset (Si c'est encore aujourd'hui on mets l'heure, sinon hier) -->
-                                        <?= $conversation['updated_at'] ?>
+                                        <?= \App\Helpers\Diamond::diffForHumans($conversation['updated_at'], true) ?>
                                     </span>
                                 </div>
                                 <p>
@@ -54,7 +53,7 @@
                                 <div class="metadata">
                                     <img src="<?= $message['user']['avatar'] ?>" alt=""
                                          class="mini-profile-picture">
-                                    <span class="date">21.08 15:48</span>
+                                    <span class="date"><?= \App\Helpers\Diamond::diffForHumans($message['created_at']) ?></span>
                                 </div>
                             <?php endif; ?>
                             <p class="message-content">

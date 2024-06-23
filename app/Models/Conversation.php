@@ -66,6 +66,23 @@ class Conversation extends Model
 
             // Si la conversation n'existe pas encore dans le tableau, l'ajouter
             if (!isset($conversations[$conversation_id])) {
+                $target = [];
+                if ($row['owner_id'] !== Auth::user()['id']) {
+                    $target = [
+                        'id' => $row['owner_id'],
+                        'username' => $row['owner_username'],
+                        'display_name' => $row['owner_display_name'],
+                        'avatar' => $row['owner_avatar']
+                    ];
+                } else {
+                    $target = [
+                        'id' => $row['target_id'],
+                        'username' => $row['target_username'],
+                        'display_name' => $row['target_display_name'],
+                        'avatar' => $row['target_avatar']
+                    ];
+                }
+
                 $conversations[$conversation_id] = [
                     'id' => $row['conversation_id'],
                     'uuid' => $row['uuid'],
@@ -76,12 +93,7 @@ class Conversation extends Model
                             'display_name' => $row['owner_display_name'],
                             'avatar' => $row['owner_avatar']
                         ],
-                        'target' => [
-                            'id' => $row['target_id'],
-                            'username' => $row['target_username'],
-                            'display_name' => $row['target_display_name'],
-                            'avatar' => $row['target_avatar']
-                        ]
+                        'target' => $target
                     ],
                     'created_at' => $row['created_at'],
                     'updated_at' => $row['updated_at'],
