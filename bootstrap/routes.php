@@ -54,6 +54,11 @@ $router->addRoute(
     '/messages/{uuid}',
     [MessagesController::class, 'show'],
 );
+$router->addRoute(
+    'POST',
+    '/messages',
+    [MessagesController::class, 'store'],
+);
 
 $router->addRoute(
     'GET',

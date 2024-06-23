@@ -70,8 +70,11 @@
                     action="/messages"
                     method="POST"
             >
+                <input type="hidden" name="conversation_id" value="<?= $currentConversation['id'] ?>">
+                <input type="hidden" name="uuid" value="<?= $currentConversation['uuid'] ?>">
+
                 <label>
-                    <input type="text" placeholder="Taper votre message ici">
+                    <input type="text" name="content" placeholder="Taper votre message ici">
                 </label>
 
                 <button class="btn btn-send">Envoyer</button>

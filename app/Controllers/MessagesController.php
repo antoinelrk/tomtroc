@@ -8,6 +8,7 @@ use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Conversation;
+use App\Models\Message;
 
 class MessagesController extends Controller
 {
@@ -52,5 +53,20 @@ class MessagesController extends Controller
             ])
             ->view('pages.messages.index')
             ->render();
+    }
+
+    public function store()
+    {
+        $request = $_POST;
+
+        (new Message())->create([
+            'conversation_id' => $request['conversation_id'],
+            'user_id' => Auth::user()['id'],
+            'content' => $request['content'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        Response::redirect('/messages/' . $request['uuid']);
     }
 }
