@@ -22,12 +22,12 @@
                     <?php foreach ($books as $book): ?>
                         <li>
                             <article>
-                                <img src="<?= $book['cover'] ?>" alt="Image de livre carré">
+                                <img src="<?= $book->cover ?>" alt="Image de livre carré">
                                 <div class="book-info">
-                                    <h2><?= $book['title'] ?></h2>
-                                    <h3><?= $book['author'] ?></h3>
+                                    <h2><?= $book->title ?></h2>
+                                    <h3><?= $book->author ?></h3>
                                     <p>
-                                        Vendu par: <?= $book['publisher_name'] ?>
+                                        Vendu par: XXX
                                     </p>
                                 </div>
                             </article>

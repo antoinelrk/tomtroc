@@ -6,10 +6,18 @@ use App\Core\Router;
 
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
+use App\Controllers\PostController;
 use App\Controllers\UserController;
 use App\Middlewares\AuthMiddleware;
 
 $router = new Router();
+
+$router->addRoute(
+    'GET',
+    '/posts',
+    [ PostController::class, 'index' ]
+);
+
 
 // ---------- DEFAULT ----------
 
