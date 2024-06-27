@@ -1,13 +1,13 @@
 <main class="books-show">
     <section class="red-line">
-        <a href="all-books.html">Nos livres</a>
+        <a href="/our-books">Nos livres</a>
         >
-        <a href="single-book.html"><?= $book->title ?></a>
+        <a href="/books/<?= $book->slug ?>"><?= $book->title ?></a>
     </section>
 
     <section class="book">
         <aside>
-            <img class="book-cover" src="./assets/images/books/original/frosty-ilze-tfYL1j1jKNo-unsplash.png" alt="">
+            <img class="book-cover" src="<?= $book->cover ?>" alt="">
         </aside>
 
         <article>
@@ -24,7 +24,7 @@
             <div class="book-footer">
                 <h2>Propriétaire</h2>
                 <div class="book-owner">
-                    <img src="./assets/images/avatars/priscilla-du-preez-aqGIS55Fjg4-unsplash.png" alt="">
+                    <img src="https://placehold.co/400" alt="">
                     Alexlecture
                 </div>
             </div>
