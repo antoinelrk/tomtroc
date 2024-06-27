@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Core\Database;
 use App\Helpers\Log;
 use PDO;
+use PDOStatement;
 use stdClass;
 
 abstract class Model
@@ -15,23 +16,31 @@ abstract class Model
 
     private array $properties = [];
 
-    protected static $statement;
+    private string $query;
+
+    protected PDOStatement $statement;
 
     public function __construct()
     {
         $this->connection = Database::getInstance()->getConnection();
+
+        $this->query = "";
     }
 
     public function where(string $column, $value): Model
     {
-        $this->statement = $this->connection->prepare("SELECT $keys FROM $this->table");
-        
+        $query = "SELECT * FROM ";
+        $query .= " $this->table WHERE $column = :value;";
+        $this->statement = $this->connection->prepare($query);
+        $this->statement->bindParam(":value", $value);
+
         return $this;
     }
 
     /**
      * Fetch specified keys
-     * 
+     *
+     * @param mixed ...$argv
      * @return self
      */
     public function only(...$argv): Model
@@ -67,9 +76,10 @@ abstract class Model
     /**
      * Return first occurence
      */
-    public function first(): Model
+    public function first()
     {
         $this->statement->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+        $this->statement->execute();
 
         return $this->statement->fetch();
     }

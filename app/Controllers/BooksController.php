@@ -27,4 +27,16 @@ class BooksController extends Controller
             ])
             ->render();
     }
+
+    public function show(string $slug)
+    {
+        $book = (new Book())->where('slug', $slug)->first();
+
+        return View::layout('layouts.app')
+            ->view('pages.books.show')
+            ->withData([
+                'book' => $book
+            ])
+            ->render();
+    }
 }
