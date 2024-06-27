@@ -27,7 +27,16 @@ $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ A
 
 // ---------- BOOKS ----------
 
-$router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
+$router->addRoute(
+    'GET',
+    '/our-books',
+    [BooksController::class, 'index']
+);
+$router->addRoute(
+    'GET',
+    '/books/{slug}',
+    [BooksController::class, 'show']
+);
 
 // ---------- AUTHENTICATED ----------
 
