@@ -15,7 +15,7 @@ abstract class Model implements Serializable
 
     public array $properties = [];
 
-    protected array $hidden;
+    protected array $hidden = [];
 
     private string $query;
 
@@ -69,9 +69,14 @@ abstract class Model implements Serializable
      */
     public function get(): array
     {
-        $this->statement->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+        if(!isset($this?->statement)) {
+            $this->statement = $this->connection->prepare("SELECT * FROM $this->table");
+        }
 
-        return $this->statement->fetchAll();
+        $this->statement->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+        $this->statement->execute();
+
+        return $this->unsetHiddenAttributesAll($this->statement->fetchAll());
     }
 
     /**
@@ -96,6 +101,19 @@ abstract class Model implements Serializable
         $statement->execute([$id]);
 
         return $this->unsetHiddenAttributes($statement->fetch());
+    }
+
+    public function unsetHiddenAttributesAll(array $models): array
+    {
+        foreach($models as $model) {
+            foreach ($model->hidden as $hiddenColumn) {
+                if ($model->properties[$hiddenColumn]) {
+                    unset($model->properties[$hiddenColumn]);
+                }
+            }
+        }
+
+        return $models;
     }
 
     public function unsetHiddenAttributes(Model $model): Model

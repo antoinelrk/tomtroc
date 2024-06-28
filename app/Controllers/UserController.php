@@ -7,7 +7,6 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Errors;
-use App\Helpers\Log;
 use App\Models\Book;
 use App\Models\User;
 
@@ -27,26 +26,22 @@ class UserController extends Controller
 
     /**
      * Return private profil page.
-     * TODO: Passe auth-user data here..
      *
      * @return void
      */
     public function me(): void
     {
-        $relatedBooks = (new Book())
-            ->users(
-                'display_name',
-                'avatar'
-            )
-            ->whereTest('user_id', Auth::user()['id'])
+        $user = Auth::user();
+        $books = (new Book())
+            ->where('user_id', $user->id)
             ->get();
 
         View::layout('layouts.app')
             ->withData([
                 'title' => 'Mon compte',
-                'user' => Auth::user(),
-                'books' => $relatedBooks,
-                'quantity' => count($relatedBooks),
+                'user' => $user,
+                'books' => $books,
+                'quantity' => count($books),
             ])
             ->view('pages.me')
             ->render();
