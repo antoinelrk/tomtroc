@@ -3,7 +3,9 @@
 namespace App\Core\Auth;
 
 use App\Core\Database;
+use App\Models\Model;
 use App\Models\User;
+use PDO;
 
 class Auth
 {
@@ -20,11 +22,16 @@ class Auth
     /**
      * Return current authenticated user.
      *
-     * @return array
+     * @return User
      */
-    public static function user(): array
+    public static function user(): ?User
     {
-        return $_SESSION['user'];
+        $user = unserialize($_SESSION['user']);
+        if (isset($user)) {
+            return $user;
+        }
+
+        return null;
     }
 
     /**
@@ -37,10 +44,11 @@ class Auth
      */
     public static function attempt($email, $password): bool
     {
-        $user = self::fetchUser($email);
+        $user = self::rawUser($email);
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user'] = (new User())->withoutHidden($user);
+        if ($user && password_verify($password, $user->password)) {
+            $_SESSION['user'] = serialize($user->unsetHiddenAttributes($user));
+
             return true;
         }
 
@@ -49,7 +57,11 @@ class Auth
 
     public static function refresh(): void
     {
-        $_SESSION['user'] = (new User())->withoutHidden(self::fetchUser(Auth::user()['id']));
+        if (isset($_SESSION['user'])) {
+            $_SESSION['user'] = (new User())
+                ->where('id', Auth::user()?->id)
+                ->first();
+        }
     }
 
     /**
@@ -62,18 +74,13 @@ class Auth
         return true;
     }
 
-    /**
-     * Fetch user WITH the password.
-     *
-     * @param string $email
-     *
-     * @return array|null
-     */
-    private static function fetchUser(string $email): array|null
+    private static function rawUser(string $email): ?Model
     {
-        $connection = Database::getInstance()->getConnection();
-        $statement = $connection->prepare("SELECT * FROM users WHERE email = :email");
-        $statement->bindParam(':email', $email);
+        $statement = Database::getInstance()
+            ->getConnection()
+            ->prepare("SELECT * FROM users WHERE email = :email");
+        $statement->bindParam(":email", $email);
+        $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
         $statement->execute();
 
         return $statement->fetch();
