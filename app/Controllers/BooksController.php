@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Helpers\Log;
+use App\Helpers\Str;
 use App\Models\Book;
 
 class BooksController extends Controller
@@ -24,5 +26,28 @@ class BooksController extends Controller
                 'books' => $books
             ])
             ->render();
+    }
+
+    public function show(string $slug): ?View
+    {
+        $book = (new Book())
+            ->whereTest('slug', $slug)
+            ->first();
+
+        Log::dd($book);
+
+        return View::layout('layouts.app')
+            ->view('pages.books.show')
+            ->withData([
+                'book' => $book
+            ])
+            ->render();
+    }
+
+    public function create(): ?View
+    {
+        $slug = Str::slug("Bonjour à tous !");
+
+        return $slug;
     }
 }
