@@ -7,6 +7,7 @@ use App\Core\Router;
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
+use App\Controllers\ConversationsController;
 use App\Middlewares\AuthMiddleware;
 
 $router = new Router();
@@ -46,14 +47,17 @@ $router->addRoute(
 
 $router->addRoute(
     'GET',
-    '/messages',
-    [MessagesController::class, 'index'],
+    '/conversations',
+    [ConversationsController::class, 'index'],
 );
 $router->addRoute(
     'GET',
-    '/messages/{uuid}',
-    [MessagesController::class, 'show'],
+    '/conversations/{uuid}',
+    [ConversationsController::class, 'show'],
 );
+
+// ---------- MESSAGES ----------
+
 $router->addRoute(
     'POST',
     '/messages',
