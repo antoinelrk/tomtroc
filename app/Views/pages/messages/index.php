@@ -9,7 +9,7 @@
             <ul>
                 <?php foreach ($conversations as $conversation): ?>
                     <li>
-                        <a href="/messages/<?= $conversation['uuid'] ?>">
+                        <a href="/conversations/<?= $conversation['uuid'] ?>">
                             <img src="<?= $conversation['users']['target']['avatar'] ?>" alt="" class="profile-picture">
 
                             <div class="user-conversation-list-infos">

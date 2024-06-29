@@ -6,11 +6,25 @@ use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
+use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Models\Message;
 
 class ConversationsController extends Controller
 {
+    public function create($target_id)
+    {
+        $conversation = (new Conversation())->create([
+            'uuid' => uniqid(),
+            'target_id' => $target_id
+        ]);
+
+        Log::dd($conversation);
+        return View::layout('layouts.app')
+            ->view('pages.conversations.create')
+            ->render();
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -21,7 +35,7 @@ class ConversationsController extends Controller
             ->first();
 
         if ($conversations !== null) {
-            Response::redirect('messages/' . $conversations['uuid']);
+            Response::redirect('conversations/' . $conversations['uuid']);
         }
     }
 
@@ -66,6 +80,6 @@ class ConversationsController extends Controller
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        Response::redirect('/messages/' . $request['uuid']);
+        Response::redirect('/conversations/' . $request['uuid']);
     }
 }

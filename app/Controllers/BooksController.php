@@ -31,10 +31,13 @@ class BooksController extends Controller
     public function show(string $slug): ?View
     {
         $book = (new Book())
+            ->users(
+                'display_name',
+                'avatar',
+                'username',
+            )
             ->whereTest('slug', $slug)
             ->first();
-
-        Log::dd($book);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')

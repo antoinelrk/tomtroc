@@ -7,4 +7,5 @@
 @import './pages/messages/index.css';
 @import './pages/me.css';
 @import './pages/books/index.css';
+@import './pages/books/show.css';
 @import './pages/users/public-profile.css';

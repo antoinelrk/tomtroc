@@ -1,5 +1,4 @@
 <main class="page-public-profile">
-    <pre><?php var_dump($user); ?></pre>
     <section class="profile">
         <aside>
             <img src="<?= $user['avatar'] ?>" alt="">

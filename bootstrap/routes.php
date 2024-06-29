@@ -54,10 +54,17 @@ $router->addRoute(
     [ AuthMiddleware::class ]
 );
 
+// ---------- CONVERSATIONS ----------
+
 $router->addRoute(
     'GET',
     '/conversations',
     [ConversationsController::class, 'index'],
+);
+$router->addRoute(
+    'GET',
+    '/new-conversations',
+    [ConversationsController::class, 'create'],
 );
 $router->addRoute(
     'GET',
