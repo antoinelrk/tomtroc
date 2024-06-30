@@ -14,6 +14,11 @@ class ConversationsController extends Controller
 {
     public function create($target_id)
     {
+        if ($target_id === null || intval($target_id) == Auth::user()['id']) {
+            Response::redirect('/conversations');
+        };
+
+//        $likelyConversation = (new Conversation())->whereTest('ta')
         $conversation = (new Conversation())->create([
             'uuid' => uniqid(),
             'target_id' => $target_id
@@ -66,20 +71,5 @@ class ConversationsController extends Controller
             ])
             ->view('pages.messages.index')
             ->render();
-    }
-
-    public function store()
-    {
-        $request = $_POST;
-
-        (new Message())->create([
-            'conversation_id' => $request['conversation_id'],
-            'user_id' => Auth::user()['id'],
-            'content' => $request['content'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
-
-        Response::redirect('/conversations/' . $request['uuid']);
     }
 }

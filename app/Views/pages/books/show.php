@@ -29,7 +29,7 @@
                 </a>
             </div>
             <!-- TODO: Ce lien doit avoir en paramètres tout ce qu'il faut pour configurer le formulaire d'envoi de message (ID, début de message comme: "Bonjour Alex! ...") -->
-            <a class="send-message" href="">Envoyer un message</a>
+            <a class="send-message" href="/new-conversation/<?= $book['user_id'] ?>">Envoyer un message</a>
         </article>
     </section>
 </main>

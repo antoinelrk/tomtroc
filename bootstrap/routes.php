@@ -63,7 +63,7 @@ $router->addRoute(
 );
 $router->addRoute(
     'GET',
-    '/new-conversations',
+    '/new-conversation/{target_id}',
     [ConversationsController::class, 'create'],
 );
 $router->addRoute(
