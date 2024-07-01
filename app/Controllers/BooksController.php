@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\QueryBuilder;
 use App\Helpers\Log;
 use App\Models\Book;
+use App\Models\User;
 
 class BooksController extends Controller
 {
@@ -38,5 +40,19 @@ class BooksController extends Controller
                 'book' => $book
             ])
             ->render();
+    }
+
+    public function test()
+    {
+        $books = (new QueryBuilder())->table(Book::class)
+            ->get()
+            ->all();
+
+        $users = (new QueryBuilder())
+            ->table(User::class)
+            ->get()
+            ->all();
+
+        Log::dd($users);
     }
 }

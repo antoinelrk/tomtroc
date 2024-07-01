@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\BooksController;
+use App\Controllers\ConversationsController;
 use App\Controllers\MessagesController;
 use App\Core\Router;
 
@@ -55,13 +56,13 @@ $router->addRoute(
 
 $router->addRoute(
     'GET',
-    '/messages',
-    [MessagesController::class, 'index'],
+    '/conversations',
+    [ConversationsController::class, 'index'],
 );
 $router->addRoute(
     'GET',
-    '/messages/{uuid}',
-    [MessagesController::class, 'show'],
+    '/conversations/{uuid}',
+    [ConversationsController::class, 'show'],
 );
 $router->addRoute(
     'POST',
@@ -73,6 +74,13 @@ $router->addRoute(
     'GET',
     '/user-name/{slug}/edit/{id}',
     [UserController::class, 'show']
+);
+
+// ---------- API ----------
+$router->addRoute(
+    'GET',
+    '/test/test',
+    [BooksController::class, 'test']
 );
 
 // ---------- API ----------
