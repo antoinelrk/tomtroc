@@ -7,6 +7,7 @@ use App\Core\Facades\View;
 use App\Core\QueryBuilder;
 use App\Helpers\Log;
 use App\Models\Book;
+use App\Models\BookManager;
 use App\Models\User;
 
 class BooksController extends Controller
@@ -18,9 +19,7 @@ class BooksController extends Controller
      */
     public function index(): ?View
     {
-        $books = (new Book())
-            ->available()
-            ->all();
+        $books = (new BookManager())->getBooks();
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
