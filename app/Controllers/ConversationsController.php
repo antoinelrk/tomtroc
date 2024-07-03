@@ -8,6 +8,7 @@ use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Conversation;
+use App\Models\ConversationManager;
 
 class ConversationsController extends Controller
 {
@@ -20,12 +21,15 @@ class ConversationsController extends Controller
     {
         $user = Auth::user();
 
+        $conversations = (new ConversationManager())->getConversations();
+
+        Log::dd($conversations);
+
         $conversations = (new Conversation())->all();
 
-        Log::dd($conversations[0]->properties);
         $conversations = (new Conversation())
             ->users('display_name')
-            ->whereTest('id', $user->id, 'users')
+            ->whereTest('id', $user->getId(), 'users')
             ->orderBy('updated_at', 'DESC')
             ->first();
 

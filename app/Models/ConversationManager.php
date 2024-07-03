@@ -6,7 +6,7 @@ use App\Core\Database;
 use App\Helpers\Log;
 use PDO;
 
-class UserManager
+class ConversationManager
 {
     protected PDO $connection;
 
@@ -15,16 +15,19 @@ class UserManager
         $this->connection = Database::getInstance()->getConnection();
     }
 
-    public function getUserById($id)
+    public function getConversations()
     {
-        $query = "SELECT * FROM users WHERE id = :id";
+        /**
+         * Récupérer toutes les conversations
+         */
+        $query = "SELECT * FROM conversations";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(":id", $id);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(PDO::FETCH_OBJ);
 
-        $user = new User($result);
 
-        return $user->withoutPassword();
+
+        return $conversations;
     }
 }

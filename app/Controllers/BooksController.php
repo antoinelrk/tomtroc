@@ -8,6 +8,8 @@ use App\Core\QueryBuilder;
 use App\Helpers\Log;
 use App\Models\Book;
 use App\Models\BookManager;
+use App\Models\Conversation;
+use App\Models\ConversationManager;
 use App\Models\User;
 
 class BooksController extends Controller

@@ -3,6 +3,7 @@
 namespace App\Core\Auth;
 
 use App\Core\Database;
+use App\Helpers\Log;
 use App\Models\Model;
 use App\Models\User;
 use PDO;
@@ -47,7 +48,7 @@ class Auth
         $user = self::rawUser($email);
 
         if ($user && password_verify($password, $user->password)) {
-            $_SESSION['user'] = serialize($user->unsetHiddenAttributes($user));
+            $_SESSION['user'] = serialize($user->withoutPassword());
 
             return true;
         }
@@ -74,15 +75,15 @@ class Auth
         return true;
     }
 
-    private static function rawUser(string $email): ?Model
+    private static function rawUser(string $email): User
     {
         $statement = Database::getInstance()
             ->getConnection()
             ->prepare("SELECT * FROM users WHERE email = :email");
         $statement->bindParam(":email", $email);
-        $statement->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $statement->setFetchMode(PDO::FETCH_OBJ);
         $statement->execute();
 
-        return $statement->fetch();
+        return new User($statement->fetch(PDO::FETCH_ASSOC));
     }
 }

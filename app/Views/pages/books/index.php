@@ -28,7 +28,7 @@
                                         <h2><?= $book->title ?></h2>
                                         <h3><?= $book->author ?></h3>
                                         <p>
-                                            Vendu par: XXX
+                                            Vendu par: <?= $book->relations[0]['user']->display_name ?>
                                         </p>
                                     </div>
                                 </article>

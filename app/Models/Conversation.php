@@ -6,5 +6,8 @@ use PDO;
 
 class Conversation extends Model
 {
-    protected string $table = 'conversations';
+    public function __construct(
+        public array $properties = []
+    )
+    {}
 }

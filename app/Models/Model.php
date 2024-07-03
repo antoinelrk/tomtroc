@@ -10,24 +10,20 @@ use Serializable;
 
 abstract class Model implements Serializable
 {
-    protected string $table;
-
     public array $properties = [];
 
-    protected array $hidden = [];
-
-    public array $relationships = [];
-
-    public function __construct() {}
-
-    public function setRelationships(string $className, array $data)
-    {
-        $this->relationships[] = [
-            'className' => $data,
-        ];
-    }
+    public array $relations = [];
 
     // ---------- GETTER / SETTER ATTRIBUTES ----------
+    public function addRelations(array $relation)
+    {
+        $this->relations[] = $relation;
+    }
+
+    public function getRelations()
+    {
+        return $this->relations;
+    }
 
     public function __set($name, $value)
     {

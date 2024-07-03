@@ -7,7 +7,9 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Errors;
+use App\Helpers\Log;
 use App\Models\Book;
+use App\Models\BookManager;
 use App\Models\User;
 
 class UserController extends Controller
@@ -31,10 +33,11 @@ class UserController extends Controller
      */
     public function me(): void
     {
+
         $user = Auth::user();
-        $books = (new Book())
-            ->where('user_id', $user->id)
-            ->get();
+
+        $books = new BookManager();
+        $books = $books->getUserBook(false);
 
         View::layout('layouts.app')
             ->withData([
