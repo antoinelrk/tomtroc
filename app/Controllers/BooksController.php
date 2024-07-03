@@ -33,7 +33,8 @@ class BooksController extends Controller
 
     public function show(string $slug)
     {
-        $book = (new Book())->where('slug', $slug)->first();
+        $bookManager = new BookManager();
+        $book = $bookManager->getBook($slug, false);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')

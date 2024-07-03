@@ -64,4 +64,27 @@ class BookManager
 
         return $books;
     }
+
+    public function getBook(string $slug, ?bool $available)
+    {
+        if ($available) {
+            $query = "SELECT * FROM books WHERE slug = :slug AND available = :available";
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue(':slug', $slug);
+            $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
+        } else {
+            $query = "SELECT * FROM books WHERE slug = :slug";
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue(':slug', $slug);
+        }
+
+        $statement->execute();
+        $bookRaw = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $book = new Book($bookRaw);
+        $user = (new UserManager())->getUserById($bookRaw['user_id']);
+        $book->addRelations(['user' => $user]);
+
+        return $book;
+    }
 }
