@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use App\Helpers\Log;
 use PDO;
 
 class MessagesManager
@@ -41,5 +42,26 @@ class MessagesManager
         }
 
         return $messages;
+    }
+
+    public function create(array $data)
+    {
+        if (!isset($data['content'])) return;
+
+        $query = "INSERT INTO messages ";
+        $query .= "(`conversation_id`, `user_id`, `receiver_id`, `content`, `created_at`, `updated_at`) ";
+        $query .= "VALUES (:conversation_id, :user_id, :receiver_id, :content, :created_at, :updated_at);";
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':conversation_id', $data['conversation_id']);
+        $statement->bindValue(':user_id', $data['user_id']);
+        $statement->bindValue(':receiver_id', $data['receiver_id']);
+        $statement->bindValue(':content', $data['content']);
+        $statement->bindValue(':created_at', date('Y-m-d H:i:s'));
+        $statement->bindValue(':updated_at', date('Y-m-d H:i:s'));
+        $statement->execute();
+
+//        $statement = $this->connection->prepare("SELECT m.* FROM messages m ORDER BY created_at DESC LIMIT 1");
+//        $statement->execute();
+//        $statement->fetch(PDO::FETCH_ASSOC);
     }
 }

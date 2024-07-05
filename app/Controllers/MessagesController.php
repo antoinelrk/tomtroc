@@ -9,64 +9,34 @@ use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\MessagesManager;
 
 class MessagesController extends Controller
 {
-    public function index()
+    protected MessagesManager $messagesManager;
+
+    public function __construct()
     {
-        $user = Auth::user();
-        $conversations = (new Conversation())
-            ->users('display_name')
-            ->whereTest('id', $user['id'], 'users')
-            ->orderBy('updated_at', 'DESC')
-            ->first();
+        parent::__construct();
 
-        if ($conversations !== null) {
-            Response::redirect('messages/' . $conversations['uuid']);
-        }
-    }
-
-    /**
-     * TODO: Return conversations with authenticated user only.
-     *
-     * @return ?View
-     */
-    public function show($uuid): ?View
-    {
-        $conversations = (new Conversation())->getConversationsNew();
-
-        // Si l'uuid n'est pas défini on retourne la premiere
-        if (!$uuid) {
-            $currentConversation = $conversations[0];
-        } else {
-            // Sur cette liste de conversation on récupère uniquement celle qui correspond à l'UUID passé en paramètre.
-
-            $currentConversation = array_values(array_filter($conversations, function ($conversation) use ($uuid) {
-                return $conversation['uuid'] === $uuid;
-            }));
-        }
-
-        return View::layout('layouts.app')
-            ->withData([
-                'conversations' => $conversations,
-                'currentConversation' => $currentConversation[0],
-            ])
-            ->view('pages.messages.index')
-            ->render();
+        $this->messagesManager = new MessagesManager();
     }
 
     public function store()
     {
         $request = $_POST;
 
-        (new Message())->create([
-            'conversation_id' => $request['conversation_id'],
-            'user_id' => Auth::user()['id'],
-            'content' => $request['content'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
+        // TODO: Vérifier les données à envoyer dans un validateur
 
-        Response::redirect('/messages/' . $request['uuid']);
+        $message = $this->messagesManager->create(
+            [
+                'conversation_id' => $request['conversation_id'],
+                'user_id' => Auth::user()->id,
+                'receiver_id' => $request['receiver_id'],
+                'content' => $request['content'],
+            ]
+        );
+
+        Response::redirect('/conversations/' . $request['uuid']);
     }
 }

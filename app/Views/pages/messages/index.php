@@ -48,7 +48,7 @@
                     <?php foreach ($currentConversation[0]->relations[0]['messages'] as $key => $message): ?>
                         <li class="message <?= \App\Core\Auth\Auth::user()->id === $message->relations[0]['user']->id ? 'me' : '' ?>">
                             <!-- Si le message précédent contient le même user tu mets pas ce bloc -->
-                            <?php if ($key === 0 || ($key > 0 && $currentConversation[0]->relations[0]['messages'][$key - 1]->sender_id === $message->user_id)): ?>
+                            <?php if ($key === 0 || ($key > 0 && $currentConversation[0]->relations[0]['messages'][$key - 1]->receiver_id === $message->user_id)): ?>
                                 <div class="metadata">
                                     <img src="<?= $message->relations[0]['user']->avatar ?>" alt=""
                                          class="mini-profile-picture">
@@ -71,9 +71,10 @@
             >
                 <input type="hidden" name="conversation_id" value="<?= $currentConversation[0]->id ?>">
                 <input type="hidden" name="uuid" value="<?= $currentConversation[0]->uuid ?>">
+                <input type="hidden" name="receiver_id" value="<?= $currentConversation[0]->relations[0]['user']->id ?>">
 
                 <label>
-                    <input type="text" name="content" placeholder="Taper votre message ici">
+                    <input type="text" name="content" placeholder="Taper votre message ici" autofocus>
                 </label>
 
                 <button class="btn btn-send">Envoyer</button>
