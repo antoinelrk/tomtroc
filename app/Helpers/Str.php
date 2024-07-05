@@ -27,4 +27,12 @@ class Str
 
         return $result;
     }
+
+    public static function trunc($string, $length): string
+    {
+        if (strlen($string) <= $length) {
+            return $string;
+        }
+        return substr($string, 0, $length) . ' ...';
+    }
 }

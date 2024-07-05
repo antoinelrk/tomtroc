@@ -19,44 +19,32 @@ class ConversationsController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
+        $conversation = (new ConversationManager())->getFirstConversation();
 
-        $conversations = (new ConversationManager())->getConversations();
-
-        Log::dd($conversations);
-
-        $conversations = (new Conversation())->all();
-
-        $conversations = (new Conversation())
-            ->users('display_name')
-            ->whereTest('id', $user->getId(), 'users')
-            ->orderBy('updated_at', 'DESC')
-            ->first();
-
-        if ($conversations !== null) {
-            Response::redirect('conversations/' . $conversations['uuid']);
+        if ($conversation !== null) {
+            Response::redirect('conversations/' . $conversation->uuid);
         }
     }
 
     public function show(string $uuid)
     {
-        $conversations = (new Conversation())->getConversationsNew();
+        $conversations = (new ConversationManager())->getConversations();
+
+        $conversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+           return $conversation->uuid === $uuid;
+        });
 
         // Si l'uuid n'est pas défini on retourne la premiere
-        if (!$uuid) {
+        if (!$conversation) {
             $currentConversation = $conversations[0];
         } else {
-            // Sur cette liste de conversation on récupère uniquement celle qui correspond à l'UUID passé en paramètre.
-
-            $currentConversation = array_values(array_filter($conversations, function ($conversation) use ($uuid) {
-                return $conversation['uuid'] === $uuid;
-            }));
+            $currentConversation = $conversation;
         }
 
         return View::layout('layouts.app')
             ->withData([
                 'conversations' => $conversations,
-                'currentConversation' => $currentConversation[0],
+                'currentConversation' => $currentConversation,
             ])
             ->view('pages.messages.index')
             ->render();

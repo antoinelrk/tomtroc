@@ -23,7 +23,7 @@ class MessagesManager
 
         $query = "SELECT m.* FROM messages m ";
         $query .= "WHERE m.conversation_id = :conversation_id ";
-        $query .= "ORDER BY m.updated_at DESC";
+        $query .= "ORDER BY m.created_at ASC";
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':conversation_id', $conversationId);

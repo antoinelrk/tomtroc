@@ -132,4 +132,10 @@
     </footer>
 </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let chatDiv = document.querySelector('.conversations-messages');
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    });
+</script>
 </html>
