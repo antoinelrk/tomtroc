@@ -9,10 +9,20 @@ use App\Core\Response;
 use App\Core\Validator;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
+use App\Helpers\Log;
 use App\Models\User;
+use App\Models\UserManager;
 
 class AuthController extends Controller
 {
+    protected UserManager $userManager;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userManager = new UserManager();
+    }
     /**
      * Login method.
      *
@@ -89,13 +99,11 @@ class AuthController extends Controller
             ],
         ]);
 
-        (new User())->create([
+        $this->userManager->create([
             'username' => $request['username'],
             'display_name' => ucfirst($request['username']),
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'created_at' => Diamond::now(),
-            'updated_at' => Diamond::now(),
         ]);
 
         Response::redirect('/');
