@@ -12,9 +12,13 @@ use App\Models\ConversationManager;
 
 class ConversationsController extends Controller
 {
+    protected ConversationManager $conversationsManager;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->conversationsManager = new ConversationManager();
     }
 
     public function index()
@@ -48,5 +52,31 @@ class ConversationsController extends Controller
             ])
             ->view('pages.messages.index')
             ->render();
+    }
+
+    public function create($id)
+    {
+        /**
+         * Il faut vérifier si la conversation existe en fonction de l'id de l'utilisateur, si elle existe on redirige
+         * vers /conversation/uuid
+         * Sinon on créé une nouvelle conversation et on redirige vers un formulaire.
+         */
+        if (intval($id) === Auth::user()->id || $id === null) {
+            Response::redirect('/conversations');
+        }
+
+        $conversation = $this->conversationsManager->getConversationByUserId($id);
+
+        if (!$conversation) {
+            Log::dd(uniqid());
+            /**
+             * 1. On créé la nouvelle conversation
+             * 2. On attache les utilisateurs à la conversation
+             * 3. On redirige vers la page de conversation avec l'id
+             */
+        }
+
+
+        Log::dd($conversation);
     }
 }

@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <a class="send-message" href="">Envoyer un message</a>
+            <a class="send-message" href="/new-message/<?= $book->relations[0]['user']->id ?>">Envoyer un message</a>
         </article>
     </section>
 </main>

@@ -54,7 +54,6 @@ class ConversationManager
         foreach ($results as $result) {
             $conversation = new Conversation($result);
 
-
             $messages = $this->messagesManager->getMessages($conversation->id);
 
             $relatedUser = array_values(array_filter($messages, function ($item) {
@@ -74,6 +73,26 @@ class ConversationManager
 
     public function getFirstConversation()
     {
-        return $this->getConversations()[0];
+        $conversation = $this->getConversations();
+
+        if (!empty($conversation)) {
+            return $conversation;
+        }
+
+        return [];
+    }
+
+    public function getConversationByUserId(int $userId)
+    {
+        $query = "SELECT c.* FROM conversations c ";
+        $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
+        $query .= "WHERE cu.user_id = :user_id;";
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':user_id', $userId);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 }

@@ -13,13 +13,6 @@ use App\Middlewares\AuthMiddleware;
 
 $router = new Router();
 
-$router->addRoute(
-    'GET',
-    '/posts',
-    [ PostController::class, 'index' ]
-);
-
-
 // ---------- DEFAULT ----------
 
 $router->addRoute('GET','/', [HomeController::class, 'index']);
@@ -68,6 +61,12 @@ $router->addRoute(
     'POST',
     '/messages',
     [MessagesController::class, 'store'],
+);
+
+$router->addRoute(
+    'GET',
+    '/new-message/{id}',
+    [ConversationsController::class, 'create'],
 );
 
 $router->addRoute(
