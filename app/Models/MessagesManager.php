@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\Log;
 use PDO;
@@ -20,19 +21,48 @@ class MessagesManager
 
     public function getMessages(int $conversationId)
     {
+        $user = Auth::user();
         $messages = [];
 
-        $query = "SELECT m.* FROM messages m ";
-        $query .= "WHERE m.conversation_id = :conversation_id ";
+        $query = "SELECT " ;
+        $query .= "m.id AS message_id,
+            m.content AS message_content,
+            m.created_at AS message_created_at,
+            m.updated_at AS message_updated_at,
+            m.parent_id AS message_parent_id,
+            m.sender_id AS message_sender_id,
+            m.receiver_id AS message_receiver_id, ";
+
+        $query .= "s.id AS sender_id,
+            s.username AS sender_username,
+            s.display_name AS sender_display_name,
+            s.avatar AS sender_avatar, ";
+
+        $query .= "r.id AS receiver_id,
+            r.username AS receiver_username,
+            r.display_name AS receiver_display_name,
+            r.avatar AS receiver_avatar ";
+
+        $query .= "FROM messages AS m ";
+
+        $query .= "INNER JOIN users s ON sender_id = s.id ";
+        $query .= "INNER JOIN users r ON receiver_id = r.id ";
+
+        $query .= "WHERE m.sender_id = :sender_id ";
+        $query .= "OR m.receiver_id = :receiver_id ";
+
         $query .= "ORDER BY m.created_at ASC";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue(':conversation_id', $conversationId);
+        $statement->bindValue(':sender_id', $user->id);
+        $statement->bindValue(':receiver_id', $user->id);
         $statement->execute();
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($messagesRaw as $messageRaw) {
             $message = new Message($messageRaw);
+
+            Log::dd($message);
 
             $message->addRelations([
                 'user' => $this->userManager->getUserById($message->user_id),

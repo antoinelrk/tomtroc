@@ -7,8 +7,6 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Log;
-use App\Models\Conversation;
-use App\Models\Message;
 use App\Models\MessagesManager;
 
 class MessagesController extends Controller
@@ -20,6 +18,20 @@ class MessagesController extends Controller
         parent::__construct();
 
         $this->messagesManager = new MessagesManager();
+    }
+
+    public function index()
+    {
+        $messages = $this->messagesManager->getMessages();
+
+        Log::dd($messages);
+
+        return View::layout('layouts.app')
+            ->view('pages.messages.index')
+            ->withData([
+                'messages' => []
+            ])
+            ->render();
     }
 
     public function store()
