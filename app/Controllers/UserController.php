@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
 use App\Helpers\Errors;
 use App\Helpers\Log;
@@ -43,7 +44,6 @@ class UserController extends Controller
      */
     public function me(): void
     {
-
         $user = Auth::user();
 
         $books = new BookManager();
@@ -91,6 +91,8 @@ class UserController extends Controller
         $request = $_POST;
 
         $this->userManager->update($user, $request);
+
+        Notification::push('Profil édité avec succès', 'success');
 
         Response::redirect('/me');
     }

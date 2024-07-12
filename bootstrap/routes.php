@@ -3,6 +3,7 @@
 use App\Controllers\BooksController;
 use App\Controllers\ConversationsController;
 use App\Controllers\MessagesController;
+use App\Controllers\NotificationsController;
 use App\Core\Router;
 
 use App\Controllers\AuthController;
@@ -91,14 +92,20 @@ $router->addRoute(
     [UserController::class, 'show']
 );
 
+// ---------- NOTIFICATIONS ----------
+
+$router->addRoute(
+    'POST',
+    '/notifications/drop/{id}',
+    [NotificationsController::class, 'drop']
+);
+
 // ---------- API ----------
 $router->addRoute(
     'GET',
     '/test/test',
     [BooksController::class, 'test']
 );
-
-// ---------- API ----------
 
 $router->addRoute('GET',
     '/' . API_PREFIX . '/users',

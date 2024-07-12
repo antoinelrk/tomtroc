@@ -2,10 +2,19 @@
 
 namespace App\Helpers;
 
+use Random\RandomException;
 use ReflectionClass;
 
 class Str
 {
+    /**
+     * @throws RandomException
+     */
+    public static function basicId(?int $length = 8): string
+    {
+        return substr(bin2hex(random_bytes($length)), 0, $length);
+    }
+
     public static function setDatatable($classname): string
     {
         $result = "";
