@@ -11,9 +11,19 @@ use App\Helpers\Log;
 use App\Models\Book;
 use App\Models\BookManager;
 use App\Models\User;
+use App\Models\UserManager;
 
 class UserController extends Controller
 {
+    protected UserManager $userManager;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userManager = new UserManager();
+    }
+
     /**
      * Return list of users, just for API tests.
      *
@@ -73,5 +83,21 @@ class UserController extends Controller
         } else {
             return Errors::notFound();
         }
+    }
+
+    public function update($userId)
+    {
+        $user = $this->userManager->getUserById($userId);
+        $request = $_POST;
+
+        $this->userManager->update($user, $request);
+
+        Response::redirect('/me');
+    }
+
+    public function updateAvatar()
+    {
+        $request = $_POST;
+        Log::dd($request);
     }
 }

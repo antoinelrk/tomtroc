@@ -3,8 +3,8 @@
     <div class="account-hero">
         <section class="left">
             <div class="profile-picture">
-                <!-- Replace in DB: ./storage/avatars/ -->
                 <img src="<?= $user->avatar ?>" alt="">
+                <!-- TODO: Ajouter un formulaire /users/avatar/update -->
                 <a class="edit-image" href="">modifier</a>
             </div>
 
@@ -28,7 +28,7 @@
         </section>
 
         <section class="right">
-            <form action="">
+            <form action="/users/update/<?= $user->id ?>" method="post">
                 <h3 class="section-title">Vos informations personnelles</h3>
                 <div class="form-group">
                     <label for="username">Pseudo</label>
@@ -42,7 +42,7 @@
 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" required>
                 </div>
 
                 <button>

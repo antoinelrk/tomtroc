@@ -28,6 +28,7 @@ class Auth
     public static function user(): ?User
     {
         $user = unserialize($_SESSION['user']);
+
         if (isset($user)) {
             return $user;
         }
@@ -59,9 +60,9 @@ class Auth
     public static function refresh(): void
     {
         if (isset($_SESSION['user'])) {
-            $_SESSION['user'] = (new User())
-                ->where('id', Auth::user()?->id)
-                ->first();
+            $oldUser = unserialize($_SESSION['user']);
+            $newUser = self::rawUser($oldUser->email);
+            $_SESSION['user'] = serialize($newUser);
         }
     }
 
@@ -70,7 +71,9 @@ class Auth
      */
     public static function logout(): bool
     {
+        // TODO: Retirer les notifications, le user
         unset($_SESSION['user']);
+        session_destroy();
 
         return true;
     }

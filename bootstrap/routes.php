@@ -27,6 +27,22 @@ $router->addRoute('POST', LOGIN_ROUTE, [AuthController::class, 'login']);
 
 $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ AuthMiddleware::class ]);
 
+// ---------- USERS ----------
+
+$router->addRoute(
+    'POST',
+    '/users/update/{id}',
+    [UserController::class, 'update'],
+    [AuthMiddleware::class]
+);
+
+$router->addRoute(
+    'POST',
+    '/users/avatar/update/{id}',
+    [UserController::class, 'updateAvatar'],
+    [AuthMiddleware::class]
+);
+
 // ---------- BOOKS ----------
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);

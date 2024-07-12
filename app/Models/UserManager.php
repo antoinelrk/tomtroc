@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\Diamond;
+use App\Helpers\Hash;
 use App\Helpers\Log;
 use PDO;
 
@@ -52,5 +54,38 @@ class UserManager
         $user = new User($stmt->fetch(PDO::FETCH_ASSOC));
 
         return $user;
+    }
+
+    public function update(User $user, array $data)
+    {
+        $sql = "UPDATE users SET ";
+        $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
+        $sql .= implode(', ', $setParts);
+
+        $sql .= " WHERE id = :id";
+        $sql .= ";";
+
+        $statement = $this->connection->prepare($sql);
+
+        foreach ($data as $key => $value) {
+            if ($key === "password") {
+                $statement->bindValue(":$key", Hash::make($value));
+            }
+            else {
+                $statement->bindValue(":$key", $value);
+            }
+
+        }
+
+        $statement->bindValue(":id", $user->id);
+
+        $state = $statement->execute();
+
+        if ($state) {
+            Auth::refresh();
+        } else {
+            // TODO: Replace with notifications system
+            Log::dd('Erreur lors de l enregistrement');
+        }
     }
 }
