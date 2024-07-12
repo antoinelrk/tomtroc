@@ -64,9 +64,7 @@ class MessagesManager
 
             Log::dd($message);
 
-            $message->addRelations([
-                'user' => $this->userManager->getUserById($message->user_id),
-            ]);
+            $message->addRelations('users', [$this->userManager->getUserById($message->user_id)]);
 
             $messages[] = $message;
         }

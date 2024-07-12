@@ -48,6 +48,7 @@ $router->addRoute(
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
 $router->addRoute('GET', '/books/{slug}', [BooksController::class, 'show']);
+$router->addRoute('GET', '/books/{slug}/edit', [BooksController::class, 'showEditForm']);
 
 // ---------- AUTHENTICATED ----------
 
@@ -98,13 +99,6 @@ $router->addRoute(
     'POST',
     '/notifications/drop/{id}',
     [NotificationsController::class, 'drop']
-);
-
-// ---------- API ----------
-$router->addRoute(
-    'GET',
-    '/test/test',
-    [BooksController::class, 'test']
 );
 
 $router->addRoute('GET',

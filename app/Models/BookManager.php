@@ -31,7 +31,7 @@ class BookManager
 
             $user = $userManager->getUserById($bookRaw['user_id']);
 
-            $book->addRelations(['user' => $user]);
+            $book->addRelations('user', $user);
 
             $books[] = $book;
         }
@@ -83,7 +83,7 @@ class BookManager
 
         $book = new Book($bookRaw);
         $user = (new UserManager())->getUserById($bookRaw['user_id']);
-        $book->addRelations(['user' => $user]);
+        $book->addRelations('user', $user);
 
         return $book;
     }

@@ -1,5 +1,6 @@
 main.private-account {
     display: flex;
+    align-items: center;
     background-color: var(--bg-100);
     padding-bottom: 80px;
     row-gap: 2em;

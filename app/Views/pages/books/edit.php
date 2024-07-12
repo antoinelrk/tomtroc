@@ -1,4 +1,4 @@
-<main class="books-show">
+<main class="books-edit">
     <section class="red-line">
         <a href="/our-books">Nos livres</a>
         >
@@ -25,11 +25,11 @@
                 <h2>Propriétaire</h2>
                 <div class="book-owner">
                     <img src="https://placehold.co/400" alt="">
-                    <?= $book->relations['user']->display_name ?>
+                    <?= $book->relations[0]['user']->display_name ?>
                 </div>
             </div>
 
-            <a class="send-message" href="/new-message/<?= $book->relations['user']->id ?>">Envoyer un message</a>
+            <a class="send-message" href="/new-message/<?= $book->relations[0]['user']->id ?>">Envoyer un message</a>
         </article>
     </section>
 </main>

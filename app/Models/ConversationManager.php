@@ -60,10 +60,8 @@ class ConversationManager
                 return $item->relations[0]['user']->id !== Auth::user()->id;
             }))[0]->relations[0]['user'];
 
-            $conversation->addRelations([
-                'messages' => $messages,
-                'user' => $relatedUser,
-            ]);
+            $conversation->addRelations('messages', [$messages]);
+            $conversation->addRelations('user', [$relatedUser]);
 
             $conversations[] = $conversation;
         }

@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\QueryBuilder;
+use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Book;
 use App\Models\BookManager;
@@ -38,6 +41,25 @@ class BooksController extends Controller
 
         return View::layout('layouts.app')
             ->view('pages.books.show')
+            ->withData([
+                'book' => $book
+            ])
+            ->render();
+    }
+
+    public function showEditForm($slug)
+    {
+        $bookManager = new BookManager();
+        $book = $bookManager->getBook($slug, false);
+        $bookUser = $book->relations['user'];
+
+        if ($bookUser->id !== Auth::user()->id) {
+            Notification::push('Vous n\'avez pas l\'authorisation de modifier ce livre !', 'error');
+            Response::redirect('/books/' . $slug);
+        }
+
+        return View::layout('layouts.app')
+            ->view('pages.books.edit')
             ->withData([
                 'book' => $book
             ])
