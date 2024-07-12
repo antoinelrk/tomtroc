@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Helpers\Diamond;
@@ -48,7 +49,8 @@ class AuthController extends Controller
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if (Auth::attempt($email, $password)) {
+        if ($user = Auth::attempt($email, $password)) {
+            Notification::push("Heureux de vous revoir $user->display_name !", 'success');
             Response::redirect('/me');
             exit;
         }
@@ -99,12 +101,16 @@ class AuthController extends Controller
             ],
         ]);
 
+        $displayName = ucfirst($request['username']);
+
         $this->userManager->create([
             'username' => $request['username'],
-            'display_name' => ucfirst($request['username']),
+            'display_name' => $displayName,
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
         ]);
+
+        Notification::push("Bienvenue $displayName sur TomTroc !", 'success');
 
         Response::redirect('/');
     }

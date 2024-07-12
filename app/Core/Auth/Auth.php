@@ -3,6 +3,7 @@
 namespace App\Core\Auth;
 
 use App\Core\Database;
+use App\Core\Notification;
 use App\Helpers\Log;
 use App\Models\Model;
 use App\Models\User;
@@ -42,16 +43,16 @@ class Auth
      * @param $email
      * @param $password
      *
-     * @return bool
+     * @return bool|User
      */
-    public static function attempt($email, $password): bool
+    public static function attempt($email, $password): bool|User
     {
         $user = self::rawUser($email);
 
         if ($user && password_verify($password, $user->password)) {
             $_SESSION['user'] = serialize($user->withoutPassword());
 
-            return true;
+            return $user;
         }
 
         return false;
@@ -71,7 +72,6 @@ class Auth
      */
     public static function logout(): bool
     {
-        // TODO: Retirer les notifications, le user
         unset($_SESSION['user']);
         session_destroy();
 
