@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
+use App\Helpers\ArrayHelper;
 use App\Helpers\Log;
 use PDO;
 
@@ -19,19 +20,19 @@ class MessagesManager
         $this->userManager = new UserManager();
     }
 
-    public function getMessages(int $conversationId)
+    public function getAllMessages(): array
     {
         $user = Auth::user();
         $messages = [];
 
         $query = "SELECT " ;
         $query .= "m.id AS message_id,
-            m.content AS message_content,
-            m.created_at AS message_created_at,
-            m.updated_at AS message_updated_at,
             m.parent_id AS message_parent_id,
+            m.content AS message_content,
             m.sender_id AS message_sender_id,
-            m.receiver_id AS message_receiver_id, ";
+            m.receiver_id AS message_receiver_id,
+            m.created_at AS message_created_at,
+            m.updated_at AS message_updated_at, ";
 
         $query .= "s.id AS sender_id,
             s.username AS sender_username,
@@ -60,11 +61,11 @@ class MessagesManager
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($messagesRaw as $messageRaw) {
-            $message = new Message($messageRaw);
 
-            Log::dd($message);
+            $message = new Message(ArrayHelper::map(ArrayHelper::normalize($messageRaw, 'message_'), Message::class));
 
-            $message->addRelations('users', [$this->userManager->getUserById($message->user_id)]);
+            $message->addRelations('receiver', $this->userManager->getUserById($message->receiver_id));
+            $message->addRelations('sender', $this->userManager->getUserById($message->sender_id));
 
             $messages[] = $message;
         }

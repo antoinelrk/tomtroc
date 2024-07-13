@@ -10,6 +10,10 @@ use Serializable;
 
 abstract class Model implements Serializable
 {
+    public array $map = [
+        'id'
+    ];
+
     public array $properties = [];
 
     public array $relations = [];

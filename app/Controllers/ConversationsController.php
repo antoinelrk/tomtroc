@@ -23,7 +23,7 @@ class ConversationsController extends Controller
 
     public function index()
     {
-        $conversation = (new ConversationManager())->getFirstConversation();
+        $conversation = $this->conversationsManager->getFirstConversation();
 
         if ($conversation !== null) {
             Response::redirect('conversations/' . $conversation->uuid);

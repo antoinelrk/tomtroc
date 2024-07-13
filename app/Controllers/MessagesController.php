@@ -22,9 +22,9 @@ class MessagesController extends Controller
 
     public function index()
     {
-        $messages = $this->messagesManager->getMessages();
+        $messages = $this->messagesManager->getAllMessages();
 
-        Log::dd($messages);
+        // Log::dd($messages);
 
         return View::layout('layouts.app')
             ->view('pages.messages.index')

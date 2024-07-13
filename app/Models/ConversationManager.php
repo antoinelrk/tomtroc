@@ -34,7 +34,7 @@ class ConversationManager
 
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        Log::dd($result);
+        return $result;
     }
 
     public function getConversations()
@@ -54,14 +54,9 @@ class ConversationManager
         foreach ($results as $result) {
             $conversation = new Conversation($result);
 
-            $messages = $this->messagesManager->getMessages($conversation->id);
+            $messages = $this->messagesManager->getAllMessages();
 
-            $relatedUser = array_values(array_filter($messages, function ($item) {
-                return $item->relations[0]['user']->id !== Auth::user()->id;
-            }))[0]->relations[0]['user'];
-
-            $conversation->addRelations('messages', [$messages]);
-            $conversation->addRelations('user', [$relatedUser]);
+            $conversation->addRelations('messages', $messages);
 
             $conversations[] = $conversation;
         }
@@ -74,7 +69,7 @@ class ConversationManager
         $conversation = $this->getConversations();
 
         if (!empty($conversation)) {
-            return $conversation;
+            return $conversation[0];
         }
 
         return [];

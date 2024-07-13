@@ -28,6 +28,10 @@ class Auth
      */
     public static function user(): ?User
     {
+        if (!isset($_SESSION['user'])) {
+            return null;
+        }
+
         $user = unserialize($_SESSION['user']);
 
         if (isset($user)) {
