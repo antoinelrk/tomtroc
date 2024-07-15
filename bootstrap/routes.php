@@ -39,7 +39,7 @@ $router->addRoute(
 
 $router->addRoute(
     'POST',
-    '/users/avatar/update/{id}',
+    '/users/avatar/update',
     [UserController::class, 'updateAvatar'],
     [AuthMiddleware::class]
 );

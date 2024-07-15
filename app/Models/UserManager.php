@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
+use App\Core\File;
+use App\Core\Notification;
+use App\Core\Response;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
 use App\Helpers\Log;
@@ -86,6 +89,36 @@ class UserManager
         } else {
             // TODO: Replace with notifications system
             Log::dd('Erreur lors de l enregistrement');
+        }
+    }
+
+    public function setAvatar(User $user, array $data)
+    {
+        $connection = Database::getInstance()->getConnection();
+        $connection->beginTransaction();
+
+        try {
+            if (($path = File::store('./storage/avatars/', $data)) === false) {
+                Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
+                Response::redirect('/me');
+            }
+
+            $sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
+            $statement = $this->connection->prepare($sql);
+            $statement->bindValue(':avatar', $path);
+            $statement->bindValue(':id', $user->id);
+            $state = $statement->execute();
+
+            if (!$state) {
+                Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
+                Response::redirect('/me');
+            }
+
+            $connection->commit();
+
+            Auth::refresh();
+        } catch (\PDOException $e) {
+            $connection->rollBack();
         }
     }
 }

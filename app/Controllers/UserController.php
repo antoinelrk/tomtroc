@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\File;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Helpers\Errors;
@@ -97,9 +98,23 @@ class UserController extends Controller
         Response::redirect('/me');
     }
 
-    public function updateAvatar()
+    public function updateAvatar(): void
     {
-        $request = $_POST;
-        Log::dd($request);
+        if ($_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            // TODO: Faire la validation
+            if ($_FILES['avatar']['size'] > 5000000) {
+                Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
+                Response::redirect('/me');
+            }
+
+            $this->userManager->setAvatar(Auth::user(), $_FILES['avatar']);
+
+            Notification::push('Votre avatar a été mis à jour !', 'success');
+            Response::redirect('/me');
+        }
+
+        Notification::push('L\'image n\'est pas valide', 'error');
+        // TODO: Mettre une sorte de referer (l'url précédente)
+        Response::redirect('/me');
     }
 }

@@ -3,9 +3,15 @@
     <div class="account-hero">
         <section class="left">
             <div class="profile-picture">
-                <img src="<?= $user->avatar ?>" alt="">
-                <!-- TODO: Ajouter un formulaire /users/avatar/update -->
-                <a class="edit-image" href="">modifier</a>
+                <form class="user-avatar" action="/users/avatar/update" method="post" enctype="multipart/form-data">
+                    <input type="file" name="avatar" id="avatar" style="display: none">
+
+                    <label for="avatar">
+                        <img src="<?= $user->avatar ?>" alt="">
+                    </label>
+
+                    <button type="submit" class="edit-image">modifier</button>
+                </form>
             </div>
 
             <div class="separator"></div>
