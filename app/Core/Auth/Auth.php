@@ -62,11 +62,11 @@ class Auth
         return false;
     }
 
-    public static function refresh(): void
+    public static function refresh(string $email = null): void
     {
         if (isset($_SESSION['user'])) {
             $oldUser = unserialize($_SESSION['user']);
-            $newUser = self::rawUser($oldUser->email);
+            $newUser = self::rawUser($email ?? $oldUser->email);
             $_SESSION['user'] = serialize($newUser);
         }
     }
@@ -90,7 +90,8 @@ class Auth
         $statement->bindParam(":email", $email);
         $statement->setFetchMode(PDO::FETCH_OBJ);
         $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return new User($statement->fetch(PDO::FETCH_ASSOC));
+        return new User($result);
     }
 }

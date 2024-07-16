@@ -38,7 +38,7 @@
                     <img src="<?= $currentConversation[0]->relations[0]['user']->avatar ?>" alt=""
                          class="profile-picture">
                     <span>
-                        <?= $currentConversation[0]->relations[0]['user']->display_name ?>
+                        <?= $currentConversation[0]->relations[0]['user']->username ?>
                     </span>
                 </div>
             </div>

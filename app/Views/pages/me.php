@@ -7,7 +7,7 @@
                     <input type="file" name="avatar" id="avatar" style="display: none">
 
                     <label for="avatar">
-                        <img src="<?= $user->avatar ?>" alt="">
+                        <img src="<?= $user->avatar ?? 'https://placehold.co/400' ?>" alt="">
                     </label>
 
                     <button type="submit" class="edit-image">modifier</button>
@@ -17,7 +17,7 @@
             <div class="separator"></div>
 
             <div class="flex column items-center user-info">
-                <p class="text-medium serif"><?= $user->display_name ?></p>
+                <p class="text-medium serif"><?= $user->username ?></p>
                 <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user->created_at) ?></p>
                 <h4 class="secondary-title">Bibliothèque</h4>
                 <div class="text-with-icon">

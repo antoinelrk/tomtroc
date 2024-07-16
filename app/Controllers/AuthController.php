@@ -50,7 +50,7 @@ class AuthController extends Controller
         $password = $_POST['password'];
 
         if ($user = Auth::attempt($email, $password)) {
-            Notification::push("Heureux de vous revoir $user->display_name !", 'success');
+            Notification::push("Heureux de vous revoir $user->username !", 'success');
             Response::redirect('/me');
             exit;
         }

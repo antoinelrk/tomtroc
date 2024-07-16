@@ -85,10 +85,11 @@ class UserManager
         $state = $statement->execute();
 
         if ($state) {
-            Auth::refresh();
+            $email = $data['email'] ?? null;
+            Auth::refresh($email);
         } else {
-            // TODO: Replace with notifications system
-            Log::dd('Erreur lors de l enregistrement');
+            Notification::push('Impossible de mettre à jour le profil, contactez un administrateur.', 'error');
+            Response::redirect('/me');
         }
     }
 

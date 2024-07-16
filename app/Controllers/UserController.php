@@ -94,7 +94,6 @@ class UserController extends Controller
         $this->userManager->update($user, $request);
 
         Notification::push('Profil édité avec succès', 'success');
-
         Response::redirect('/me');
     }
 
@@ -107,14 +106,20 @@ class UserController extends Controller
                 Response::redirect('/me');
             }
 
-            $this->userManager->setAvatar(Auth::user(), $_FILES['avatar']);
+            $user = Auth::user();
+
+            if ($user->avatar !== null) {
+                unlink($user->avatar);
+            }
+
+            $this->userManager->setAvatar($user, $_FILES['avatar']);
 
             Notification::push('Votre avatar a été mis à jour !', 'success');
             Response::redirect('/me');
+        } else {
+            Notification::push('L\'image n\'est pas valide', 'error');
+            // TODO: Mettre une sorte de referer (l'url précédente)
+            Response::redirect('/me');
         }
-
-        Notification::push('L\'image n\'est pas valide', 'error');
-        // TODO: Mettre une sorte de referer (l'url précédente)
-        Response::redirect('/me');
     }
 }
