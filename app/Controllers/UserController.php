@@ -6,6 +6,7 @@ use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\File;
+use App\Core\File\Image;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Helpers\Errors;
@@ -107,10 +108,6 @@ class UserController extends Controller
             }
 
             $user = Auth::user();
-
-            if ($user->avatar !== null) {
-                unlink($user->avatar);
-            }
 
             $this->userManager->setAvatar($user, $_FILES['avatar']);
 

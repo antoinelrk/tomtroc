@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Core\File;
+use App\Core\File\Image;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Helpers\Diamond;
@@ -99,6 +100,10 @@ class UserManager
         $connection->beginTransaction();
 
         try {
+//            if ($user->avatar !== null) {
+//                unlink($user->avatar);
+//            }
+
             if (($path = File::store('./storage/avatars/', $data)) === false) {
                 Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
                 Response::redirect('/me');
