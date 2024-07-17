@@ -4,6 +4,7 @@ namespace App\Core\Auth;
 
 use App\Core\Database;
 use App\Core\Notification;
+use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Model;
 use App\Models\User;
@@ -88,9 +89,13 @@ class Auth
             ->getConnection()
             ->prepare("SELECT * FROM users WHERE email = :email");
         $statement->bindParam(":email", $email);
-        $statement->setFetchMode(PDO::FETCH_OBJ);
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            Notification::push('Vos informations sont incorrects', 'error');
+            Response::redirect('/auth/login');
+        }
 
         return new User($result);
     }
