@@ -14,14 +14,19 @@ class File
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fullpath = $path . $filename . '.' . $extension;
 
-
-        (new Image())->crop($fullpath, 10, 10);
-
-        Log::dd('oui');
-
-
         if (move_uploaded_file($file['tmp_name'], $fullpath)) {
-            return $fullpath;
+            if (file_exists($fullpath)) {
+                (new Image())->crop(
+                    $file,
+                    $fullpath,
+                    256,
+                    $file['type']
+                );
+
+                return $fullpath;
+            }
+
+            return false;
         }
 
         return false;

@@ -107,6 +107,11 @@ class UserController extends Controller
                 Response::redirect('/me');
             }
 
+            if ($_FILES['avatar']['type'] !== 'image/jpeg' || $_FILES['avatar']['type'] !== 'image/png') {
+                Notification::push('L\'image doit être au format: jpg ou png', 'error');
+                Response::redirect('/me');
+            }
+
             $user = Auth::user();
 
             $this->userManager->setAvatar($user, $_FILES['avatar']);

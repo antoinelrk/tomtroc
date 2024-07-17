@@ -100,9 +100,9 @@ class UserManager
         $connection->beginTransaction();
 
         try {
-//            if ($user->avatar !== null) {
-//                unlink($user->avatar);
-//            }
+            if ($user->avatar !== null) {
+                unlink($user->avatar);
+            }
 
             if (($path = File::store('./storage/avatars/', $data)) === false) {
                 Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
