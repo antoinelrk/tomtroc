@@ -34,21 +34,14 @@ class ConversationsController extends Controller
     {
         $conversations = (new ConversationManager())->getConversations();
 
-        $conversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+        $selectedConversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
            return $conversation->uuid === $uuid;
         });
-
-        // Si l'uuid n'est pas défini on retourne la premiere
-        if (!$conversation) {
-            $currentConversation = $conversations[0];
-        } else {
-            $currentConversation = $conversation;
-        }
 
         return View::layout('layouts.app')
             ->withData([
                 'conversations' => $conversations,
-                'currentConversation' => $currentConversation,
+                'selectedConversation' => $selectedConversation[0],
             ])
             ->view('pages.messages.index')
             ->render();
