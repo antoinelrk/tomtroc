@@ -48,7 +48,7 @@ $router->addRoute(
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
 $router->addRoute('GET', '/books/{slug}', [BooksController::class, 'show']);
-$router->addRoute('GET', '/books/{slug}/edit', [BooksController::class, 'showEditForm']);
+$router->addRoute('GET', '/books/{slug}/edit', [BooksController::class, 'edit']);
 
 // ---------- AUTHENTICATED ----------
 
