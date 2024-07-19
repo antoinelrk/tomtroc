@@ -26,16 +26,22 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function show(string $slug)
+    public function show(string $slug): ?View
     {
-        $bookManager = new BookManager();
-        $book = $bookManager->getBook($slug, false);
+        $book = (new BookManager())->getBook($slug);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')
             ->withData([
                 'book' => $book
             ])
+            ->render();
+    }
+
+    public function createForm(): ?View
+    {
+        return View::layout('layouts.app')
+            ->view('pages.books.createForm')
             ->render();
     }
 

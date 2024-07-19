@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
+use App\Core\Response;
 use App\Helpers\Log;
 use PDO;
 
@@ -65,7 +66,7 @@ class BookManager
         return $books;
     }
 
-    public function getBook(string $slug, ?bool $available)
+    public function getBook(string $slug, ?bool $available = null): Book
     {
         if ($available) {
             $query = "SELECT * FROM books WHERE slug = :slug AND available = :available";
@@ -86,5 +87,10 @@ class BookManager
         $book->addRelations('user', $user);
 
         return $book;
+    }
+
+    public function update(Book $book, array $data)
+    {
+        Response::redirect('/books/show' . $book->slug);
     }
 }

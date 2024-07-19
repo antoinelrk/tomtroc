@@ -88,7 +88,7 @@
                     </td>
 
                     <td class="action">
-                        <a href="/books/<?= $book->slug ?>/edit">Editer</a>
+                        <a href="/books/edit/<?= $book->slug ?>">Editer</a>
                         <!-- TODO: Faire un alert en javascript -->
                         <a class="delete" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
                     </td>

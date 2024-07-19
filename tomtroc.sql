@@ -124,28 +124,6 @@ INSERT INTO `messages` (`id`, `parent_id`, `content`, `sender_id`, `receiver_id`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `posts`
---
-
-CREATE TABLE `posts` (
-  `id` int(11) NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `content` longtext NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `posts`
---
-
-INSERT INTO `posts` (`id`, `title`, `content`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Titre 1', 'Contenu 1', 1, '2024-06-29 06:02:45', '2024-06-29 06:02:45');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
