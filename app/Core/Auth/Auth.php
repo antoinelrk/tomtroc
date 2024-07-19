@@ -3,7 +3,12 @@
 namespace App\Core\Auth;
 
 use App\Core\Database;
+use App\Core\Notification;
+use App\Core\Response;
+use App\Helpers\Log;
+use App\Models\Model;
 use App\Models\User;
+use PDO;
 
 class Auth
 {
@@ -20,11 +25,21 @@ class Auth
     /**
      * Return current authenticated user.
      *
-     * @return array
+     * @return User
      */
-    public static function user(): array
+    public static function user(): ?User
     {
-        return $_SESSION['user'];
+        if (!isset($_SESSION['user'])) {
+            return null;
+        }
+
+        $user = unserialize($_SESSION['user']);
+
+        if (isset($user)) {
+            return $user;
+        }
+
+        return null;
     }
 
     /**
@@ -33,23 +48,28 @@ class Auth
      * @param $email
      * @param $password
      *
-     * @return bool
+     * @return bool|User
      */
-    public static function attempt($email, $password): bool
+    public static function attempt($email, $password): bool|User
     {
-        $user = self::fetchUser($email);
+        $user = self::rawUser($email);
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user'] = (new User())->withoutHidden($user);
-            return true;
+        if ($user && password_verify($password, $user->password)) {
+            $_SESSION['user'] = serialize($user->withoutPassword());
+
+            return $user;
         }
 
         return false;
     }
 
-    public static function refresh(): void
+    public static function refresh(string $email = null): void
     {
-        $_SESSION['user'] = (new User())->withoutHidden(self::fetchUser(Auth::user()['id']));
+        if (isset($_SESSION['user'])) {
+            $oldUser = unserialize($_SESSION['user']);
+            $newUser = self::rawUser($email ?? $oldUser->email);
+            $_SESSION['user'] = serialize($newUser);
+        }
     }
 
     /**
@@ -58,24 +78,25 @@ class Auth
     public static function logout(): bool
     {
         unset($_SESSION['user']);
+        session_destroy();
 
         return true;
     }
 
-    /**
-     * Fetch user WITH the password.
-     *
-     * @param string $email
-     *
-     * @return array|null
-     */
-    private static function fetchUser(string $email): array|null
+    private static function rawUser(string $email): User
     {
-        $connection = Database::getInstance()->getConnection();
-        $statement = $connection->prepare("SELECT * FROM users WHERE email = :email");
-        $statement->bindParam(':email', $email);
+        $statement = Database::getInstance()
+            ->getConnection()
+            ->prepare("SELECT * FROM users WHERE email = :email");
+        $statement->bindParam(":email", $email);
         $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $statement->fetch();
+        if (!$result) {
+            Notification::push('Vos informations sont incorrects', 'error');
+            Response::redirect('/auth/login');
+        }
+
+        return new User($result);
     }
 }

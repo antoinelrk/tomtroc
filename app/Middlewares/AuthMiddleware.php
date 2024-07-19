@@ -2,7 +2,9 @@
 
 namespace App\Middlewares;
 
+use App\Core\Auth\Auth;
 use App\Core\Middleware;
+use App\Core\Notification;
 use App\Core\Response;
 use Closure;
 
@@ -18,8 +20,9 @@ class AuthMiddleware implements Middleware
      */
     public function handle($request, Closure $next): mixed
     {
-        if (!isset($_SESSION['user']))
+        if (!Auth::user())
         {
+            Notification::push("Vous n'êtes pas autorisé à voir cette page !", 'error');
             Response::redirectToLogin();
             exit;
         }

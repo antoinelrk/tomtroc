@@ -5,14 +5,28 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\File;
+use App\Core\File\Image;
+use App\Core\Notification;
 use App\Core\Response;
 use App\Helpers\Errors;
 use App\Helpers\Log;
 use App\Models\Book;
+use App\Models\BookManager;
 use App\Models\User;
+use App\Models\UserManager;
 
 class UserController extends Controller
 {
+    protected UserManager $userManager;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userManager = new UserManager();
+    }
+
     /**
      * Return list of users, just for API tests.
      *
@@ -27,26 +41,22 @@ class UserController extends Controller
 
     /**
      * Return private profil page.
-     * TODO: Passe auth-user data here..
      *
      * @return void
      */
     public function me(): void
     {
-        $relatedBooks = (new Book())
-            ->users(
-                'display_name',
-                'avatar'
-            )
-            ->whereTest('user_id', Auth::user()['id'])
-            ->get();
+        $user = Auth::user();
+
+        $books = new BookManager();
+        $books = $books->getUserBook(false);
 
         View::layout('layouts.app')
             ->withData([
                 'title' => 'Mon compte',
-                'user' => Auth::user(),
-                'books' => $relatedBooks,
-                'quantity' => count($relatedBooks),
+                'user' => $user,
+                'books' => $books,
+                'quantity' => count($books),
             ])
             ->view('pages.me')
             ->render();
@@ -74,6 +84,44 @@ class UserController extends Controller
                 ->render();
         } else {
             return Errors::notFound();
+        }
+    }
+
+    public function update($userId)
+    {
+        $user = $this->userManager->getUserById($userId);
+        $request = $_POST;
+
+        $this->userManager->update($user, $request);
+
+        Notification::push('Profil édité avec succès', 'success');
+        Response::redirect('/me');
+    }
+
+    public function updateAvatar(): void
+    {
+        if ($_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            // TODO: Faire la validation
+            if ($_FILES['avatar']['size'] > 5000000) {
+                Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
+                Response::redirect('/me');
+            }
+
+            if ($_FILES['avatar']['type'] !== 'image/jpeg' || $_FILES['avatar']['type'] !== 'image/png') {
+                Notification::push('L\'image doit être au format: jpg ou png', 'error');
+                Response::redirect('/me');
+            }
+
+            $user = Auth::user();
+
+            $this->userManager->setAvatar($user, $_FILES['avatar']);
+
+            Notification::push('Votre avatar a été mis à jour !', 'success');
+            Response::redirect('/me');
+        } else {
+            Notification::push('L\'image n\'est pas valide', 'error');
+            // TODO: Mettre une sorte de referer (l'url précédente)
+            Response::redirect('/me');
         }
     }
 }

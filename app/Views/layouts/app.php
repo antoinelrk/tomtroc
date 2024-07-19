@@ -11,6 +11,14 @@
 </head>
 <body>
 <div id="app">
+    <?php if (App\Core\Notification::as()) : ?>
+    <ul class="notifications">
+        <?php foreach (\App\Core\Notification::all() as $key => $notification) ?>
+        <li class="notification <?= $notification['state'] ?>" id="<?= $key ?>">
+            <?= $notification['message'] ?>
+        </li>
+    </ul>
+    <?php endif; ?>
     <header>
         <div class="centered">
             <div class="left">
@@ -52,6 +60,7 @@
                                     </div>
                                     Messagerie
                                     <span>
+                                        <!-- TODO: Ajouter un système de message non-lu -->
                                     0
                               </span>
                                 </a>
@@ -113,7 +122,7 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="/">
                     TomTroc ©
                 </a>
             </li>
@@ -132,4 +141,29 @@
     </footer>
 </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let chatDiv = document.querySelector('.conversations-messages');
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    });
+
+    function showPopups() {
+        let popups = document.querySelectorAll('.notification');
+        popups.forEach(function(popup) {
+            popup.style.display = 'flex';
+        });
+
+        setTimeout(function() {
+            popups.forEach(async function (popup) {
+                await fetch(`/notifications/drop/${popup.id}`, {
+                    method: 'POST'
+                })
+
+                popup.remove()
+            })
+        }, 3000);
+    }
+
+    showPopups();
+</script>
 </html>

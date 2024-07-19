@@ -3,17 +3,22 @@
     <div class="account-hero">
         <section class="left">
             <div class="profile-picture">
-                <!-- Replace in DB: ./storage/avatars/ -->
-                <img src="<?= $user['avatar'] ?>" alt="">
-                <a class="edit-image" href="">modifier</a>
-            </div>
+                <form class="user-avatar" action="/users/avatar/update" method="post" enctype="multipart/form-data">
+                    <input type="file" name="avatar" id="avatar" style="display: none">
 
+                    <label for="avatar">
+                        <img src="<?= $user->avatar ?? 'https://placehold.co/400' ?>" alt="">
+                    </label>
+
+                    <button type="submit" class="edit-image">modifier</button>
+                </form>
+            </div>
 
             <div class="separator"></div>
 
             <div class="flex column items-center user-info">
-                <p class="text-medium serif"><?= $user['display_name'] ?></p>
-                <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user['created_at']) ?></p>
+                <p class="text-medium serif"><?= $user->username ?></p>
+                <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user->created_at) ?></p>
                 <h4 class="secondary-title">Bibliothèque</h4>
                 <div class="text-with-icon">
                     <figure>
@@ -23,28 +28,27 @@
                         </svg>
 
                     </figure>
-                    <!-- TODO: Remplacer par la liste des livres -->
                     <?= $quantity ?> livres
                 </div>
             </div>
         </section>
 
         <section class="right">
-            <form action="">
+            <form action="/users/update/<?= $user->id ?>" method="post">
                 <h3 class="section-title">Vos informations personnelles</h3>
                 <div class="form-group">
                     <label for="username">Pseudo</label>
-                    <input type="text" name="username" id="username" value="<?= $user['username'] ?>">
+                    <input type="text" name="username" id="username" value="<?= $user->username ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Adresse email</label>
-                    <input type="email" name="email" id="email" value="<?= $user['email'] ?>">
+                    <input type="email" name="email" id="email" value="<?= $user->email ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" required>
                 </div>
 
                 <button>
@@ -68,24 +72,25 @@
             <?php foreach ($books as $book) : ?>
                 <tr class="line">
                     <td>
-                        <img class="book-icon" src="<?= $book['cover'] ?>" alt="">
+                        <img class="book-icon" src="<?= $book->cover ?>" alt="">
                     </td>
-                    <td><?= $book['title'] ?></td>
-                    <td><?= $book['author'] ?></td>
+                    <td><?= $book->title ?></td>
+                    <td><?= $book->author ?></td>
 
                     <td class="text">
-                        <p><?= $book['description'] ?></p>
+                        <p><?= $book->description ?></p>
                     </td>
 
                     <td>
-                            <span class="tag <?= $book['available'] == '0' ? 'unavailable' : 'available' ?>">
-                                <?= $book['available'] == '0' ? 'unavailable' : 'available' ?>
+                            <span class="tag <?= $book->available == '0' ? 'unavailable' : 'available' ?>">
+                                <?= $book->available == '0' ? 'unavailable' : 'available' ?>
                             </span>
                     </td>
 
                     <td class="action">
-                        <a href="#">Editer</a>
-                        <a class="delete" href="#">Supprimer</a>
+                        <a href="/books/<?= $book->slug ?>/edit">Editer</a>
+                        <!-- TODO: Faire un alert en javascript -->
+                        <a class="delete" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -2,34 +2,34 @@
     <section class="red-line">
         <a href="/our-books">Nos livres</a>
         >
-        <a href="/books/<?= $book['slug'] ?>"><?= $book['title'] ?></a>
+        <a href="/books/<?= $book->slug ?>"><?= $book->title ?></a>
     </section>
 
     <section class="book">
         <aside>
-            <img class="book-cover" src="<?= $book['cover'] ?>" alt="">
+            <img class="book-cover" src="<?= $book->cover ?>" alt="">
         </aside>
 
         <article>
             <div class="book-head">
-                <h1><?= $book['title'] ?></h1>
-                <span>par <?= $book['author'] ?></span>
+                <h1><?= $book->title ?></h1>
+                <span>par <?= $book->author ?></span>
             </div>
 
             <div class="book-content">
                 <h2>Description</h2>
-                <p><?= $book['description'] ?></p>
+                <p><?= $book->description ?></p>
             </div>
 
             <div class="book-footer">
                 <h2>Propriétaire</h2>
-                <a class="book-owner" href="/users/<?= $book['username'] ?>">
-                    <img src="<?= $book['avatar'] ?>" alt="">
-                    <?= $book['display_name'] ?>
-                </a>
+                <div class="book-owner">
+                    <img src="https://placehold.co/400" alt="">
+                    <?= $book->relations['user']->display_name ?>
+                </div>
             </div>
-            <!-- TODO: Ce lien doit avoir en paramètres tout ce qu'il faut pour configurer le formulaire d'envoi de message (ID, début de message comme: "Bonjour Alex! ...") -->
-            <a class="send-message" href="/new-conversation/<?= $book['user_id'] ?>">Envoyer un message</a>
+
+            <a class="send-message" href="/new-message/<?= $book->relations['user']->id ?>">Envoyer un message</a>
         </article>
     </section>
 </main>

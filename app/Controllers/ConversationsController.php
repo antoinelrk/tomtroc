@@ -8,68 +8,68 @@ use App\Core\Facades\View;
 use App\Core\Response;
 use App\Helpers\Log;
 use App\Models\Conversation;
-use App\Models\Message;
+use App\Models\ConversationManager;
 
 class ConversationsController extends Controller
 {
-    public function create($target_id)
+    protected ConversationManager $conversationsManager;
+
+    public function __construct()
     {
-        if ($target_id === null || intval($target_id) == Auth::user()['id']) {
-            Response::redirect('/conversations');
-        };
+        parent::__construct();
 
-//        $likelyConversation = (new Conversation())->whereTest('ta')
-        $conversation = (new Conversation())->create([
-            'uuid' => uniqid(),
-            'target_id' => $target_id
-        ]);
-
-        Log::dd($conversation);
-        return View::layout('layouts.app')
-            ->view('pages.conversations.create')
-            ->render();
+        $this->conversationsManager = new ConversationManager();
     }
 
     public function index()
     {
-        $user = Auth::user();
-        $conversations = (new Conversation())
-            ->users('display_name')
-            ->whereTest('id', $user['id'], 'users')
-            ->orderBy('updated_at', 'DESC')
-            ->first();
+        $conversation = $this->conversationsManager->getFirstConversation();
 
-        if ($conversations !== null) {
-            Response::redirect('conversations/' . $conversations['uuid']);
+        if ($conversation !== null) {
+            Response::redirect('conversations/' . $conversation->uuid);
         }
     }
 
-    /**
-     * TODO: Return conversations with authenticated user only.
-     *
-     * @return ?View
-     */
-    public function show($uuid): ?View
+    public function show(string $uuid)
     {
-        $conversations = (new Conversation())->getConversationsNew();
+        $conversations = (new ConversationManager())->getConversations();
 
-        // Si l'uuid n'est pas défini on retourne la premiere
-        if (!$uuid) {
-            $currentConversation = $conversations[0];
-        } else {
-            // Sur cette liste de conversation on récupère uniquement celle qui correspond à l'UUID passé en paramètre.
-
-            $currentConversation = array_values(array_filter($conversations, function ($conversation) use ($uuid) {
-                return $conversation['uuid'] === $uuid;
-            }));
-        }
+        $selectedConversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+           return $conversation->uuid === $uuid;
+        });
 
         return View::layout('layouts.app')
             ->withData([
                 'conversations' => $conversations,
-                'currentConversation' => $currentConversation[0],
+                'selectedConversation' => $selectedConversation[0],
             ])
             ->view('pages.messages.index')
             ->render();
+    }
+
+    public function create($id)
+    {
+        /**
+         * Il faut vérifier si la conversation existe en fonction de l'id de l'utilisateur, si elle existe on redirige
+         * vers /conversation/uuid
+         * Sinon on créé une nouvelle conversation et on redirige vers un formulaire.
+         */
+        if (intval($id) === Auth::user()->id || $id === null) {
+            Response::redirect('/conversations');
+        }
+
+        $conversation = $this->conversationsManager->getConversationByUserId($id);
+
+        if (!$conversation) {
+            Log::dd(uniqid());
+            /**
+             * 1. On créé la nouvelle conversation
+             * 2. On attache les utilisateurs à la conversation
+             * 3. On redirige vers la page de conversation avec l'id
+             */
+        }
+
+
+        Log::dd($conversation);
     }
 }

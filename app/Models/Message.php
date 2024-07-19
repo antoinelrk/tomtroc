@@ -2,9 +2,19 @@
 
 namespace App\Models;
 
-use App\Core\Model;
-
 class Message extends Model
 {
-    protected string $table = 'messages';
+    public array $map = [
+        'id',
+        'parent_id',
+        'content',
+        'sender_id',
+        'receiver_id',
+        'created_at',
+        'updated_at',
+    ];
+
+    public function __construct(
+        public array $properties = []
+    ) {}
 }

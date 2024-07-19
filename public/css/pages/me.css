@@ -1,5 +1,6 @@
 main.private-account {
     display: flex;
+    align-items: center;
     background-color: var(--bg-100);
     padding-bottom: 80px;
     row-gap: 2em;
@@ -41,13 +42,22 @@ main.private-account {
                         border-radius: 9999px;
                     }
 
-                    a {
-                        font-family: var(--s-serif), sans-serif;
-                        font-size: 14px;
-                        color: var(--gray);
+                    form.user-avatar {
+                        display: flex;
+                        flex-direction: column;
+                        column-gap: 1em;
+                        align-items: center;
 
-                        &:hover {
-                            text-decoration: underline;
+                        button.edit-image {
+                            display: flex;
+                            font-family: var(--s-serif), sans-serif;
+                            font-size: 14px;
+                            color: var(--gray);
+                            cursor: pointer;
+
+                            &:hover {
+                                text-decoration: underline;
+                            }
                         }
                     }
                 }

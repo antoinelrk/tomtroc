@@ -21,14 +21,14 @@
                 <ul class="grid-of-last-books">
                     <?php foreach ($books as $book): ?>
                         <li>
-                            <a href="/books/<?= $book['slug'] ?>">
+                            <a href="/books/<?= $book->slug ?>">
                                 <article>
-                                    <img src="<?= $book['cover'] ?>" alt="Image de livre carré">
+                                    <img src="<?= $book->cover ?>" alt="Image de livre carré">
                                     <div class="book-info">
-                                        <h2><?= $book['title'] ?></h2>
-                                        <h3><?= $book['author'] ?></h3>
+                                        <h2><?= $book->title ?></h2>
+                                        <h3><?= $book->author ?></h3>
                                         <p>
-                                            Vendu par: <?= $book['publisher_name'] ?>
+                                            Vendu par: <?= $book->relations['user']->display_name ?>
                                         </p>
                                     </div>
                                 </article>

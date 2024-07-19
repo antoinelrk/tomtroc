@@ -5,8 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Helpers\Log;
-use App\Helpers\Str;
-use App\Models\Book;
+use App\Models\BookManager;
 
 class BooksController extends Controller
 {
@@ -17,8 +16,7 @@ class BooksController extends Controller
      */
     public function index(): ?View
     {
-        // $books = (new Book())->where('available', '=', '1');
-        $books = (new Book())->getBooks();
+        $books = (new BookManager())->getBooks();
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
@@ -28,16 +26,10 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function show(string $slug): ?View
+    public function show(string $slug)
     {
-        $book = (new Book())
-            ->users(
-                'display_name',
-                'avatar',
-                'username',
-            )
-            ->whereTest('slug', $slug)
-            ->first();
+        $bookManager = new BookManager();
+        $book = $bookManager->getBook($slug, false);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')
@@ -47,10 +39,10 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function create(): ?View
+    public function edit(string $slug): ?View
     {
-        $slug = Str::slug("Bonjour à tous !");
-
-        return $slug;
+        return View::layout('layouts.app')
+            ->view('pages.books.edit')
+            ->render();
     }
 }

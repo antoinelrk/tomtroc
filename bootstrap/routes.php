@@ -1,13 +1,15 @@
 <?php
 
 use App\Controllers\BooksController;
+use App\Controllers\ConversationsController;
 use App\Controllers\MessagesController;
+use App\Controllers\NotificationsController;
 use App\Core\Router;
 
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
+use App\Controllers\PostController;
 use App\Controllers\UserController;
-use App\Controllers\ConversationsController;
 use App\Middlewares\AuthMiddleware;
 
 $router = new Router();
@@ -26,18 +28,27 @@ $router->addRoute('POST', LOGIN_ROUTE, [AuthController::class, 'login']);
 
 $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ AuthMiddleware::class ]);
 
-// ---------- BOOKS ----------
+// ---------- USERS ----------
 
 $router->addRoute(
-    'GET',
-    '/our-books',
-    [BooksController::class, 'index']
+    'POST',
+    '/users/update/{id}',
+    [UserController::class, 'update'],
+    [AuthMiddleware::class]
 );
+
 $router->addRoute(
-    'GET',
-    '/books/{slug}',
-    [BooksController::class, 'show']
+    'POST',
+    '/users/avatar/update',
+    [UserController::class, 'updateAvatar'],
+    [AuthMiddleware::class]
 );
+
+// ---------- BOOKS ----------
+
+$router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
+$router->addRoute('GET', '/books/{slug}', [BooksController::class, 'show']);
+$router->addRoute('GET', '/books/{slug}/edit', [BooksController::class, 'edit']);
 
 // ---------- AUTHENTICATED ----------
 
@@ -54,8 +65,6 @@ $router->addRoute(
     [ AuthMiddleware::class ]
 );
 
-// ---------- CONVERSATIONS ----------
-
 $router->addRoute(
     'GET',
     '/conversations',
@@ -63,17 +72,9 @@ $router->addRoute(
 );
 $router->addRoute(
     'GET',
-    '/new-conversation/{target_id}',
-    [ConversationsController::class, 'create'],
-);
-$router->addRoute(
-    'GET',
     '/conversations/{uuid}',
     [ConversationsController::class, 'show'],
 );
-
-// ---------- MESSAGES ----------
-
 $router->addRoute(
     'POST',
     '/messages',
@@ -82,11 +83,23 @@ $router->addRoute(
 
 $router->addRoute(
     'GET',
+    '/new-message/{id}',
+    [ConversationsController::class, 'create'],
+);
+
+$router->addRoute(
+    'GET',
     '/user-name/{slug}/edit/{id}',
     [UserController::class, 'show']
 );
 
-// ---------- API ----------
+// ---------- NOTIFICATIONS ----------
+
+$router->addRoute(
+    'POST',
+    '/notifications/drop/{id}',
+    [NotificationsController::class, 'drop']
+);
 
 $router->addRoute('GET',
     '/' . API_PREFIX . '/users',

@@ -70,22 +70,6 @@ class Model
     }
 
     /**
-     * Fetch all data on specific table
-     *
-     * @return false|array
-     */
-    public function all(): false|array
-    {
-        $statement = $this->connection->prepare("SELECT * FROM {$this->table}");
-        $statement->execute();
-        $data = $statement->fetchAll();
-
-        return array_map(
-            [$this, 'withoutHidden'], $data
-        );
-    }
-
-    /**
      * Fetch specific data on specific table
      *
      * @param $id
@@ -99,24 +83,6 @@ class Model
         $statement->execute();
 
         return $this->withoutHidden($statement->fetch());
-    }
-
-    /**
-     * Fetch data with where :column condition.
-     *
-     * @param $column
-     * @param $operator
-     * @param $value
-     *
-     * @return array|false
-     */
-    public function where($column, $operator, $value)
-    {
-        $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} :value";
-        $statement = $this->connection->prepare($query);
-        $statement->bindValue(':value', $value);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function orderBy($column, $direction)
@@ -133,24 +99,6 @@ class Model
         $this->pushToBind[] = [ 'value' => $value ];
 
         return $this;
-    }
-
-    public function only(): self
-    {
-        $this->only = array_map(function($arg) {
-            return $this->table . "." . $arg;
-        }, func_get_args());
-
-        return $this;
-    }
-
-    public function get(): false|array
-    {
-        $this->query = "SELECT {$this->table}.{$this->applyOnly()}{$this->selectable} FROM {$this->table}$this->query;";
-        $statement = $this->bindAll();
-        // Log::dd($statement);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -187,51 +135,6 @@ class Model
         }
 
         return false;
-    }
-
-    /**
-     * Update entry in database.
-     * TODO: Create validation request
-     *
-     * @param $id
-     * @param array $data
-     *
-     * @return false|array
-     */
-    public function update($id, array $data): false|array
-    {
-        $set = [];
-
-        foreach ($data as $key => $value) {
-            $set[] = "$key = :$key";
-        }
-
-        $set = implode(',', $set);
-        $statement = $this->connection->prepare("UPDATE {$this->table} SET $set WHERE {$this->primaryKey} = :id");
-        $statement->bindParam(':id', $id);
-
-        foreach ($data as $key => $value) {
-            $statement->bindValue(":$key", $value);
-        }
-
-        $statement->execute();
-
-        return $this->find($id);
-    }
-
-    /**
-     * Delete specific entry.
-     *
-     * @param $id
-     *
-     * @return void
-     */
-    public function delete($id): void
-    {
-        $statement = $this->connection->prepare("DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id");
-        $statement->bindParam(':id', $id);
-
-        $statement->execute();
     }
 
     private function bindAll(): false|PDOStatement

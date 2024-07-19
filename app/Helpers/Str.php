@@ -2,45 +2,46 @@
 
 namespace App\Helpers;
 
+use Random\RandomException;
+use ReflectionClass;
+
 class Str
 {
     /**
-     *
-     *
-     * @param $string
-     *
-     * @return string
+     * @throws RandomException
      */
-    public static function slug(string $string): string
+    public static function basicId(?int $length = 8): string
     {
-        $string = strtolower($string);
+        return substr(bin2hex(random_bytes($length)), 0, $length);
+    }
 
-        $unwanted_array = [
-            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'æ' => 'ae', 'ã' => 'a', 'å' => 'a', 'ā' => 'a',
-            'ç' => 'c', 'ć' => 'c', 'č' => 'c',
-            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ē' => 'e', 'ė' => 'e', 'ę' => 'e',
-            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ī' => 'i',
-            'ł' => 'l',
-            'ñ' => 'n', 'ń' => 'n',
-            'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'ö' => 'o', 'œ' => 'oe', 'ø' => 'o', 'ō' => 'o',
-            'ß' => 'ss',
-            'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ū' => 'u',
-            'ÿ' => 'y',
-            'ž' => 'z', 'ź' => 'z', 'ż' => 'z',
-            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ä' => 'A', 'Æ' => 'AE', 'Ã' => 'A', 'Å' => 'A', 'Ā' => 'A',
-            'Ç' => 'C', 'Ć' => 'C', 'Č' => 'C',
-            'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ē' => 'E', 'Ė' => 'E', 'Ę' => 'E',
-            'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ī' => 'I',
-            'Ł' => 'L',
-            'Ñ' => 'N', 'Ń' => 'N',
-            'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Ö' => 'O', 'Œ' => 'OE', 'Ø' => 'O', 'Ō' => 'O',
-            'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ū' => 'U',
-            'Ÿ' => 'Y',
-            'Ž' => 'Z', 'Ź' => 'Z', 'Ż' => 'Z'
-        ];
-        $string = strtr($string, $unwanted_array);
-        $string = preg_replace('/[^a-z0-9]+/i', '-', $string);
+    public static function setDatatable($classname): string
+    {
+        $result = "";
 
-        return trim($string, '-');
+        try
+        {
+            $classname = (new ReflectionClass($classname))
+                ->getShortName();
+            $result = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $classname));
+
+            if (str_ends_with($result, 'y')) {
+                $result = substr($result, 0, -1) . 'ies';
+            } elseif (str_ends_with($result, 's')) {
+                $result .= 'es';
+            } else {
+                $result .= 's';
+            }
+        } catch (\ReflectionException $exception) {}
+
+        return $result;
+    }
+
+    public static function trunc($string, $length): string
+    {
+        if (strlen($string) <= $length) {
+            return $string;
+        }
+        return substr($string, 0, $length) . ' ...';
     }
 }
