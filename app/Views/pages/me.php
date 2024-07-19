@@ -94,6 +94,12 @@
                     </td>
                 </tr>
             <?php endforeach; ?>
+
+            <tr class="line no-content">
+                <td>
+                    <a class="button-create-book" href="/books/create">Ajouter un nouveau livre</a>
+                </td>
+            </tr>
         </table>
     </div>
 </main>
