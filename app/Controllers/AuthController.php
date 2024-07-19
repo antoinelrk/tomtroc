@@ -110,7 +110,9 @@ class AuthController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        Notification::push("Bienvenue $displayName sur TomTroc !", 'success');
+        Notification::push("Bienvenue sur TomTroc $displayName !", 'success');
+
+        Auth::attempt($request['email'], $request['password']);
 
         Response::redirect('/');
     }
