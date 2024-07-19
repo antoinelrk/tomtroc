@@ -47,8 +47,9 @@ $router->addRoute(
 // ---------- BOOKS ----------
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
-$router->addRoute('GET', '/books/{slug}', [BooksController::class, 'show']);
-$router->addRoute('GET', '/books/{slug}/edit', [BooksController::class, 'edit']);
+$router->addRoute('GET', '/books/create', [BooksController::class, 'createForm']);
+$router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show']);
+$router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit']);
 
 // ---------- AUTHENTICATED ----------
 

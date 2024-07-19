@@ -21,7 +21,7 @@
                 <ul class="grid-of-last-books">
                     <?php foreach ($books as $book): ?>
                         <li>
-                            <a href="/books/<?= $book->slug ?>">
+                            <a href="/books/show/<?= $book->slug ?>">
                                 <article>
                                     <img src="<?= $book->cover ?>" alt="Image de livre carré">
                                     <div class="book-info">

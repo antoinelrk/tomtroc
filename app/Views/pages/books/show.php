@@ -7,7 +7,7 @@
 
     <section class="book">
         <aside>
-            <img class="book-cover" src="<?= $book->cover ?>" alt="">
+            <img class="book-cover" src="/<?= $book->cover ?>" alt="">
         </aside>
 
         <article>
