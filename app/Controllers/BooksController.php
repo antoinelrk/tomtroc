@@ -9,6 +9,13 @@ use App\Models\BookManager;
 
 class BooksController extends Controller
 {
+    public function __construct(
+        protected BookManager $bookManager = new BookManager(),
+    )
+    {
+        parent::__construct();
+    }
+
     /**
      * Return index page.
      *
@@ -28,7 +35,7 @@ class BooksController extends Controller
 
     public function show(string $slug): ?View
     {
-        $book = (new BookManager())->getBook($slug);
+        $book = $this->bookManager->getBook($slug);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')
@@ -38,11 +45,23 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function createForm(): ?View
+    public function create(): ?View
     {
         return View::layout('layouts.app')
-            ->view('pages.books.createForm')
+            ->view('pages.books.create')
             ->render();
+    }
+
+    public function store()
+    {
+        $data = [
+            'title' => $_POST['title'],
+            'author' => $_POST['author'],
+            'description' => $_POST['description'],
+            'available' => $_POST['available'] ? 1 : 0,
+        ];
+
+        $this->bookManager->create($data);
     }
 
     public function edit(string $slug): ?View
