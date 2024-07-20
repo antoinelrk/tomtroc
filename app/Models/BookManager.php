@@ -94,11 +94,8 @@ class BookManager
 
     public function create(array $data)
     {
-        $slug = Str::slug($data['title']);
-
         $data = [
-            ...$data,
-            'slug' => $slug,
+            ...$this->prepareData($data),
             'user_id' => Auth::user()->id,
             'created_at' => Diamond::now(),
             'updated_at' => Diamond::now()
@@ -119,7 +116,7 @@ class BookManager
         // TODO: Retourner uniquement le statement, laisser gérer le controller
         if ($statement->execute()) {
             Notification::push('Votre nouveau livre a été ajouté', 'success');
-            Response::redirect('/books/show/' . $slug);
+            Response::redirect('/books/show/' . $data['slug']);
         } else {
             /**
              * TODO: Ajouter un moyen de fournir les anciennes données via un helper comme sur laravel
@@ -132,6 +129,50 @@ class BookManager
 
     public function update(Book $book, array $data)
     {
-        Response::redirect('/books/show' . $book->slug);
+        $data = [
+            ...$this->prepareData($data),
+            'updated_at' => Diamond::now(),
+        ];
+
+        $line = "";
+
+        foreach ($data as $key => $value) {
+            if ($key === array_key_last($data)) {
+                $line .= $key . " = :" . $key;
+            } else {
+                $line .= $key . " = :" . $key . ", ";
+            }
+        }
+
+        $sql = "UPDATE books SET $line WHERE id = :id;";
+        $statement = $this->connection->prepare($sql);
+
+        $statement->bindValue(':id', $book->id);
+
+        foreach (array_keys($data) as $item) {
+            if ($item === 'available') {
+                $statement->bindParam(':' . $item, $data[$item], PDO::PARAM_INT);
+            } else {
+                $statement->bindParam(':' . $item, $data[$item]);
+            }
+        }
+
+        if ($statement->execute()) {
+            Notification::push('Le livre ' . $book->title . ' a bien été modifié', 'success');
+            Response::redirect('/books/show/' . $book->slug);
+        } else {
+            Notification::push('Impossible de modifier: ' . $book->title . ', contactez un administrateur', 'error');
+            Response::redirect('/books/edit/' . $book->slug);
+        }
+    }
+
+    private function prepareData(array $data): array
+    {
+        $slug = Str::slug($data['title']);
+
+        return [
+            ...$data,
+            'slug' => $slug,
+        ];
     }
 }

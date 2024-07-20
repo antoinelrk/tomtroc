@@ -21,7 +21,13 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Commentaire</label>
-                    <textarea name="description" id="description" cols="30" rows="10">foobar</textarea>
+                    <textarea
+                        name="description"
+                        id="description"
+                        cols="30"
+                        rows="10"
+                        placeholder="Votre commentaire"
+                    ></textarea>
                 </div>
 
                 <label for="available">Disponibilité:</label>

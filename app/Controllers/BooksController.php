@@ -66,8 +66,21 @@ class BooksController extends Controller
 
     public function edit(string $slug): ?View
     {
+        $book = $this->bookManager->getBook($slug);
+
         return View::layout('layouts.app')
             ->view('pages.books.edit')
+            ->withData([
+                'book' => $book
+            ])
             ->render();
+    }
+
+    public function update(string $slug)
+    {
+        // TODO: Vérifier que le livre existe
+        $book = $this->bookManager->getBook($slug);
+        // TODO: Vérifier les attributs
+        $this->bookManager->update($book, $_POST);
     }
 }
