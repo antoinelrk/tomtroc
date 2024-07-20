@@ -16,14 +16,9 @@ class BooksController extends Controller
         parent::__construct();
     }
 
-    /**
-     * Return index page.
-     *
-     * @return View|null
-     */
     public function index(): ?View
     {
-        $books = (new BookManager())->getBooks();
+        $books = (new BookManager())->getBooks(true);
 
         return View::layout('layouts.app')
             ->view('pages.books.index')

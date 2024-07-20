@@ -8,10 +8,7 @@ use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
-use App\Helpers\Diamond;
 use App\Helpers\Hash;
-use App\Helpers\Log;
-use App\Models\User;
 use App\Models\UserManager;
 
 class AuthController extends Controller
@@ -24,11 +21,7 @@ class AuthController extends Controller
 
         $this->userManager = new UserManager();
     }
-    /**
-     * Login method.
-     *
-     * @return ?View
-     */
+
     public function loginForm(): ?View
     {
         return View::layout('layouts.app')
@@ -39,11 +32,6 @@ class AuthController extends Controller
             ->render();
     }
 
-    /**
-     * Login a user.
-     *
-     * @return void
-     */
     public function login(): void
     {
         $email = $_POST['email'];
@@ -58,11 +46,6 @@ class AuthController extends Controller
         Response::redirectToLogin();
     }
 
-    /**
-     * Registering method.
-     *
-     * @return ?View
-     */
     public function registerForm(): ?View
     {
         return View::layout('layouts.app')
@@ -73,11 +56,6 @@ class AuthController extends Controller
             ->render();
     }
 
-    /**
-     * Register a new user.
-     *
-     * @return void
-     */
     public function register(): void
     {
         $request = $_POST;
@@ -117,11 +95,6 @@ class AuthController extends Controller
         Response::redirect('/');
     }
 
-    /**
-     * Log out the user and redirect to log in form.
-     *
-     * @return void
-     */
     public function logout(): void
     {
         Auth::logout();
