@@ -7,7 +7,7 @@
 
         <section class="page-content">
             <aside>
-                <img src="" alt="Couverture du livre <?= $book->title ?>">
+                <img class="cover-book" src="<?= $book->cover !== null ? '/.' . $book->cover : '/../storage/books/default.png' ?>" alt="Couverture du livre <?= $book->title ?>">
             </aside>
 
             <form action="/books/update/<?= $book->slug ?>" method="POST">
@@ -30,13 +30,17 @@
                     ><?= $book->description ?></textarea>
                 </div>
 
-                <label for="available">Disponibilité:</label>
-                <select name="available" id="available">
-                    <option value="1" <?= $book->available ? 'selected': '' ?>>Disponible</option>
-                    <option value="0" <?= !$book->available ? 'selected': '' ?>>Indisponible</option>
-                </select>
+                <div class="form-group">
+                    <label for="available">Disponibilité:</label>
+                    <select name="available" id="available">
+                        <option value="1" <?= $book->available === 1 ? 'selected' : '' ?>>Disponible</option>
+                        <option value="0" <?= $book->available === 0 ? 'selected' : '' ?>>Indisponible</option>
+                    </select>
+                </div>
 
-                <button type="submit">Valider</button>
+                <div class="form-group">
+                    <button type="submit">Valider</button>
+                </div>
             </form>
         </section>
     </div>

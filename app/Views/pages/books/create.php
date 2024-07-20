@@ -7,7 +7,7 @@
 
         <section class="page-content">
             <aside>
-                image
+                <img class="cover-book" src="/../storage/books/default.png" alt="">
             </aside>
 
             <form action="/books/store" method="POST">
@@ -30,13 +30,17 @@
                     ></textarea>
                 </div>
 
-                <label for="available">Disponibilité:</label>
-                <select name="available" id="available">
-                    <option value="1" selected>Disponible</option>
-                    <option value="0">Indisponible</option>
-                </select>
+                <div class="form-group">
+                    <label for="available">Disponibilité:</label>
+                    <select name="available" id="available">
+                        <option value="1" selected>Disponible</option>
+                        <option value="0">Indisponible</option>
+                    </select>
+                </div>
 
-                <button type="submit">Valider</button>
+                <div class="form-group">
+                    <button type="submit">Valider</button>
+                </div>
             </form>
         </section>
     </div>

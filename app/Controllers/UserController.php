@@ -49,7 +49,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         $books = new BookManager();
-        $books = $books->getUserBook(false);
+        $books = $books->getUserBook();
 
         View::layout('layouts.app')
             ->withData([

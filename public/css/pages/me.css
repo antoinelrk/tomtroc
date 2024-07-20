@@ -40,6 +40,7 @@ main.private-account {
                         width: 256px;
                         aspect-ratio: 1/1;
                         border-radius: 9999px;
+                        object-fit: cover;
                     }
 
                     form.user-avatar {
@@ -273,6 +274,8 @@ main.private-account {
                             width: 78px;
                             height: 78px;
                             aspect-ratio: 1/1;
+                            object-fit: cover;
+                            object-position: top center;
                         }
 
                         &.text {

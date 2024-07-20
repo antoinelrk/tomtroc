@@ -5,6 +5,13 @@ main.books-create {
     min-height: var(--page-size);
     background-color: var(--bg-100);
 
+    h1 {
+        display: flex;
+        margin: 64px 0;
+        width: var(--centered);
+        font-family: var(--serif), serif;
+    }
+
     section.red-line {
         display: flex;
         width: 1440px;
@@ -20,6 +27,72 @@ main.books-create {
     }
 
     section.page-content {
+        display: flex;
+        padding: 2em;
         background-color: #fff;
+        border-radius: 1em;
+
+        aside {
+            display: flex;
+            width: 50%;
+
+            img.cover-book {
+                max-width: 50%;
+                aspect-ratio: 11 / 16;
+                object-fit: cover;
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            align-items: center;
+            justify-content: center;
+            row-gap: 2em;
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                max-width: 50%;
+                width: 100%;
+                row-gap: .5em;
+
+                label {
+                    color: gray;
+                    font-family: sans-serif;
+                }
+
+                input {
+                    background-color: #edf2f6;
+                    border: none;
+                    border-radius: .3em;
+                    padding: 1em;
+                }
+
+                textarea {
+                    background-color: #edf2f6;
+                    border: none;
+                    border-radius: .3em;
+                    padding: 1em;
+                }
+
+                button {
+                    margin-right: auto;
+                    border-radius: 6px;
+                    background-color: var(--tonic-100);
+                    padding: 1.2em 2em;
+                    font-family: var(--s-serif), sans-serif;
+                    font-weight: 600;
+                    color: var(--white);
+                    width: 75%;
+
+                    &:hover {
+                        background-color: var(--tonic-200);
+                    }
+                }
+            }
+
+        }
     }
 }
