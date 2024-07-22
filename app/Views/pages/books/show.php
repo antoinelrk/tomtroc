@@ -28,8 +28,9 @@
                     <?= $book->relations['user']->username ?>
                 </div>
             </div>
-
-            <a class="send-message" href="/new-message/<?= $book->relations['user']->id ?>">Envoyer un message</a>
+            <?php if ($book->relations['user']->id !== \App\Core\Auth\Auth::user()->id): ?>
+                <a class="send-message" href="/new-message/<?= $book->relations['user']->id ?>">Envoyer un message</a>
+            <?php endif; ?>
         </article>
     </section>
 </main>
