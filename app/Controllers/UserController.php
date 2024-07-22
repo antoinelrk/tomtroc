@@ -49,7 +49,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         $books = new BookManager();
-        $books = $books->getUserBook(false);
+        $books = $books->getUserBook();
 
         View::layout('layouts.app')
             ->withData([
@@ -107,21 +107,21 @@ class UserController extends Controller
                 Response::redirect('/me');
             }
 
-            if ($_FILES['avatar']['type'] !== 'image/jpeg' || $_FILES['avatar']['type'] !== 'image/png') {
+            // TODO: A refacto
+            if ($_FILES['avatar']['type'] === 'image/jpeg' || $_FILES['avatar']['type'] === 'image/png') {
+                $user = Auth::user();
+
+                $this->userManager->setAvatar($user, $_FILES['avatar']);
+
+                Notification::push('Votre avatar a été mis à jour !', 'success');
+            } else {
                 Notification::push('L\'image doit être au format: jpg ou png', 'error');
-                Response::redirect('/me');
             }
 
-            $user = Auth::user();
-
-            $this->userManager->setAvatar($user, $_FILES['avatar']);
-
-            Notification::push('Votre avatar a été mis à jour !', 'success');
-            Response::redirect('/me');
         } else {
             Notification::push('L\'image n\'est pas valide', 'error');
             // TODO: Mettre une sorte de referer (l'url précédente)
-            Response::redirect('/me');
         }
+        Response::redirect('/me');
     }
 }

@@ -20,11 +20,19 @@ class BookManager
         $this->connection = Database::getInstance()->getConnection();
     }
 
-    public function getBooks()
+    public function getBooks(?bool $available = null): array
     {
-        $query = "SELECT * FROM books";
-        $statement = $this->connection->prepare($query);
-        $statement->execute();
+        if ($available) {
+            $query = "SELECT * FROM books WHERE available = :available;";
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
+            $statement->execute();
+        } else {
+            $query = "SELECT * FROM books";
+            $statement = $this->connection->prepare($query);
+            $statement->execute();
+        }
+
         $booksRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
         $books = [];
 
@@ -43,7 +51,7 @@ class BookManager
         return $books;
     }
 
-    public function getUserBook(bool $available = true)
+    public function getUserBook(?bool $available = null)
     {
         $books = [];
 

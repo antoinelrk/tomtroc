@@ -82,8 +82,8 @@
                     </td>
 
                     <td>
-                            <span class="tag <?= $book->available == '0' ? 'unavailable' : 'available' ?>">
-                                <?= $book->available == '0' ? 'unavailable' : 'available' ?>
+                            <span class="tag <?= $book->available === 0 ? 'unavailable' : 'available' ?>">
+                                <?= $book->available === 0 ? 'unavailable' : 'available' ?>
                             </span>
                     </td>
 

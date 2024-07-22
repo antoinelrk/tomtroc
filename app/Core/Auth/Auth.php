@@ -5,8 +5,6 @@ namespace App\Core\Auth;
 use App\Core\Database;
 use App\Core\Notification;
 use App\Core\Response;
-use App\Helpers\Log;
-use App\Models\Model;
 use App\Models\User;
 use PDO;
 
