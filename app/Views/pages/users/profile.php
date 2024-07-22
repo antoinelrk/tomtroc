@@ -1,13 +1,13 @@
 <main class="page-public-profile">
-    <section class="profile">
+    <section class="profile centered">
         <aside>
-            <img src="<?= $user['avatar'] ?>" alt="">
+            <img src="<?= $user->avatar ?>" alt="">
 
             <div class="separator"></div>
 
             <div class="flex column items-center user-info">
-                <p class="text-medium serif"><?= $user['display_name'] ?></p>
-                <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user['created_at']) ?></p>
+                <p class="text-medium serif"><?= $user->username ?></p>
+                <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user->created_at) ?></p>
                 <h4 class="secondary-title">Bibliothèque</h4>
                 <div class="text-with-icon">
                     <figure>
@@ -29,7 +29,9 @@
 
         <article>
             <?php if(count($books) <= 0): ?>
-            <span>Cet utilisateur n'a pas de livre</span>
+            <h1 class="no-product">
+                Cet utilisateur n'a pas encore de livre
+            </h1>
             <?php else: ?>
                 <table class="list-of-books">
                     <tr class="title">
@@ -42,18 +44,18 @@
                     <?php foreach ($books as $key => $book): ?>
                         <tr class="line">
                             <td>
-                                <img class="book-icon" src="<?= $book['cover'] ?>" alt="">
+                                <img class="book-icon" src="<?= $book->cover ?>" alt="">
                             </td>
                             <td>
-                                <?= $book['title'] ?>
+                                <?= $book->title ?>
                             </td>
                             <td>
-                                <?= $book['author'] ?>
+                                <?= $book->author ?>
                             </td>
 
                             <td class="text">
                                 <p>
-                                    <?= $book['description'] ?>
+                                    <?= $book->description ?>
                                 </p>
                             </td>
                         </tr>

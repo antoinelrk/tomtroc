@@ -22,6 +22,20 @@ class UserManager
         $this->connection = Database::getInstance()->getConnection();
     }
 
+    // TODO: A REFACTOR
+    public function getUserByName(string $username)
+    {
+        $query = "SELECT * FROM users WHERE username = :username";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(":username", $username);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $user = new User($result);
+
+        return $user->withoutPassword();
+    }
+
     public function getUserById($id)
     {
         $query = "SELECT * FROM users WHERE id = :id";
@@ -34,7 +48,7 @@ class UserManager
 
         return $user->withoutPassword();
     }
-
+    // TODO END
     public function create(array $data)
     {
         $query = "INSERT INTO users ";

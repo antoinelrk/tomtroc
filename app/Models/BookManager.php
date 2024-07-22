@@ -51,7 +51,7 @@ class BookManager
         return $books;
     }
 
-    public function getUserBook(?bool $available = null)
+    public function getUserBook(User $user, ?bool $available = null)
     {
         $books = [];
 
@@ -59,11 +59,11 @@ class BookManager
             $query = "SELECT * FROM books WHERE available = :available AND user_id = :user_id";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
-            $statement->bindValue(':user_id', Auth::user()->id, PDO::PARAM_INT);
+            $statement->bindValue(':user_id', $user->id, PDO::PARAM_INT);
         } else {
             $query = "SELECT * FROM books WHERE user_id = :user_id";
             $statement = $this->connection->prepare($query);
-            $statement->bindValue(':user_id', Auth::user()->id, PDO::PARAM_INT);
+            $statement->bindValue(':user_id', $user->id, PDO::PARAM_INT);
         }
 
         $statement->execute();
