@@ -23,7 +23,7 @@
                         <li>
                             <a href="/books/show/<?= $book->slug ?>">
                                 <article>
-                                    <img src="<?= $book->cover ?>" alt="Image de livre carré">
+                                    <img src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Image de livre carré">
                                     <div class="book-info">
                                         <h2><?= $book->title ?></h2>
                                         <h3><?= $book->author ?></h3>

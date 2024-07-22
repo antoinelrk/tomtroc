@@ -23,10 +23,11 @@ main.page-public-profile {
             padding: 4em 0;
             row-gap: 5em;
 
-            img {
-                width: 40%;
+            img.profile-picture {
+                width: 50%;
                 aspect-ratio: 1/1;
                 border-radius: 9999px;
+                object-fit: cover;
             }
 
             .separator {

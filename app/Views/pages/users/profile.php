@@ -1,7 +1,7 @@
 <main class="page-public-profile">
     <section class="profile centered">
         <aside>
-            <img src="<?= $user->avatar ?>" alt="">
+            <img class="profile-picture" src="<?= \App\Helpers\File::get($user->avatar, 'avatars') ?>" alt="Photo de profile de <?= $user->username ?>">
 
             <div class="separator"></div>
 
@@ -17,7 +17,7 @@
                         </svg>
 
                     </figure>
-                    4 livres
+                    <?= \App\Helpers\Str::plurialize(count($books), 'livre') ?>
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                     <?php foreach ($books as $key => $book): ?>
                         <tr class="line">
                             <td>
-                                <img class="book-icon" src="<?= $book->cover ?>" alt="">
+                                <img class="book-icon" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="">
                             </td>
                             <td>
                                 <?= $book->title ?>

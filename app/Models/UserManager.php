@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
-use App\Core\File;
-use App\Core\File\Image;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Helpers\File;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
 use App\Helpers\Log;
+use App\Helpers\Str;
 use PDO;
 
 class UserManager
@@ -118,14 +118,14 @@ class UserManager
                 unlink($user->avatar);
             }
 
-            if (($path = File::store('./storage/avatars/', $data)) === false) {
+            if (($filename = File::store('avatars', $data)) === false) {
                 Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
                 Response::redirect('/me');
             }
 
             $sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
             $statement = $this->connection->prepare($sql);
-            $statement->bindValue(':avatar', $path);
+            $statement->bindValue(':avatar', $filename);
             $statement->bindValue(':id', $user->id);
             $state = $statement->execute();
 

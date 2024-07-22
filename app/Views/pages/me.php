@@ -7,7 +7,7 @@
                     <input type="file" name="avatar" id="avatar" style="display: none">
 
                     <label for="avatar">
-                        <img src="<?= $user->avatar ?? 'https://placehold.co/400' ?>" alt="">
+                        <img src="<?= \App\Helpers\File::get($user->avatar, 'avatars') ?>" alt="">
                     </label>
 
                     <button type="submit" class="edit-image">modifier</button>
@@ -72,7 +72,7 @@
             <?php foreach ($books as $book) : ?>
                 <tr class="line">
                     <td>
-                        <img class="book-icon" src="<?= $book->cover ?>" alt="">
+                        <img class="book-icon" src="<?= \App\Helpers\File::get($book?->cover, 'books') ?>" alt="">
                     </td>
                     <td><?= $book->title ?></td>
                     <td><?= $book->author ?></td>

@@ -7,7 +7,7 @@
 
     <section class="book">
         <aside>
-            <img class="book-cover" src="/<?= $book->cover ?>" alt="">
+            <img class="book-cover" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="">
         </aside>
 
         <article>
@@ -24,8 +24,8 @@
             <div class="book-footer">
                 <h2>Propriétaire</h2>
                 <div class="book-owner">
-                    <img src="https://placehold.co/400" alt="">
-                    <?= $book->relations['user']->display_name ?>
+                    <img src="<?= \App\Helpers\File::get($book->relations['user']->avatar, 'avatars') ?>" alt="">
+                    <?= $book->relations['user']->username ?>
                 </div>
             </div>
 

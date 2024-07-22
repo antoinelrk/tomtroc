@@ -71,8 +71,20 @@ class Str
             'ï' => 'i', 'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
             'ő' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y',
             'þ' => 'th', 'ÿ' => 'y'
-            // Ajoute plus de caractères ici si nécessaire
         ];
         return strtr($text, $transliterationTable);
+    }
+
+    public static function plurialize(int $number, string $text): string
+    {
+        if ($number === 0) {
+            return "Aucun(e) $text";
+        }
+
+        if ($number > 1) {
+            return "$number {$text}s";
+        } else {
+            return "$number $text";
+        }
     }
 }
