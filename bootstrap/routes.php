@@ -37,13 +37,6 @@ $router->addRoute(
     [AuthMiddleware::class]
 );
 
-$router->addRoute(
-    'POST',
-    '/users/avatar/update',
-    [UserController::class, 'updateAvatar'],
-    [AuthMiddleware::class]
-);
-
 // ---------- BOOKS ----------
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);

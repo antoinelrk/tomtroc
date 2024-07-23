@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Auth\Auth;
 use App\Core\Controller;
+use App\Core\Database;
 use App\Core\Facades\View;
 use App\Core\File;
 use App\Core\File\Image;
@@ -80,15 +81,19 @@ class UserController extends Controller
         $user = $this->userManager->getUserById($userId);
         $request = $_POST;
 
+        if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $request['avatar'] = $_FILES['avatar'];
+        }
+
         $this->userManager->update($user, $request);
 
         Notification::push('Profil édité avec succès', 'success');
         Response::redirect('/me');
     }
 
-    public function updateAvatar(): void
+    private function updateAvatar(User $user, $avatar): void
     {
-        if ($_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+        if ($avatar['error'] === UPLOAD_ERR_OK) {
             // TODO: Faire la validation
             if ($_FILES['avatar']['size'] > 5000000) {
                 Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
@@ -97,8 +102,6 @@ class UserController extends Controller
 
             // TODO: A refacto
             if ($_FILES['avatar']['type'] === 'image/jpeg' || $_FILES['avatar']['type'] === 'image/png') {
-                $user = Auth::user();
-
                 $this->userManager->setAvatar($user, $_FILES['avatar']);
 
                 Notification::push('Votre avatar a été mis à jour !', 'success');

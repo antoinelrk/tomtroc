@@ -74,10 +74,19 @@ class UserManager
         return $user;
     }
 
-    public function update(User $user, array $data)
+    public function update(User $user, array $data): bool
     {
         $sql = "UPDATE users SET ";
+
         $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
+
+        if (isset($data['avatar'])) {
+            if (($filename = $this->setAvatar($user, $data['avatar'])) !== false) {
+                $setParts[] = "avatar = :avatar";
+                $data['avatar'] = $filename;
+            }
+        }
+
         $sql .= implode(', ', $setParts);
 
         $sql .= " WHERE id = :id";
@@ -102,43 +111,24 @@ class UserManager
         if ($state) {
             $email = $data['email'] ?? null;
             Auth::refresh($email);
+            return true;
         } else {
             Notification::push('Impossible de mettre à jour le profil, contactez un administrateur.', 'error');
-            Response::redirect('/me');
+            return false;
         }
     }
 
-    public function setAvatar(User $user, array $data)
+    public function setAvatar(User $user, array $data): bool|string
     {
-        $connection = Database::getInstance()->getConnection();
-        $connection->beginTransaction();
-
-        try {
-            if ($user->avatar !== null) {
-                unlink($user->avatar);
-            }
-
-            if (($filename = File::store('avatars', $data)) === false) {
-                Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
-                Response::redirect('/me');
-            }
-
-            $sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
-            $statement = $this->connection->prepare($sql);
-            $statement->bindValue(':avatar', $filename);
-            $statement->bindValue(':id', $user->id);
-            $state = $statement->execute();
-
-            if (!$state) {
-                Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
-                Response::redirect('/me');
-            }
-
-            $connection->commit();
-
-            Auth::refresh();
-        } catch (\PDOException $e) {
-            $connection->rollBack();
+        if ($user->avatar !== null) {
+            unlink($user->avatar);
         }
+
+        if (($filename = File::store('avatars', $data)) === false) {
+            Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
+            return false;
+        }
+
+        return $filename;
     }
 }

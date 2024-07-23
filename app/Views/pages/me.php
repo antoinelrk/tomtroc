@@ -1,6 +1,6 @@
 <main class="private-account">
     <h1>Mon compte</h1>
-    <form action="/users/update/<?= $user->id ?>" class="form-hero" enctype="multipart/form-data" method="POST">
+    <form action="/users/update/<?= $user->id ?>" method="post" enctype="multipart/form-data" class="form-hero">
         <!-- TODO: Ajouter une vérification des tokens CSRF -->
         <section class="form-section left">
             <div class="profile-picture">
@@ -8,8 +8,8 @@
                 <img src="<?= \App\Helpers\File::get($user->avatar, 'avatars') ?>" alt="">
 
                 <div class="form-group">
-                    <input type="file" name="avatar" id="avatar" hidden>
                     <label for="avatar" class="edit-image">modifier</label>
+                    <input type="file" name="avatar" id="avatar" style="display: none">
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                 <input type="password" name="password" id="password" required>
             </div>
 
-            <button>
+            <button type="submit">
                 Enregistrer
             </button>
         </section>
