@@ -39,4 +39,9 @@ class File
 
         return false;
     }
+
+    public static function delete(string $filename, string $type): void
+    {
+        unlink("storage/$type/$filename");
+    }
 }

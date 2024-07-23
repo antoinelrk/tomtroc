@@ -81,7 +81,9 @@ class UserManager
         $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
 
         if (isset($data['avatar'])) {
-            if (($filename = $this->setAvatar($user, $data['avatar'])) !== false) {
+            $filename = $this->setAvatar($user, $data['avatar']);
+
+            if (!is_bool($filename)) {
                 $setParts[] = "avatar = :avatar";
                 $data['avatar'] = $filename;
             }
@@ -118,17 +120,36 @@ class UserManager
         }
     }
 
-    public function setAvatar(User $user, array $data): bool|string
+    public function setAvatar(User $user, array $avatar): bool|string
     {
-        if ($user->avatar !== null) {
-            unlink($user->avatar);
+        if ($avatar['error'] !== UPLOAD_ERR_OK) {
+            Notification::push('L\'image n\'est pas valide', 'error');
+            return false;
         }
 
-        if (($filename = File::store('avatars', $data)) === false) {
+        if ($avatar['size'] > 5000000) {
+            Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
+            return false;
+        }
+
+        if ($user->avatar !== null) {
+            File::delete($user->avatar, 'avatars');
+        }
+
+        /**
+         * Si tout va bien:
+         */
+        if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
+            if (($filename = File::store('avatars', $avatar))) {
+                Notification::push('Votre avatar a été mis à jour !', 'success');
+
+                return $filename;
+            }
+
             Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
             return false;
         }
 
-        return $filename;
+        return false;
     }
 }

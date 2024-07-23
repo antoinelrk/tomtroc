@@ -90,29 +90,4 @@ class UserController extends Controller
         Notification::push('Profil édité avec succès', 'success');
         Response::redirect('/me');
     }
-
-    private function updateAvatar(User $user, $avatar): void
-    {
-        if ($avatar['error'] === UPLOAD_ERR_OK) {
-            // TODO: Faire la validation
-            if ($_FILES['avatar']['size'] > 5000000) {
-                Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
-                Response::redirect('/me');
-            }
-
-            // TODO: A refacto
-            if ($_FILES['avatar']['type'] === 'image/jpeg' || $_FILES['avatar']['type'] === 'image/png') {
-                $this->userManager->setAvatar($user, $_FILES['avatar']);
-
-                Notification::push('Votre avatar a été mis à jour !', 'success');
-            } else {
-                Notification::push('L\'image doit être au format: jpg ou png', 'error');
-            }
-
-        } else {
-            Notification::push('L\'image n\'est pas valide', 'error');
-            // TODO: Mettre une sorte de referer (l'url précédente)
-        }
-        Response::redirect('/me');
-    }
 }
