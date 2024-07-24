@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Enum\EnumNotificationState;
 use App\Helpers\Str;
 use Random\RandomException;
 
@@ -41,7 +42,7 @@ class Notification
     {
         $_SESSION['notifications']["n" . Str::basicId()] = [
             'message' => $message,
-            'state' => $state ?? 'info',
+            'state' => $state ?? EnumNotificationState::INFO->value,
         ];
 
         return self::all();
