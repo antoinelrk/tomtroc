@@ -87,7 +87,7 @@
                     <td class="action">
                         <a href="/books/edit/<?= $book->slug ?>">Editer</a>
                         <!-- TODO: Faire un alert en javascript -->
-                        <a class="delete" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
+                        <a class="delete deletable-link" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
