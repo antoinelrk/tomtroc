@@ -11,7 +11,6 @@ use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Hash;
 use App\Models\UserManager;
-use Random\RandomException;
 
 class AuthController extends Controller
 {
