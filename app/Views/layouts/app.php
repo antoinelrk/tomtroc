@@ -148,6 +148,16 @@
         }
     });
 
+    const deletableLinks = document.querySelectorAll('.deletable-link')
+    deletableLinks.forEach((deletableLink) => {
+        deletableLink.addEventListener('click', (event) => {
+            event.preventDefault()
+            if (confirm('Voulez vous vraiment supprimer le livre ?')) {
+                window.location = deletableLink.href
+            }
+        })
+    })
+
     function showPopups() {
         let popups = document.querySelectorAll('.notification');
         popups.forEach(function(popup) {
