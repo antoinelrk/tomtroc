@@ -6,10 +6,12 @@ use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumFileCategory;
 use App\Helpers\Diamond;
-use App\Helpers\Log;
+use App\Helpers\File;
 use App\Helpers\Str;
 use PDO;
+use PDOException;
 
 class BookManager
 {
@@ -97,6 +99,8 @@ class BookManager
         $user = (new UserManager())->getUserById($bookRaw['user_id']);
         $book->addRelations('user', $user);
 
+        // TODO: Le livre n'existe peut-etre pas !
+
         return $book;
     }
 
@@ -121,18 +125,8 @@ class BookManager
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
-        // TODO: Retourner uniquement le statement, laisser gérer le controller
-        if ($statement->execute()) {
-            Notification::push('Votre nouveau livre a été ajouté', 'success');
-            Response::redirect('/books/show/' . $data['slug']);
-        } else {
-            /**
-             * TODO: Ajouter un moyen de fournir les anciennes données via un helper comme sur laravel
-             *  Déplacer ce comportement dans le controller
-             */
-            Notification::push('Une erreur est survenue', 'error');
-            Response::redirect('/books/create');
-        }
+        // TODO: A vérifier
+        return $statement->execute() ? new Book($this->connection->lastInsertId()) : false;
     }
 
     public function update(Book $book, array $data)
@@ -172,6 +166,29 @@ class BookManager
             Notification::push('Impossible de modifier: ' . $book->title . ', contactez un administrateur', 'error');
             Response::redirect('/books/edit/' . $book->slug);
         }
+    }
+
+    public function delete(Book $book)
+    {
+        $this->connection->beginTransaction();
+
+        try {
+            $sql = "DELETE FROM books WHERE id = :id;";
+            $statement = $this->connection->prepare($sql);
+            $statement->bindValue(':id', $book->id);
+            $statement->execute();
+
+            $this->connection->commit();
+
+            // TODO: Penser à changer toutes les variables statiques
+            File::delete($book->cover, EnumFileCategory::BOOK->value);
+
+            return true;
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+        }
+
+        return false;
     }
 
     private function prepareData(array $data): array
