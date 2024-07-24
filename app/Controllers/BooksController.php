@@ -4,7 +4,10 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Facades\View;
-use App\Helpers\Log;
+use App\Core\Notification;
+use App\Core\Response;
+use App\Core\Validator;
+use App\Enum\EnumNotificationState;
 use App\Models\BookManager;
 
 class BooksController extends Controller
@@ -18,7 +21,7 @@ class BooksController extends Controller
 
     public function index(): ?View
     {
-        $books = (new BookManager())->getBooks(true);
+        $books = $this->bookManager->getBooks(true);
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
@@ -56,7 +59,42 @@ class BooksController extends Controller
             'available' => $_POST['available'] ? 1 : 0,
         ];
 
-        $this->bookManager->create($data);
+        $isValid = Validator::check($data, [
+            'title' => [
+                'required' => true,
+                'min' => 2,
+                'max' => 128,
+            ],
+            'author' => [
+                'required' => true,
+                'min' => 2,
+                'max' => 32,
+            ],
+            'description' => [
+                'required' => true,
+                'min' => 2,
+            ],
+            'cover' => [
+                'required' => false,
+            ]
+        ]);
+
+        if ($isValid) {
+            if ($this->bookManager->create($data)) {
+                Notification::push(
+                    'Votre nouveau livre a été ajouté',
+                    EnumNotificationState::SUCCESS->value
+                );
+
+                Response::redirect('/books/show/' . $data['slug']);
+            } else {
+                Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
+
+                Response::redirect('/books/create');
+            }
+        }
+
+        Response::redirect('/books/create');
     }
 
     public function edit(string $slug): ?View
@@ -77,5 +115,14 @@ class BooksController extends Controller
         $book = $this->bookManager->getBook($slug);
         // TODO: Vérifier les attributs
         $this->bookManager->update($book, $_POST);
+    }
+
+    public function delete(string $slug)
+    {
+        $book = $this->bookManager->getBook($slug);
+        if ($this->bookManager->delete($book)) {
+            Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
+            Response::redirect('/me');
+        }
     }
 }
