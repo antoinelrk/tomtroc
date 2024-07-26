@@ -24,10 +24,15 @@ class BookManager
         $this->connection = Database::getInstance()->getConnection();
     }
 
+    public function getLastBooks($number = 4): array
+    {
+        return array_slice($this->getBooks(true), 0, $number);
+    }
+
     public function getBooks(?bool $available = null): array
     {
         if ($available) {
-            $query = "SELECT * FROM books WHERE available = :available;";
+            $query = "SELECT * FROM books WHERE available = :available ORDER BY created_at DESC;";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
             $statement->execute();
