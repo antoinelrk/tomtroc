@@ -34,7 +34,7 @@ $router->addRoute('POST', '/users/update/{id}', [UserController::class, 'update'
 
 // ---------- BOOKS ----------
 
-$router->addRoute('GET', '/our-books', [BooksController::class, 'index'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
 $router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show'], [AuthMiddleware::class]);
 $router->addRoute('GET', '/books/create', [BooksController::class, 'create'], [AuthMiddleware::class]);
 $router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit'], [AuthMiddleware::class]);
