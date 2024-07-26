@@ -115,7 +115,6 @@ class UserManager
             Auth::refresh($email);
             return true;
         } else {
-            Notification::push('Impossible de mettre à jour le profil, contactez un administrateur.', 'error');
             return false;
         }
     }

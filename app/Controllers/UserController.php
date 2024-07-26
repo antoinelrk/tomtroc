@@ -64,7 +64,7 @@ class UserController extends Controller
             ->render();
     }
 
-    public function show($username)
+    public function show($username): void
     {
         $user = $this->userManager->getUserByName($username)->books();
 
@@ -77,7 +77,7 @@ class UserController extends Controller
             ->render();
     }
 
-    public function update($userId)
+    public function update($userId): void
     {
         $user = $this->userManager->getUserById($userId);
         $request = $_POST;
@@ -86,9 +86,18 @@ class UserController extends Controller
             $request['avatar'] = $_FILES['avatar'];
         }
 
-        $this->userManager->update($user, $request);
+        if ($this->userManager->update($user, $request)) {
+            Notification::push(
+                'Profil édité avec succès',
+                EnumNotificationState::SUCCESS->value
+            );
+        } else {
+            Notification::push(
+                'Impossible de mettre à jour le profil, contactez un administrateur.',
+                EnumNotificationState::ERROR->value
+            );
+        }
 
-        Notification::push('Profil édité avec succès', EnumNotificationState::SUCCESS->value);
         Response::redirect('/me');
     }
 }

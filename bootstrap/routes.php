@@ -30,21 +30,16 @@ $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ A
 
 // ---------- USERS ----------
 
-$router->addRoute(
-    'POST',
-    '/users/update/{id}',
-    [UserController::class, 'update'],
-    [AuthMiddleware::class]
-);
+$router->addRoute('POST', '/users/update/{id}', [UserController::class, 'update'], [AuthMiddleware::class]);
 
 // ---------- BOOKS ----------
 
-$router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
-$router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show']);
-$router->addRoute('GET', '/books/create', [BooksController::class, 'create']);
-$router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit']);
-$router->addRoute('POST', '/books/store', [BooksController::class, 'store']);
-$router->addRoute('POST', '/books/update/{id}', [BooksController::class, 'update']);
+$router->addRoute('GET', '/our-books', [BooksController::class, 'index'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/books/create', [BooksController::class, 'create'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit'], [AuthMiddleware::class]);
+$router->addRoute('POST', '/books/store', [BooksController::class, 'store'], [AuthMiddleware::class]);
+$router->addRoute('POST', '/books/update/{id}', [BooksController::class, 'update'], [AuthMiddleware::class]);
 
 // ---------- AUTHENTICATED ----------
 
@@ -81,12 +76,6 @@ $router->addRoute(
     'GET',
     '/new-message/{id}',
     [ConversationsController::class, 'create'],
-);
-
-$router->addRoute(
-    'GET',
-    '/user-name/{slug}/edit/{id}',
-    [UserController::class, 'show']
 );
 
 // ---------- NOTIFICATIONS ----------
