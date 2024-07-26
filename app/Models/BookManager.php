@@ -7,8 +7,10 @@ use App\Core\Database;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Enum\EnumFileCategory;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Diamond;
 use App\Helpers\File;
+use App\Helpers\Log;
 use App\Helpers\Str;
 use PDO;
 use PDOException;
@@ -131,41 +133,58 @@ class BookManager
 
     public function update(Book $book, array $data)
     {
-        $data = [
-            ...$this->prepareData($data),
-            'updated_at' => Diamond::now(),
-        ];
+        $data = $this->prepareData($data);
 
-        $line = "";
+        $sql = "UPDATE books SET ";
+        $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
 
-        foreach ($data as $key => $value) {
-            if ($key === array_key_last($data)) {
-                $line .= $key . " = :" . $key;
-            } else {
-                $line .= $key . " = :" . $key . ", ";
+        if (isset($data['cover'])) {
+            $filename = $this->setCover($book, $data['cover']);
+
+            if (!is_bool($filename)) {
+                $data['cover'] = $filename;
             }
         }
 
-        $sql = "UPDATE books SET $line WHERE id = :id;";
+        $sql .= implode(', ', $setParts);
+        $sql .= " WHERE id = :id;";
+
         $statement = $this->connection->prepare($sql);
 
-        $statement->bindValue(':id', $book->id);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(":$key", $value);
+        }
 
-        foreach (array_keys($data) as $item) {
-            if ($item === 'available') {
-                $statement->bindParam(':' . $item, $data[$item], PDO::PARAM_INT);
-            } else {
-                $statement->bindParam(':' . $item, $data[$item]);
+        $statement->bindValue(":id", $book->id);
+
+        return $statement->execute();
+    }
+
+    private function setCover(Book $book, array $cover): bool|string
+    {
+        if ($cover['error'] !== UPLOAD_ERR_OK) {
+            Notification::push('L\'image n\'est pas valide', EnumNotificationState::ERROR->value);
+            return false;
+        }
+
+        if ($cover['size'] > 5000000) {
+            Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
+            return false;
+        }
+
+        if ($book->cover !== null) {
+            File::delete($book->cover, EnumFileCategory::BOOK->value);
+        }
+
+        if ($cover['type'] === 'image/jpeg' || $cover['type'] === 'image/png') {
+            if (($filename = File::store(EnumFileCategory::BOOK->value, $cover))) {
+                return $filename;
             }
+
+            return false;
         }
 
-        if ($statement->execute()) {
-            Notification::push('Le livre ' . $book->title . ' a bien été modifié', 'success');
-            Response::redirect('/books/show/' . $book->slug);
-        } else {
-            Notification::push('Impossible de modifier: ' . $book->title . ', contactez un administrateur', 'error');
-            Response::redirect('/books/edit/' . $book->slug);
-        }
+        return false;
     }
 
     public function delete(Book $book)

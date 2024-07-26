@@ -8,6 +8,7 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
+use App\Helpers\Log;
 use App\Models\BookManager;
 
 class BooksController extends Controller
@@ -109,12 +110,22 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function update(string $slug)
+    public function update(string $slug): void
     {
-        // TODO: Vérifier que le livre existe
         $book = $this->bookManager->getBook($slug);
-        // TODO: Vérifier les attributs
-        $this->bookManager->update($book, $_POST);
+        $request = $_POST;
+
+        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $request['cover'] = $_FILES['cover'];
+        }
+
+        if ($this->bookManager->update($book, $request)) {
+            Notification::push('Livre édité avec succès', 'success');
+        } else {
+            Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
+        }
+
+        Response::redirect('/books/show/' . $slug);
     }
 
     public function delete(string $slug)

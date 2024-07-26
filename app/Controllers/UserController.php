@@ -10,6 +10,7 @@ use App\Core\File;
 use App\Core\File\Image;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Errors;
 use App\Helpers\Log;
 use App\Models\Book;
@@ -87,7 +88,7 @@ class UserController extends Controller
 
         $this->userManager->update($user, $request);
 
-        Notification::push('Profil édité avec succès', 'success');
+        Notification::push('Profil édité avec succès', EnumNotificationState::SUCCESS->value);
         Response::redirect('/me');
     }
 }

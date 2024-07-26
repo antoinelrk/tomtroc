@@ -26,24 +26,41 @@ main.books-create {
         }
     }
 
-    section.page-content {
+    form.page-content {
         display: flex;
         padding: 2em;
-        background-color: #fff;
         border-radius: 1em;
+        background-color: #fff;
 
         aside {
             display: flex;
+            flex-direction: column;
             width: 50%;
+            aspect-ratio: 1/1;
 
             img.cover-book {
-                max-width: 50%;
-                aspect-ratio: 11 / 16;
+                height: 100%;
+                width: 100%;
                 object-fit: cover;
+            }
+
+            input[type=file] {
+                display: none;
+            }
+            label.cover-input {
+                margin: .5em 0 0 auto;
+                color: gray;
+                cursor: pointer;
+                font-family: "Inter", sans-serif;
+                font-size: 14px;
+
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
 
-        form {
+        .left-form-part {
             display: flex;
             flex-direction: column;
             width: 50%;
@@ -54,7 +71,7 @@ main.books-create {
             .form-group {
                 display: flex;
                 flex-direction: column;
-                max-width: 50%;
+                max-width: 70%;
                 width: 100%;
                 row-gap: .5em;
 
@@ -70,11 +87,21 @@ main.books-create {
                     padding: 1em;
                 }
 
+                select {
+                    width: 80%;
+                    height: 48px;
+                    border: none;
+                    padding-left: 1em;
+                    background-color: #edf2f6;
+                    border-radius: .3em;
+                }
+
                 textarea {
                     background-color: #edf2f6;
                     border: none;
                     border-radius: .3em;
                     padding: 1em;
+                    resize: vertical;
                 }
 
                 button {

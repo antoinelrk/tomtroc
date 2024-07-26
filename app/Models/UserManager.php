@@ -6,6 +6,8 @@ use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumFileCategory;
+use App\Enum\EnumNotificationState;
 use App\Helpers\File;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
@@ -91,8 +93,7 @@ class UserManager
 
         $sql .= implode(', ', $setParts);
 
-        $sql .= " WHERE id = :id";
-        $sql .= ";";
+        $sql .= " WHERE id = :id;";
 
         $statement = $this->connection->prepare($sql);
 
@@ -103,7 +104,6 @@ class UserManager
             else {
                 $statement->bindValue(":$key", $value);
             }
-
         }
 
         $statement->bindValue(":id", $user->id);
@@ -123,17 +123,17 @@ class UserManager
     public function setAvatar(User $user, array $avatar): bool|string
     {
         if ($avatar['error'] !== UPLOAD_ERR_OK) {
-            Notification::push('L\'image n\'est pas valide', 'error');
+            Notification::push('L\'image n\'est pas valide', EnumNotificationState::ERROR->value);
             return false;
         }
 
         if ($avatar['size'] > 5000000) {
-            Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', 'error');
+            Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
             return false;
         }
 
         if ($user->avatar !== null) {
-            File::delete($user->avatar, 'avatars');
+            File::delete($user->avatar, EnumFileCategory::AVATAR->value);
         }
 
         /**
@@ -141,12 +141,9 @@ class UserManager
          */
         if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
             if (($filename = File::store('avatars', $avatar))) {
-                Notification::push('Votre avatar a été mis à jour !', 'success');
-
                 return $filename;
             }
 
-            Notification::push('Impossible d\'enregistrer le fichier, contactez un administrateur!', 'error');
             return false;
         }
 

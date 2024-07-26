@@ -5,12 +5,19 @@
         </section>
         <h1 class="page-title">Modifier les informations</h1>
 
-        <section class="page-content">
+        <form
+            class="page-content"
+            action="/books/update/<?= $book->slug ?>"
+            method="POST"
+            enctype="multipart/form-data"
+        >
             <aside>
-                <img class="cover-book" src="<?= $book->cover !== null ? '/.' . $book->cover : '/../storage/books/default.png' ?>" alt="Couverture du livre <?= $book->title ?>">
+                <img class="cover-book" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Couverture du livre <?= $book->title ?>">
+                <input type="file" id="cover" name="cover">
+                <label for="cover" class="cover-input">modifier</label>
             </aside>
 
-            <form action="/books/update/<?= $book->slug ?>" method="POST">
+            <div class="left-form-part">
                 <div class="form-group">
                     <label for="title">Titre</label>
                     <input type="text" name="title" id="title" value="<?= $book->title ?>"/>
@@ -41,7 +48,7 @@
                 <div class="form-group">
                     <button type="submit">Valider</button>
                 </div>
-            </form>
-        </section>
+            </div>
+        </form>
     </div>
 </main>
