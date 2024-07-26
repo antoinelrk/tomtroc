@@ -12,7 +12,7 @@ class File
             return "/../storage/$type/$filename";
         }
 
-        return "/../storage/$type/default.jpg";
+        return "/../storage/$type/default.svg";
     }
 
     public static function store(string $path, array $file, string $filename = null, int $resolution = null): bool|string
