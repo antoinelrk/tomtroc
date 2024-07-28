@@ -93,7 +93,6 @@ class AuthController extends Controller
 
         $this->userManager->create([
             'username' => $request['username'],
-            'display_name' => $displayName,
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
         ]);

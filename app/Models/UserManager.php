@@ -54,12 +54,11 @@ class UserManager
     public function create(array $data)
     {
         $query = "INSERT INTO users ";
-        $query .= "(username, display_name, password, email, created_at, updated_at) VALUES ";
-        $query .= "(:username, :display_name, :password, :email, :created_at, :updated_at)";
+        $query .= "(username, password, email, created_at, updated_at) VALUES ";
+        $query .= "(:username, :password, :email, :created_at, :updated_at)";
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':username', $data['username']);
-        $statement->bindValue(':display_name', $data['display_name']);
         $statement->bindValue(':password', $data['password']);
         $statement->bindValue(':email', $data['email']);
         $statement->bindValue(':created_at', Diamond::now());
