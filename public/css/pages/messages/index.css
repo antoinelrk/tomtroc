@@ -1,6 +1,7 @@
 main.conversations-page {
     display: flex;
     justify-content: center;
+    align-items: center;
     background-color: var(--bg-200);
 
     .centered {
@@ -48,6 +49,7 @@ main.conversations-page {
                             width: 60px;
                             height: 60px;
                             border-radius: 9999px;
+                            object-fit: cover;
                         }
 
                         .user-conversation-list-infos {

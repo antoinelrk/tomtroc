@@ -24,7 +24,7 @@ button {
     cursor: pointer;
 }
 
-.book-cover {
+.book-cover, .image-cover {
     object-fit: cover;
 }
 

@@ -43,7 +43,7 @@ class ConversationsController extends Controller
                 'conversations' => $conversations,
                 'selectedConversation' => $selectedConversation[0],
             ])
-            ->view('pages.messages.index')
+            ->view('pages.conversations.index')
             ->render();
     }
 

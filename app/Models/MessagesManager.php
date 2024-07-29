@@ -36,12 +36,10 @@ class MessagesManager
 
         $query .= "s.id AS sender_id,
             s.username AS sender_username,
-            s.display_name AS sender_display_name,
             s.avatar AS sender_avatar, ";
 
         $query .= "r.id AS receiver_id,
             r.username AS receiver_username,
-            r.display_name AS receiver_display_name,
             r.avatar AS receiver_avatar ";
 
         $query .= "FROM messages AS m ";

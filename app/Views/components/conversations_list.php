@@ -4,12 +4,16 @@
             Messagerie
         </h1>
     </div>
+
     <ul>
         <?php foreach ($conversations as $conversation): ?>
             <li>
                 <a href="/conversations/<?= $conversation->uuid ?>">
-                    <img src=".<?= $conversation->relations['messages'][0]->relations['receiver']->avatar ?? './storage/avatars/default.png' ?>" alt=""
-                         class="profile-picture">
+                    <img
+                        src="<?= \App\Helpers\File::get($conversation->relations['messages'][0]->relations['receiver']->avatar,'avatars') ?>"
+                        alt=""
+                        class="profile-picture"
+                    >
 
                     <div class="user-conversation-list-infos">
                         <div class="top-user-infos">
