@@ -5,6 +5,7 @@ namespace App\Core\Auth;
 use App\Core\Database;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumNotificationState;
 use App\Models\User;
 use PDO;
 
@@ -77,6 +78,7 @@ class Auth
     {
         unset($_SESSION['user']);
         session_destroy();
+        session_start();
 
         return true;
     }
@@ -91,7 +93,10 @@ class Auth
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if (!$result) {
-            Notification::push('Vos informations sont incorrects', 'error');
+            Notification::push(
+                'Vos informations sont incorrects',
+                EnumNotificationState::ERROR->value
+            );
             Response::redirect('/auth/login');
         }
 

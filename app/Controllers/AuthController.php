@@ -47,6 +47,10 @@ class AuthController extends Controller
             exit;
         }
 
+        Notification::push(
+            'Erreur dans la combinaison email/password',
+            EnumNotificationState::ERROR->value
+        );
         Response::redirectToLogin();
     }
 

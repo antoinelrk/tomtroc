@@ -115,6 +115,35 @@ class BooksController extends Controller
         $book = $this->bookManager->getBook($slug);
         $request = $_POST;
 
+        $isValid = Validator::check($request, [
+            'title' => [
+                'required' => true,
+                'min' => 2,
+                'max' => 128,
+            ],
+            'author' => [
+                'required' => true,
+                'min' => 2,
+                'max' => 32,
+            ],
+            'description' => [
+                'required' => true,
+                'min' => 2,
+            ],
+            'cover' => [
+                'required' => false,
+            ]
+        ]);
+
+        if (!$isValid) {
+            Notification::push(
+                'Certaines informations ne sont pas valides',
+                EnumNotificationState::ERROR->value
+            );
+
+            Response::redirect('/register');
+        }
+
         if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
             $request['cover'] = $_FILES['cover'];
         }
@@ -128,7 +157,7 @@ class BooksController extends Controller
         Response::redirect('/books/show/' . $slug);
     }
 
-    public function delete(string $slug)
+    public function delete(string $slug): void
     {
         $book = $this->bookManager->getBook($slug);
         if ($this->bookManager->delete($book)) {
