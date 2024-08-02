@@ -51,7 +51,7 @@ class BooksController extends Controller
             ->render();
     }
 
-    public function store()
+    public function store(): void
     {
         $data = [
             'title' => $_POST['title'],
@@ -81,21 +81,21 @@ class BooksController extends Controller
         ]);
 
         if ($isValid) {
-            if ($this->bookManager->create($data)) {
+            $book = $this->bookManager->create($data);
+
+            if ($book === false) {
+                Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
+
+                Response::redirect('/books/create');
+            } else {
                 Notification::push(
                     'Votre nouveau livre a été ajouté',
                     EnumNotificationState::SUCCESS->value
                 );
 
-                Response::redirect('/books/show/' . $data['slug']);
-            } else {
-                Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
-
-                Response::redirect('/books/create');
+                Response::redirect('/books/show/' . $book->slug);
             }
         }
-
-        Response::redirect('/books/create');
     }
 
     public function edit(string $slug): ?View

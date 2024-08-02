@@ -86,6 +86,21 @@ class BookManager
         return $books;
     }
 
+    public function getLastBook(int $id): ?Book
+    {
+        $query = "SELECT * FROM books WHERE id = :id";
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(":id", $id, PDO::PARAM_INT);
+        $statement->execute();
+        $bookRaw = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $book = new Book($bookRaw);
+        $user = (new UserManager())->getUserById($bookRaw['user_id']);
+        $book->addRelations('user', $user);
+
+        return $book;
+    }
+
     public function getBook(string $slug, ?bool $available = null): Book
     {
         if ($available) {
@@ -111,7 +126,7 @@ class BookManager
         return $book;
     }
 
-    public function create(array $data)
+    public function create(array $data): Book|bool
     {
         $data = [
             ...$this->prepareData($data),
@@ -132,8 +147,13 @@ class BookManager
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
-        // TODO: A vérifier
-        return $statement->execute() ? new Book($this->connection->lastInsertId()) : false;
+        $result = $statement->execute();
+
+        if (!$result) {
+            return false;
+        }
+
+        return $this->getLastBook($this->connection->lastInsertId());
     }
 
     public function update(Book $book, array $data)
