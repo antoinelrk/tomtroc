@@ -132,7 +132,11 @@ main.conversations-page {
                             }
 
                             p.message-content {
-                                background-color: #edf2f6;
+                                background-color: #d3f0ff;
+
+                                &.collapsed {
+                                    margin-top: -1.8em;
+                                }
                             }
                         }
 
@@ -155,6 +159,10 @@ main.conversations-page {
                             padding: 10px 18px;
                             background-color: #fff;
                             font-family: sans-serif;
+
+                            &.collapsed {
+                                margin-top: -2em;
+                            }
                         }
                     }
                 }

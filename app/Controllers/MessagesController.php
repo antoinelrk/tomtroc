@@ -20,20 +20,6 @@ class MessagesController extends Controller
         $this->messagesManager = new MessagesManager();
     }
 
-    public function index()
-    {
-        $messages = $this->messagesManager->getAllMessages();
-
-        // Log::dd($messages);
-
-        return View::layout('layouts.app')
-            ->view('pages.messages.index')
-            ->withData([
-                'messages' => []
-            ])
-            ->render();
-    }
-
     public function store()
     {
         $request = $_POST;
@@ -51,4 +37,11 @@ class MessagesController extends Controller
 
         Response::redirect('/conversations/' . $request['uuid']);
     }
+
+    /**
+     * Faire la liste de tous les messages dont je suis le receveur et l'envoyer.
+     * De chaque message, j'ai besoin de la relation du receveur et de l'envoyer (User)
+     * Je dois grouper ces messages en fonction de l'utilisateur qui n'est pas moi: 'conversation'
+     *
+     */
 }

@@ -5,10 +5,10 @@
         <section class="conversation-wrapper">
             <div class="header">
                 <div class="user-infos">
-                    <img src="/../storage/avatars/default.svg" alt=""
-                         class="profile-picture">
+                    <img src="<?= \App\Helpers\File::get($selectedConversation->relations['receiver']->avatar, \App\Enum\EnumFileCategory::AVATAR->value) ?>" alt=""
+                         class="profile-picture image-cover">
                     <span>
-                        John Doe
+                        <?= $selectedConversation->relations['receiver']->username ?>
                     </span>
                 </div>
             </div>
@@ -16,19 +16,23 @@
             <div class="conversations-messages">
                 <ul class="messages-list">
                     <?php foreach ($selectedConversation->relations['messages'] as $key => $message): ?>
-                        <li class="message <?= \App\Core\Auth\Auth::user()->id === $message->relations['user']->id ? 'me' : '' ?>">
-                            <!-- Si le message précédent contient le même user tu mets pas ce bloc -->
-                            <?php if ($key === 0 || ($key > 0 && $selectedConversation->relations['messages'][$key - 1]->receiver_id === $message->user_id)): ?>
+                        <li class="message <?= \App\Core\Auth\Auth::user()->id === $message?->relations['sender']->id ? 'me' : '' ?>">
+                            <!-- Si le message précédent contient le même user tu mets ce bloc -->
+                            <?php if ($key === 0 || ($key > 0 && $selectedConversation->relations['messages'][$key - 1]->receiver_id === $message->relations['sender']->id)): ?>
                                 <div class="metadata">
-                                    <img src="<?= $message->relations['user']->avatar ?>" alt=""
-                                         class="mini-profile-picture">
+                                    <img src="<?= \App\Helpers\File::get($message->relations['sender']->avatar, \App\Enum\EnumFileCategory::AVATAR->value) ?>" alt=""
+                                         class="mini-profile-picture image-cover">
                                     <span class="date"><?= \App\Helpers\Diamond::diffForHumans($message->created_at, true) ?></span>
                                 </div>
+                                <p class="message-content">
+                                    <?= $message->content ?>
+                                </p>
+                            <?php else: ?>
+                                <p class="message-content collapsed">
+                                    <?= $message->content ?>
+                                </p>
                             <?php endif; ?>
 
-                            <p class="message-content">
-                                <?= $message->content ?>
-                            </p>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -41,7 +45,7 @@
             >
                 <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">
                 <input type="hidden" name="uuid" value="<?= $selectedConversation->uuid ?>">
-                <input type="hidden" name="receiver_id" value="<?= $selectedConversation->relations[0]['user']->id ?>">
+                <input type="hidden" name="receiver_id" value="<?= $selectedConversation->relations['receiver']->id ?>">
 
                 <label>
                     <input type="text" name="content" placeholder="Taper votre message ici" autofocus>

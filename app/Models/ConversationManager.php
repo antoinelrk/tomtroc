@@ -54,9 +54,17 @@ class ConversationManager
         foreach ($results as $result) {
             $conversation = new Conversation($result);
 
-            $messages = $this->messagesManager->getAllMessages();
+            [$messages, $receiver] = $this->messagesManager->getMessages($conversation->id);
 
-            $conversation->addRelations('messages', $messages);
+            $conversation->addRelations(
+                'messages',
+                $messages
+            );
+
+            $conversation->addRelations(
+                'receiver',
+                $receiver
+            );
 
             $conversations[] = $conversation;
         }
