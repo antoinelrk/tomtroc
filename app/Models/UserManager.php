@@ -24,8 +24,7 @@ class UserManager
         $this->connection = Database::getInstance()->getConnection();
     }
 
-    // TODO: A REFACTOR
-    public function getUserByName(string $username)
+    public function getUserByName(string $username): User
     {
         $query = "SELECT * FROM users WHERE username = :username";
         $statement = $this->connection->prepare($query);
@@ -38,7 +37,7 @@ class UserManager
         return $user->withoutPassword();
     }
 
-    public function getUserById($id)
+    public function getUserById($id): User|null
     {
         $query = "SELECT * FROM users WHERE id = :id";
         $statement = $this->connection->prepare($query);
@@ -54,8 +53,8 @@ class UserManager
 
         return null;
     }
-    // TODO END
-    public function create(array $data)
+
+    public function create(array $data): User
     {
         $query = "INSERT INTO users ";
         $query .= "(username, password, email, created_at, updated_at) VALUES ";

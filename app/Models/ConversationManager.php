@@ -97,8 +97,6 @@ class ConversationManager
         return $result;
     }
 
-    public function getLastConversation()
-
     public function createConversation(array $data): Conversation|bool
     {
         $map = (new Conversation())->map;
@@ -114,7 +112,6 @@ class ConversationManager
         }
 
         $result = $statement->execute();
-
 
         if (!$result) {
             return false;
