@@ -6,9 +6,27 @@
     </div>
 
     <ul>
+        <?php if (isset($user)): ?>
+            <li>
+                <div class="conversation-selector selected">
+                    <img
+                        src="<?= \App\Helpers\File::get($user->avatar,'avatars') ?>"
+                        alt=""
+                        class="profile-picture"
+                    >
+                    <div class="user-conversation-list-infos">
+                        <div class="top-user-infos">
+                            <span>
+                                <?= $user->username ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        <?php endif; ?>
         <?php foreach ($conversations as $conversation): ?>
             <li>
-                <a href="/conversations/<?= $conversation->uuid ?>">
+                <a class="conversation-selector" href="/conversations/show/<?= $conversation->uuid ?>">
                     <img
                         src="<?= \App\Helpers\File::get($conversation->relations['messages'][0]->relations['receiver']->avatar,'avatars') ?>"
                         alt=""
@@ -17,12 +35,12 @@
 
                     <div class="user-conversation-list-infos">
                         <div class="top-user-infos">
-                                    <span>
-                                        <?= $conversation->relations['messages'][0]->relations['receiver']->username ?>
-                                    </span>
                             <span>
-                                        <?= \App\Helpers\Diamond::diffForHumans($conversation->updated_at, true) ?>
-                                    </span>
+                                <?= $conversation->relations['messages'][0]->relations['receiver']->username ?>
+                            </span>
+                            <span>
+                                <?= \App\Helpers\Diamond::diffForHumans($conversation->updated_at, true) ?>
+                            </span>
                         </div>
                         <p>
                             <?= \App\Helpers\Str::trunc(end($conversation->relations['messages'])->content, 20) ?>

@@ -96,4 +96,60 @@ class ConversationManager
 
         return $result;
     }
+
+    public function getLastConversation()
+
+    public function createConversation(array $data): Conversation|bool
+    {
+        $map = (new Conversation())->map;
+        $attributes = implode(', ', $map);
+        $keys = ':' . implode(', :', $map);
+
+        $sql = "INSERT INTO conversations ($attributes)";
+        $sql .= " VALUES ($keys);";
+        $statement = $this->connection->prepare($sql);
+
+        foreach ($map as $item) {
+            $statement->bindParam(':' . $item, $data[$item]);
+        }
+
+        $result = $statement->execute();
+
+
+        if (!$result) {
+            return false;
+        }
+
+        return $this->getLastConversation($this->connection->lastInsertId());
+    }
+
+    public function getLastConversation(int $id): Conversation
+    {
+        $query = "SELECT c.* FROM conversations c ";
+        $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
+        $query .= "WHERE cu.user_id = :authenticated_id";
+        $query .= "AND c.id = :conversation_id";
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':authenticated_id', Auth::user()->id);
+        $statement->bindValue(':conversation_id', $id);
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $conversation = new Conversation($result);
+
+        [$messages, $receiver] = $this->messagesManager->getMessages($conversation->id);
+        $conversation->addRelations(
+            'messages',
+            $messages
+        );
+
+        $conversation->addRelations(
+            'receiver',
+            $receiver
+        );
+
+        return $conversation;
+    }
 }

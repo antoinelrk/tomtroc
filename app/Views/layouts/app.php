@@ -49,7 +49,7 @@
                         <li></li>
                         <?php if(\App\Core\Auth\Auth::check()): ?>
                             <li>
-                                <a href="/conversations">
+                                <a href="/conversations/show">
                                     <div class="icon">
                                         <figure>
                                             <svg width="100%" height="100%" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">

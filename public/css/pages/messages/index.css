@@ -34,12 +34,16 @@ main.conversations-page {
                 li {
                     display: flex;
 
-                    a {
+                    a.conversation-selector, .conversation-selector {
                         display: flex;
                         padding: 18px 34px;
                         width: 100%;
                         column-gap: 1em;
                         font-family: sans-serif;
+
+                        &.selected {
+                            background-color: #fff;
+                        }
 
                         &:hover {
                             background-color: #fff;

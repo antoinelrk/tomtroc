@@ -46,9 +46,13 @@ class UserManager
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $user = new User($result);
+        if ($result !== false) {
+            $user = new User($result);
 
-        return $user->withoutPassword();
+            return $user->withoutPassword();
+        }
+
+        return null;
     }
     // TODO END
     public function create(array $data)
