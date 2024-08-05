@@ -6,6 +6,7 @@ use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\Log;
 use PDO;
+use PDOException;
 
 class ConversationManager
 {
@@ -97,30 +98,58 @@ class ConversationManager
         return $result;
     }
 
-    public function getLastConversation()
-
-    public function createConversation(array $data): Conversation|bool
+    public function create(array $data): Conversation|bool
     {
-        $map = (new Conversation())->map;
-        $attributes = implode(', ', $map);
-        $keys = ':' . implode(', :', $map);
+        $this->connection->beginTransaction();
 
-        $sql = "INSERT INTO conversations ($attributes)";
-        $sql .= " VALUES ($keys);";
-        $statement = $this->connection->prepare($sql);
+        try {
+            $map = (new Conversation())->map;
+            $attributes = implode(', ', $map);
+            $keys = ':' . implode(', :', $map);
 
-        foreach ($map as $item) {
-            $statement->bindParam(':' . $item, $data[$item]);
-        }
+            $sql = "INSERT INTO conversations ($attributes)";
+            $sql .= " VALUES ($keys);";
+            $statement = $this->connection->prepare($sql);
 
-        $result = $statement->execute();
+            foreach ($map as $item) {
+                $statement->bindParam(':' . $item, $data[$item]);
+            }
 
+            $statement->execute();
 
-        if (!$result) {
+            $this->attachUsersToConversation(
+                $this->connection->lastInsertId(),
+                $data['sender_id'],
+                $data['receiver_id']
+            );
+
+            // On créé le message
+
+            $this->connection->commit();
+
+            return $this->getLastConversation($this->connection->lastInsertId());
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+
             return false;
         }
+    }
 
-        return $this->getLastConversation($this->connection->lastInsertId());
+    protected function attachUsersToConversation(int $conversationId, int $senderId, int $receiverId): void
+    {
+        $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':user_id', $senderId);
+        $statement->bindValue(':conversation_id', $conversationId);
+
+        $statement->execute();
+
+        $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':user_id', $receiverId);
+        $statement->bindValue(':conversation_id', $conversationId);
+
+        $statement->execute();
     }
 
     public function getLastConversation(int $id): Conversation
@@ -129,6 +158,7 @@ class ConversationManager
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
         $query .= "WHERE cu.user_id = :authenticated_id";
         $query .= "AND c.id = :conversation_id";
+        $query .= "ORDER BY c.id DESC LIMIT 1";
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':authenticated_id', Auth::user()->id);

@@ -5,24 +5,72 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
+use App\Helpers\Str;
+use App\Models\ConversationManager;
 use App\Models\MessagesManager;
 
 class MessagesController extends Controller
 {
     protected MessagesManager $messagesManager;
+    protected ConversationManager $conversationManager;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->messagesManager = new MessagesManager();
+        $this->conversationManager = new ConversationManager();
     }
 
     public function store()
     {
         $request = $_POST;
+
+        $isValid = [
+            'receiver_id' => [
+                'required' => true,
+            ]
+        ];
+
+        if (!$isValid) {
+            Notification::push(
+                'Le contact cible n\'existe pas !',
+                EnumNotificationState::ERROR->value
+            );
+
+            Response::referer();
+            return;
+        }
+
+        if (!isset($request['conversation_id']) && !isset($request['uuid'])) {
+            // On créé la conversation
+
+            $conversation = $this->conversationManager->create([
+                'receiver_id' => $request['receiver_id'],
+                'sender_id' => Auth::user()->id,
+                'uuid' => Str::uuid(),
+                'archived' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            Log::dd($conversation);
+        }
+
+        $this->messagesManager->create([
+            'conversation_id' => $request['conversation_id'],
+            'uuid' => $request['uuid'],
+            'receiver_id' => $request['receiver_id'],
+            'sender_id' => Auth::user()->id,
+            'content' => $request['content'],
+        ]);
+        // On créé juste le message
+
+        Log::dd($_POST);
 
         // TODO: Vérifier les données à envoyer dans un validateur
 

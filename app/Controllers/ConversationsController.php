@@ -118,7 +118,7 @@ class ConversationsController extends Controller
             return false;
         }
 
-        $this->conversationsManager->createConversation($request);
+        // $this->conversationsManager->createConversation($request);
         return false;
     }
 }

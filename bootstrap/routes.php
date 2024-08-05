@@ -62,7 +62,7 @@ $router->addRoute('GET', '/conversations/create/{id}', [ConversationsController:
 $router->addRoute('GET', '/conversations/show', [ConversationsController::class, 'index']);
 $router->addRoute('GET', '/conversations/show/{uuid}', [ConversationsController::class, 'show']);
 $router->addRoute('POST', '/conversations/store', [ConversationsController::class, 'store']);
-$router->addRoute('POST', '/messages', [MessagesController::class, 'store'],);
+$router->addRoute('POST', '/messages/store', [MessagesController::class, 'store'],);
 
 $router->addRoute(
     'GET',
