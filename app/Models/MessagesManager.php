@@ -35,9 +35,7 @@ class MessagesManager
         $statement->bindValue(':created_at', date('Y-m-d H:i:s'));
         $statement->bindValue(':updated_at', date('Y-m-d H:i:s'));
 
-        $result = $statement->execute();
-
-        Log::dd($result);
+        $statement->execute();
 
 //        $statement = $this->connection->prepare("SELECT m.* FROM messages m ORDER BY created_at DESC LIMIT 1");
 //        $statement->execute();
@@ -71,8 +69,7 @@ class MessagesManager
         $query .= "INNER JOIN users s ON sender_id = s.id ";
         $query .= "INNER JOIN users r ON receiver_id = r.id ";
 
-        $query .= "WHERE m.sender_id = :sender_id ";
-        $query .= "OR m.receiver_id = :receiver_id ";
+        $query .= "WHERE m.conversation_id = :conversation_id ";
 
         if ($conversationId !== null) {
             $query .= "AND m.conversation_id = :conversation_id ";
@@ -81,11 +78,8 @@ class MessagesManager
         $query .= "ORDER BY m.created_at ASC";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue(':sender_id', $user->id);
-        $statement->bindValue(':receiver_id', $user->id);
-        if ($conversationId !== null) {
-            $statement->bindValue(':conversation_id', $conversationId);
-        }
+        $statement->bindValue(':conversation_id', $conversationId);
+
         $statement->execute();
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 

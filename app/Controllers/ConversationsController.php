@@ -38,11 +38,11 @@ class ConversationsController extends Controller
 
     public function show(string $uuid)
     {
-        $conversations = (new ConversationManager())->getConversations();
+        $conversations = $this->conversationsManager->getConversations();
 
-        $selectedConversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
            return $conversation->uuid === $uuid;
-        });
+        }));
 
         return View::layout('layouts.app')
             ->withData([

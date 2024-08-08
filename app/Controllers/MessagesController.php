@@ -54,6 +54,7 @@ class MessagesController extends Controller
                 'sender_id' => Auth::user()->id,
                 'uuid' => Str::uuid(),
                 'archived' => 0,
+                'content' => $request['content'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

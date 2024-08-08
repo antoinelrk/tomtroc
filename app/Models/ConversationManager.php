@@ -100,39 +100,37 @@ class ConversationManager
 
     public function create(array $data): Conversation|bool
     {
-        $this->connection->beginTransaction();
+        $map = (new Conversation())->map;
+        $attributes = implode(', ', $map);
+        $keys = ':' . implode(', :', $map);
 
-        try {
-            $map = (new Conversation())->map;
-            $attributes = implode(', ', $map);
-            $keys = ':' . implode(', :', $map);
+        $sql = "INSERT INTO conversations ($attributes)";
+        $sql .= " VALUES ($keys);";
+        $statement = $this->connection->prepare($sql);
 
-            $sql = "INSERT INTO conversations ($attributes)";
-            $sql .= " VALUES ($keys);";
-            $statement = $this->connection->prepare($sql);
-
-            foreach ($map as $item) {
-                $statement->bindParam(':' . $item, $data[$item]);
-            }
-
-            $statement->execute();
-
-            $this->attachUsersToConversation(
-                $this->connection->lastInsertId(),
-                $data['sender_id'],
-                $data['receiver_id']
-            );
-
-            // On créé le message
-
-            $this->connection->commit();
-
-            return $this->getLastConversation($this->connection->lastInsertId());
-        } catch (PDOException $e) {
-            $this->connection->rollBack();
-
-            return false;
+        foreach ($map as $item) {
+            $statement->bindParam(':' . $item, $data[$item]);
         }
+
+        $statement->execute();
+        $conversationId = $this->connection->lastInsertId();
+
+        $this->attachUsersToConversation(
+            $conversationId,
+            $data['sender_id'],
+            $data['receiver_id']
+        );
+
+        // On créé le message
+        $this->messagesManager->create([
+            'conversation_id' => $conversationId,
+            'sender_id' => $data['sender_id'],
+            'receiver_id' => $data['receiver_id'],
+            'content' => $data['content'],
+        ]);
+
+
+        return $this->getLastConversation($conversationId);
     }
 
     protected function attachUsersToConversation(int $conversationId, int $senderId, int $receiverId): void
