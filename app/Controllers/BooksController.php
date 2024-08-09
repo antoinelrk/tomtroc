@@ -8,13 +8,12 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Log;
-use App\Models\BookManager;
+use App\Services\BookService;
 
 class BooksController extends Controller
 {
     public function __construct(
-        protected BookManager $bookManager = new BookManager(),
+        protected BookService $bookService = new BookService(),
     )
     {
         parent::__construct();
@@ -22,7 +21,7 @@ class BooksController extends Controller
 
     public function index(): ?View
     {
-        $books = $this->bookManager->getBooks(true);
+        $books = $this->bookService->getBooks(true);
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
@@ -34,7 +33,7 @@ class BooksController extends Controller
 
     public function show(string $slug): ?View
     {
-        $book = $this->bookManager->getBook($slug);
+        $book = $this->bookService->getBook($slug);
 
         return View::layout('layouts.app')
             ->view('pages.books.show')
@@ -81,7 +80,7 @@ class BooksController extends Controller
         ]);
 
         if ($isValid) {
-            $book = $this->bookManager->create($data);
+            $book = $this->bookService->create($data);
 
             if ($book === false) {
                 Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
@@ -100,7 +99,7 @@ class BooksController extends Controller
 
     public function edit(string $slug): ?View
     {
-        $book = $this->bookManager->getBook($slug);
+        $book = $this->bookService->getBook($slug);
 
         return View::layout('layouts.app')
             ->view('pages.books.edit')
@@ -112,7 +111,7 @@ class BooksController extends Controller
 
     public function update(string $slug): void
     {
-        $book = $this->bookManager->getBook($slug);
+        $book = $this->bookService->getBook($slug);
         $request = $_POST;
 
         $isValid = Validator::check($request, [
@@ -148,7 +147,7 @@ class BooksController extends Controller
             $request['cover'] = $_FILES['cover'];
         }
 
-        if ($this->bookManager->update($book, $request)) {
+        if ($this->bookService->update($book, $request)) {
             Notification::push('Livre édité avec succès', 'success');
         } else {
             Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
@@ -159,8 +158,8 @@ class BooksController extends Controller
 
     public function delete(string $slug): void
     {
-        $book = $this->bookManager->getBook($slug);
-        if ($this->bookManager->delete($book)) {
+        $book = $this->bookService->getBook($slug);
+        if ($this->bookService->delete($book)) {
             Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
             Response::redirect('/me');
         }

@@ -10,17 +10,17 @@ use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Hash;
-use App\Models\UserManager;
+use App\Models\UserService;
 
 class AuthController extends Controller
 {
-    protected UserManager $userManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->userManager = new UserManager();
+        $this->userManager = new UserService();
     }
 
     public function loginForm(): ?View

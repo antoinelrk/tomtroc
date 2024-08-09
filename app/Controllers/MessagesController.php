@@ -10,20 +10,20 @@ use App\Core\Response;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
 use App\Helpers\Str;
-use App\Models\ConversationManager;
-use App\Models\MessagesManager;
+use App\Models\ConversationService;
+use App\Models\MessagesService;
 
 class MessagesController extends Controller
 {
-    protected MessagesManager $messagesManager;
-    protected ConversationManager $conversationManager;
+    protected MessagesService $messagesManager;
+    protected ConversationService $conversationManager;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->messagesManager = new MessagesManager();
-        $this->conversationManager = new ConversationManager();
+        $this->messagesManager = new MessagesService();
+        $this->conversationManager = new ConversationService();
     }
 
     public function store()

@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\ArrayHelper;
-use App\Helpers\Log;
+use App\Models\Message;
 use PDO;
 
-class MessagesManager
+class MessagesService
 {
     protected PDO $connection;
 
-    protected UserManager $userManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->userManager = new UserManager();
+        $this->userManager = new UserService();
     }
 
     public function create(array $data)

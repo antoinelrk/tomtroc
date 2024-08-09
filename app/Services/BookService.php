@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Core\Notification;
-use App\Core\Response;
 use App\Enum\EnumFileCategory;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Diamond;
 use App\Helpers\File;
-use App\Helpers\Log;
 use App\Helpers\Str;
+use App\Models\Book;
+use App\Models\User;
+use App\Services\UserService;
 use PDO;
 use PDOException;
 
-class BookManager
+class BookService extends Service
 {
-    protected PDO $connection;
-
-    public function __construct()
+    public function __construct(
+        protected UserService $userService = new UserService(),
+    )
     {
-        $this->connection = Database::getInstance()->getConnection();
+        parent::__construct();
     }
 
     public function getLastBooks($number = 4): array
@@ -45,12 +46,10 @@ class BookManager
         $booksRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
         $books = [];
 
-        $userManager = new UserManager();
-
         foreach ($booksRaw as $bookRaw) {
             $book = new Book($bookRaw);
 
-            $user = $userManager->getUserById($bookRaw['user_id']);
+            $user = $this->userService->getUserById($bookRaw['user_id']);
 
             $book->addRelations('user', $user);
 
@@ -60,7 +59,7 @@ class BookManager
         return $books;
     }
 
-    public function getUserBook(User $user, ?bool $available = null)
+    public function getUserBook(User $user, ?bool $available = null): array
     {
         $books = [];
 
@@ -95,7 +94,7 @@ class BookManager
         $bookRaw = $statement->fetch(PDO::FETCH_ASSOC);
 
         $book = new Book($bookRaw);
-        $user = (new UserManager())->getUserById($bookRaw['user_id']);
+        $user = $this->userService->getUserById($bookRaw['user_id']);
         $book->addRelations('user', $user);
 
         return $book;
@@ -118,7 +117,7 @@ class BookManager
         $bookRaw = $statement->fetch(PDO::FETCH_ASSOC);
 
         $book = new Book($bookRaw);
-        $user = (new UserManager())->getUserById($bookRaw['user_id']);
+        $user = $this->userService->getUserById($bookRaw['user_id']);
         $book->addRelations('user', $user);
 
         // TODO: Le livre n'existe peut-etre pas !

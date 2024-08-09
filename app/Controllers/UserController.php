@@ -4,41 +4,21 @@ namespace App\Controllers;
 
 use App\Core\Auth\Auth;
 use App\Core\Controller;
-use App\Core\Database;
 use App\Core\Facades\View;
-use App\Core\File;
-use App\Core\File\Image;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Errors;
-use App\Helpers\Log;
-use App\Models\Book;
-use App\Models\BookManager;
+use App\Services\BookService;
 use App\Models\User;
-use App\Models\UserManager;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-    protected UserManager $userManager;
-
-    public function __construct()
+    public function __construct(
+        protected UserService $userService = new UserService()
+    )
     {
         parent::__construct();
-
-        $this->userManager = new UserManager();
-    }
-
-    /**
-     * Return list of users, just for API tests.
-     *
-     * @return void
-     */
-    public function index(): void
-    {
-        $users = (new User())->all();
-
-        Response::json($users, Response::HTTP_OK);
     }
 
     /**
@@ -50,7 +30,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $books = new BookManager();
+        $books = new BookService();
         $books = $books->getUserBook(Auth::user());
 
         View::layout('layouts.app')
@@ -66,7 +46,7 @@ class UserController extends Controller
 
     public function show($username): void
     {
-        $user = $this->userManager->getUserByName($username)->books();
+        $user = $this->userService->getUserByName($username)->books();
 
         View::layout('layouts.app')
             ->withData([
@@ -79,14 +59,14 @@ class UserController extends Controller
 
     public function update($userId): void
     {
-        $user = $this->userManager->getUserById($userId);
+        $user = $this->userService->getUserById($userId);
         $request = $_POST;
 
         if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
             $request['avatar'] = $_FILES['avatar'];
         }
 
-        if ($this->userManager->update($user, $request)) {
+        if ($this->userService->update($user, $request)) {
             Notification::push(
                 'Profil édité avec succès',
                 EnumNotificationState::SUCCESS->value

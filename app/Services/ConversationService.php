@@ -1,26 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
-use App\Helpers\Log;
+use App\Models\Conversation;
 use PDO;
-use PDOException;
 
-class ConversationManager
+class ConversationService
 {
     protected PDO $connection;
 
-    protected MessagesManager $messagesManager;
+    protected MessagesService $messagesManager;
 
-    protected UserManager $usersManager;
+    protected UserService $usersManager;
 
     public function __construct()
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->messagesManager = new MessagesManager();
-        $this->usersManager = new UserManager();
+        $this->messagesManager = new MessagesService();
+        $this->usersManager = new UserService();
     }
 
     public function getConversationByUuid(string $uuid)
@@ -33,12 +32,10 @@ class ConversationManager
         $statement->bindValue(':authenticated_id', Auth::user()->id);
         $statement->execute();
 
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-
-        return $result;
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getConversations()
+    public function getConversations(): array
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
@@ -93,9 +90,8 @@ class ConversationManager
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':user_id', $userId);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $result;
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     public function create(array $data): Conversation|bool
@@ -136,13 +132,13 @@ class ConversationManager
     protected function attachUsersToConversation(int $conversationId, int $senderId, int $receiverId): void
     {
         $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
+
         $statement = $this->connection->prepare($sql);
         $statement->bindValue(':user_id', $senderId);
         $statement->bindValue(':conversation_id', $conversationId);
 
         $statement->execute();
 
-        $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
         $statement = $this->connection->prepare($sql);
         $statement->bindValue(':user_id', $receiverId);
         $statement->bindValue(':conversation_id', $conversationId);

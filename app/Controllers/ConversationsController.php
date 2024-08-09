@@ -9,22 +9,21 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Log;
 use App\Models\Conversation;
-use App\Models\ConversationManager;
-use App\Models\UserManager;
+use App\Services\ConversationService;
+use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
-    protected ConversationManager $conversationsManager;
-    protected UserManager $userManager;
+    protected ConversationService $conversationsManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->conversationsManager = new ConversationManager();
-        $this->userManager = new UserManager();
+        $this->conversationsManager = new ConversationService();
+        $this->userManager = new UserService();
     }
 
     public function index()

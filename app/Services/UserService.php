@@ -1,27 +1,22 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
-use App\Core\Database;
 use App\Core\Notification;
-use App\Core\Response;
 use App\Enum\EnumFileCategory;
 use App\Enum\EnumNotificationState;
 use App\Helpers\File;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
-use App\Helpers\Log;
-use App\Helpers\Str;
+use App\Models\User;
 use PDO;
 
-class UserManager
+class UserService extends Service
 {
-    protected PDO $connection;
-
     public function __construct()
     {
-        $this->connection = Database::getInstance()->getConnection();
+        parent::__construct();
     }
 
     // TODO: A REFACTOR
@@ -55,7 +50,7 @@ class UserManager
         return null;
     }
     // TODO END
-    public function create(array $data)
+    public function create(array $data): User
     {
         $query = "INSERT INTO users ";
         $query .= "(username, password, email, created_at, updated_at) VALUES ";

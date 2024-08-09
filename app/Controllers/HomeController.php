@@ -4,14 +4,13 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Facades\View;
-use App\Core\Notification;
-use App\Models\BookManager;
+use App\Services\BookService;
 
 class HomeController extends Controller
 {
     public function index(): ?View
     {
-        $books = (new BookManager())->getLastBooks();
+        $books = (new BookService())->getLastBooks();
 
         return View::layout('layouts.app')
             ->view('pages.home')
