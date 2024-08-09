@@ -78,13 +78,12 @@ class ConversationsController extends Controller
         // On récupère la liste des conversations
         $conversations = $this->conversationsManager->getConversations();
 
-        $likelyConversation = array_filter($conversations, function (Conversation $conversation) use ($userId) {
+        $likelyConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($userId) {
             return $conversation->relations['receiver']->id === $userId;
-        });
+        }));
 
         if (!empty($likelyConversation)) {
-            $likelyConversation = $likelyConversation[0];
-            Response::redirect('/conversations/show/' . $likelyConversation->uuid);
+            Response::redirect('/conversations/show/' . $likelyConversation[0]->uuid);
         }
 
         return View::layout('layouts.app')
