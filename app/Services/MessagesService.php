@@ -20,9 +20,9 @@ class MessagesService
         $this->userManager = new UserService();
     }
 
-    public function create(array $data)
+    public function create(array $data): Message|bool
     {
-        if (!isset($data['content'])) return;
+        if (!isset($data['content'])) return false;
 
         $query = "INSERT INTO messages ";
         $query .= "(`conversation_id`, `sender_id`, `receiver_id`, `content`, `created_at`, `updated_at`) ";
@@ -40,6 +40,8 @@ class MessagesService
 //        $statement = $this->connection->prepare("SELECT m.* FROM messages m ORDER BY created_at DESC LIMIT 1");
 //        $statement->execute();
 //        $statement->fetch(PDO::FETCH_ASSOC);
+
+        return true;
     }
 
     public function getMessages(?int $conversationId = null): array
