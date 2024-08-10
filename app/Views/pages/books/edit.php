@@ -22,10 +22,12 @@
                     <label for="title">Titre</label>
                     <input type="text" name="title" id="title" value="<?= $book->title ?>"/>
                 </div>
+
                 <div class="form-group">
                     <label for="author">Auteur</label>
                     <input type="text" name="author" id="author" value="<?= $book->author ?>"/>
                 </div>
+
                 <div class="form-group">
                     <label for="description">Commentaire</label>
                     <textarea

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
+use App\Helpers\Log;
 use App\Models\Conversation;
 use PDO;
 
@@ -125,7 +126,6 @@ class ConversationService
             'content' => $data['content'],
         ]);
 
-
         return $this->getLastConversation($conversationId);
     }
 
@@ -146,16 +146,14 @@ class ConversationService
         $statement->execute();
     }
 
-    public function getLastConversation(int $id): Conversation
+    public function getLastConversation($id): Conversation
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
-        $query .= "WHERE cu.user_id = :authenticated_id";
-        $query .= "AND c.id = :conversation_id";
+        $query .= "WHERE c.id = :conversation_id ";
         $query .= "ORDER BY c.id DESC LIMIT 1";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue(':authenticated_id', Auth::user()->id);
         $statement->bindValue(':conversation_id', $id);
         $statement->execute();
 

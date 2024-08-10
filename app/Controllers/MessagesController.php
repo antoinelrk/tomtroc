@@ -44,7 +44,7 @@ class MessagesController extends Controller
         }
 
         if (!isset($request['conversation_id']) && !isset($request['uuid'])) {
-            $this->conversationManager->create([
+            $conversation = $this->conversationManager->create([
                 'receiver_id' => $request['receiver_id'],
                 'sender_id' => Auth::user()->id,
                 'uuid' => Str::uuid(),
@@ -56,7 +56,7 @@ class MessagesController extends Controller
         }
 
         $this->messagesManager->create([
-            'conversation_id' => $request['conversation_id'],
+            'conversation_id' => $conversation->id ?? $request['conversation_id'],
             'uuid' => $request['uuid'],
             'receiver_id' => $request['receiver_id'],
             'sender_id' => Auth::user()->id,

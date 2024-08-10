@@ -5,20 +5,29 @@
         </section>
         <h1 class="page-title">Modifier les informations</h1>
 
-        <section class="page-content">
+        <form
+            class="page-content"
+            action="/books/store"
+            method="POST"
+            enctype="multipart/form-data"
+        >
             <aside>
-                <img class="cover-book" src="/../storage/books/default.png" alt="">
+                <img class="cover-book" src="<?= \App\Helpers\File::get(null, 'books') ?>" alt="Couverture du livre">
+                <input type="file" id="cover" name="cover">
+                <label for="cover" class="cover-input">modifier</label>
             </aside>
 
-            <form action="/books/store" method="POST">
+            <div class="left-form-part">
                 <div class="form-group">
                     <label for="title">Titre</label>
                     <input type="text" name="title" id="title"/>
                 </div>
+
                 <div class="form-group">
                     <label for="author">Auteur</label>
                     <input type="text" name="author" id="author"/>
                 </div>
+
                 <div class="form-group">
                     <label for="description">Commentaire</label>
                     <textarea
@@ -41,7 +50,7 @@
                 <div class="form-group">
                     <button type="submit">Valider</button>
                 </div>
-            </form>
-        </section>
+            </div>
+        </form>
     </div>
 </main>
