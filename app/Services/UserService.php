@@ -11,6 +11,7 @@ use App\Helpers\Diamond;
 use App\Helpers\Hash;
 use App\Models\User;
 use PDO;
+use Random\RandomException;
 
 class UserService extends Service
 {
@@ -117,6 +118,9 @@ class UserService extends Service
         }
     }
 
+    /**
+     * @throws RandomException
+     */
     public function setAvatar(User $user, array $avatar): bool|string
     {
         if ($avatar['error'] !== UPLOAD_ERR_OK) {
@@ -133,9 +137,6 @@ class UserService extends Service
             File::delete($user->avatar, EnumFileCategory::AVATAR->value);
         }
 
-        /**
-         * Si tout va bien:
-         */
         if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
             if (($filename = File::store('avatars', $avatar))) {
                 return $filename;

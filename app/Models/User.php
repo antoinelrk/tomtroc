@@ -4,6 +4,7 @@ namespace App\Models;
 
 /**
  * @property mixed $id
+ * @property mixed $avatar
  */
 class User extends Model
 {
