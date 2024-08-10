@@ -1,44 +1,47 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\ArrayHelper;
-use App\Helpers\Log;
+use App\Models\Message;
 use PDO;
 
-class MessagesManager
+class MessagesService
 {
     protected PDO $connection;
 
-    protected UserManager $userManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->userManager = new UserManager();
+        $this->userManager = new UserService();
     }
 
-    public function create(array $data)
+    public function create(array $data): Message|bool
     {
-        if (!isset($data['content'])) return;
+        if (!isset($data['content'])) return false;
 
         $query = "INSERT INTO messages ";
-        $query .= "(`conversation_id`, `user_id`, `receiver_id`, `content`, `created_at`, `updated_at`) ";
-        $query .= "VALUES (:conversation_id, :user_id, :receiver_id, :content, :created_at, :updated_at);";
+        $query .= "(`conversation_id`, `sender_id`, `receiver_id`, `content`, `created_at`, `updated_at`) ";
+        $query .= "VALUES (:conversation_id, :sender_id, :receiver_id, :content, :created_at, :updated_at);";
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':conversation_id', $data['conversation_id']);
-        $statement->bindValue(':user_id', $data['user_id']);
+        $statement->bindValue(':sender_id', $data['sender_id']);
         $statement->bindValue(':receiver_id', $data['receiver_id']);
         $statement->bindValue(':content', $data['content']);
         $statement->bindValue(':created_at', date('Y-m-d H:i:s'));
         $statement->bindValue(':updated_at', date('Y-m-d H:i:s'));
+
         $statement->execute();
 
 //        $statement = $this->connection->prepare("SELECT m.* FROM messages m ORDER BY created_at DESC LIMIT 1");
 //        $statement->execute();
 //        $statement->fetch(PDO::FETCH_ASSOC);
+
+        return true;
     }
 
     public function getMessages(?int $conversationId = null): array
@@ -68,8 +71,7 @@ class MessagesManager
         $query .= "INNER JOIN users s ON sender_id = s.id ";
         $query .= "INNER JOIN users r ON receiver_id = r.id ";
 
-        $query .= "WHERE m.sender_id = :sender_id ";
-        $query .= "OR m.receiver_id = :receiver_id ";
+        $query .= "WHERE m.conversation_id = :conversation_id ";
 
         if ($conversationId !== null) {
             $query .= "AND m.conversation_id = :conversation_id ";
@@ -78,11 +80,8 @@ class MessagesManager
         $query .= "ORDER BY m.created_at ASC";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue(':sender_id', $user->id);
-        $statement->bindValue(':receiver_id', $user->id);
-        if ($conversationId !== null) {
-            $statement->bindValue(':conversation_id', $conversationId);
-        }
+        $statement->bindValue(':conversation_id', $conversationId);
+
         $statement->execute();
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 

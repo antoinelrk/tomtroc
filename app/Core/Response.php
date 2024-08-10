@@ -90,6 +90,11 @@ class Response
         header('Location: ' . $path);
     }
 
+    public static function referer(): void
+    {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
     /**
      * Return to log in path.
      *

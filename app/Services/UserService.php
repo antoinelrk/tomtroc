@@ -1,30 +1,27 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
-use App\Core\Database;
 use App\Core\Notification;
-use App\Core\Response;
 use App\Enum\EnumFileCategory;
 use App\Enum\EnumNotificationState;
 use App\Helpers\File;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
-use App\Helpers\Log;
-use App\Helpers\Str;
+use App\Models\User;
 use PDO;
+use Random\RandomException;
 
-class UserManager
+class UserService extends Service
 {
-    protected PDO $connection;
-
     public function __construct()
     {
-        $this->connection = Database::getInstance()->getConnection();
+        parent::__construct();
     }
 
-    public function getUserByName(string $username): User
+    // TODO: A REFACTOR
+    public function getUserByName(string $username)
     {
         $query = "SELECT * FROM users WHERE username = :username";
         $statement = $this->connection->prepare($query);
@@ -37,7 +34,7 @@ class UserManager
         return $user->withoutPassword();
     }
 
-    public function getUserById($id): User|null
+    public function getUserById($id)
     {
         $query = "SELECT * FROM users WHERE id = :id";
         $statement = $this->connection->prepare($query);
@@ -53,7 +50,7 @@ class UserManager
 
         return null;
     }
-
+    // TODO END
     public function create(array $data): User
     {
         $query = "INSERT INTO users ";
@@ -121,6 +118,9 @@ class UserManager
         }
     }
 
+    /**
+     * @throws RandomException
+     */
     public function setAvatar(User $user, array $avatar): bool|string
     {
         if ($avatar['error'] !== UPLOAD_ERR_OK) {
@@ -137,9 +137,6 @@ class UserManager
             File::delete($user->avatar, EnumFileCategory::AVATAR->value);
         }
 
-        /**
-         * Si tout va bien:
-         */
         if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
             if (($filename = File::store('avatars', $avatar))) {
                 return $filename;

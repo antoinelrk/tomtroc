@@ -35,7 +35,7 @@ $router->addRoute('POST', '/users/update/{id}', [UserController::class, 'update'
 // ---------- BOOKS ----------
 
 $router->addRoute('GET', '/our-books', [BooksController::class, 'index']);
-$router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/books/show/{id}', [BooksController::class, 'show']);
 $router->addRoute('GET', '/books/create', [BooksController::class, 'create'], [AuthMiddleware::class]);
 $router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit'], [AuthMiddleware::class]);
 $router->addRoute('POST', '/books/store', [BooksController::class, 'store'], [AuthMiddleware::class]);
@@ -62,7 +62,7 @@ $router->addRoute('GET', '/conversations/create/{id}', [ConversationsController:
 $router->addRoute('GET', '/conversations/show', [ConversationsController::class, 'index']);
 $router->addRoute('GET', '/conversations/show/{uuid}', [ConversationsController::class, 'show']);
 $router->addRoute('POST', '/conversations/store', [ConversationsController::class, 'store']);
-$router->addRoute('POST', '/messages', [MessagesController::class, 'store'],);
+$router->addRoute('POST', '/messages/store', [MessagesController::class, 'store'],);
 
 $router->addRoute(
     'GET',

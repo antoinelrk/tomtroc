@@ -9,22 +9,21 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Log;
 use App\Models\Conversation;
-use App\Models\ConversationManager;
-use App\Models\UserManager;
+use App\Services\ConversationService;
+use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
-    protected ConversationManager $conversationsManager;
-    protected UserManager $userManager;
+    protected ConversationService $conversationsManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->conversationsManager = new ConversationManager();
-        $this->userManager = new UserManager();
+        $this->conversationsManager = new ConversationService();
+        $this->userManager = new UserService();
     }
 
     public function index()
@@ -38,11 +37,11 @@ class ConversationsController extends Controller
 
     public function show(string $uuid)
     {
-        $conversations = (new ConversationManager())->getConversations();
+        $conversations = $this->conversationsManager->getConversations();
 
-        $selectedConversation = array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
            return $conversation->uuid === $uuid;
-        });
+        }));
 
         return View::layout('layouts.app')
             ->withData([
@@ -78,13 +77,12 @@ class ConversationsController extends Controller
         // On récupère la liste des conversations
         $conversations = $this->conversationsManager->getConversations();
 
-        $likelyConversation = array_filter($conversations, function (Conversation $conversation) use ($userId) {
+        $likelyConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($userId) {
             return $conversation->relations['receiver']->id === $userId;
-        });
+        }));
 
         if (!empty($likelyConversation)) {
-            $likelyConversation = $likelyConversation[0];
-            Response::redirect('/conversations/show/' . $likelyConversation->uuid);
+            Response::redirect('/conversations/show/' . $likelyConversation[0]->uuid);
         }
 
         return View::layout('layouts.app')
@@ -118,7 +116,7 @@ class ConversationsController extends Controller
             return false;
         }
 
-        $this->conversationsManager->createConversation($request);
+        // $this->conversationsManager->createConversation($request);
         return false;
     }
 }

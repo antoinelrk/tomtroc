@@ -1,25 +1,26 @@
 <?php
 
-namespace App\Models;
+namespace App\Services;
 
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\Log;
+use App\Models\Conversation;
 use PDO;
 
-class ConversationManager
+class ConversationService
 {
     protected PDO $connection;
 
-    protected MessagesManager $messagesManager;
+    protected MessagesService $messagesManager;
 
-    protected UserManager $usersManager;
+    protected UserService $usersManager;
 
     public function __construct()
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->messagesManager = new MessagesManager();
-        $this->usersManager = new UserManager();
+        $this->messagesManager = new MessagesService();
+        $this->usersManager = new UserService();
     }
 
     public function getConversationByUuid(string $uuid)
@@ -32,12 +33,10 @@ class ConversationManager
         $statement->bindValue(':authenticated_id', Auth::user()->id);
         $statement->execute();
 
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-
-        return $result;
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getConversations()
+    public function getConversations(): array
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
@@ -92,12 +91,11 @@ class ConversationManager
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':user_id', $userId);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $result;
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createConversation(array $data): Conversation|bool
+    public function create(array $data): Conversation|bool
     {
         $map = (new Conversation())->map;
         $attributes = implode(', ', $map);
@@ -111,24 +109,51 @@ class ConversationManager
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
-        $result = $statement->execute();
+        $statement->execute();
+        $conversationId = $this->connection->lastInsertId();
 
-        if (!$result) {
-            return false;
-        }
+        $this->attachUsersToConversation(
+            $conversationId,
+            $data['sender_id'],
+            $data['receiver_id']
+        );
 
-        return $this->getLastConversation($this->connection->lastInsertId());
+        // On créé le message
+        $this->messagesManager->create([
+            'conversation_id' => $conversationId,
+            'sender_id' => $data['sender_id'],
+            'receiver_id' => $data['receiver_id'],
+            'content' => $data['content'],
+        ]);
+
+        return $this->getLastConversation($conversationId);
     }
 
-    public function getLastConversation(int $id): Conversation
+    protected function attachUsersToConversation(int $conversationId, int $senderId, int $receiverId): void
+    {
+        $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
+
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':user_id', $senderId);
+        $statement->bindValue(':conversation_id', $conversationId);
+
+        $statement->execute();
+
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':user_id', $receiverId);
+        $statement->bindValue(':conversation_id', $conversationId);
+
+        $statement->execute();
+    }
+
+    public function getLastConversation($id): Conversation
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
-        $query .= "WHERE cu.user_id = :authenticated_id";
-        $query .= "AND c.id = :conversation_id";
+        $query .= "WHERE c.id = :conversation_id ";
+        $query .= "ORDER BY c.id DESC LIMIT 1";
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue(':authenticated_id', Auth::user()->id);
         $statement->bindValue(':conversation_id', $id);
         $statement->execute();
 

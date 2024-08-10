@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+/**
+ * @property mixed $id
+ * @property mixed $avatar
+ */
 class User extends Model
 {
     public function __construct(
@@ -18,7 +22,7 @@ class User extends Model
 
     public function books(): self
     {
-        $books = (new BookManager())->getUserBook($this);
+        $books = (new BookService())->getUserBook($this);
         $this->relations['books'] = $books;
 
         return $this;

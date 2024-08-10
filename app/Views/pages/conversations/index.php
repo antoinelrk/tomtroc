@@ -40,7 +40,7 @@
 
             <form
                 class="message-sender"
-                action="/messages"
+                action="/messages/store"
                 method="POST"
             >
                 <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">

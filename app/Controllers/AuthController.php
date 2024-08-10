@@ -10,17 +10,18 @@ use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Hash;
-use App\Models\UserManager;
+use App\Services\UserService;
+use Random\RandomException;
 
 class AuthController extends Controller
 {
-    protected UserManager $userManager;
+    protected UserService $userManager;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->userManager = new UserManager();
+        $this->userManager = new UserService();
     }
 
     public function loginForm(): ?View
@@ -33,6 +34,9 @@ class AuthController extends Controller
             ->render();
     }
 
+    /**
+     * @throws RandomException
+     */
     public function login(): void
     {
         $email = $_POST['email'];
@@ -64,6 +68,9 @@ class AuthController extends Controller
             ->render();
     }
 
+    /**
+     * @throws RandomException
+     */
     public function register(): void
     {
         $request = $_POST;
@@ -115,6 +122,6 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        Response::redirect('/auth/login');
+        Response::redirect('/');
     }
 }

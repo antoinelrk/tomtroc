@@ -4,6 +4,9 @@ namespace App\Models;
 use App\Core\Auth\Auth;
 use PDO;
 
+/**
+ * @property mixed $id
+ */
 class Conversation extends Model
 {
     public array $map = [

@@ -18,7 +18,7 @@
 
             <form
                     class="message-sender"
-                    action="/conversations/store"
+                    action="/messages/store"
                     method="POST"
             >
                 <input type="hidden" name="receiver_id" value="<?= $user->id ?>">

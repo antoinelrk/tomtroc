@@ -5,43 +5,64 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
-use App\Models\MessagesManager;
+use App\Helpers\Str;
+use App\Services\ConversationService;
+use App\Services\MessagesService;
 
 class MessagesController extends Controller
 {
-    protected MessagesManager $messagesManager;
-
-    public function __construct()
+    public function __construct(
+        protected MessagesService $messagesManager = new MessagesService(),
+        protected ConversationService $conversationManager = new ConversationService()
+    )
     {
         parent::__construct();
-
-        $this->messagesManager = new MessagesManager();
     }
 
     public function store()
     {
         $request = $_POST;
 
-        // TODO: Vérifier les données à envoyer dans un validateur
-
-        $message = $this->messagesManager->create(
-            [
-                'conversation_id' => $request['conversation_id'],
-                'user_id' => Auth::user()->id,
-                'receiver_id' => $request['receiver_id'],
-                'content' => $request['content'],
+        $isValid = [
+            'receiver_id' => [
+                'required' => true,
             ]
-        );
+        ];
 
-        Response::redirect('/conversations/' . $request['uuid']);
+        if (!$isValid) {
+            Notification::push(
+                'Le contact cible n\'existe pas !',
+                EnumNotificationState::ERROR->value
+            );
+
+            Response::referer();
+            return;
+        }
+
+        if (!isset($request['conversation_id']) && !isset($request['uuid'])) {
+            $conversation = $this->conversationManager->create([
+                'receiver_id' => $request['receiver_id'],
+                'sender_id' => Auth::user()->id,
+                'uuid' => Str::uuid(),
+                'archived' => 0,
+                'content' => $request['content'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        $this->messagesManager->create([
+            'conversation_id' => $conversation->id ?? $request['conversation_id'],
+            'uuid' => $request['uuid'],
+            'receiver_id' => $request['receiver_id'],
+            'sender_id' => Auth::user()->id,
+            'content' => $request['content'],
+        ]);
+
+        Response::redirect('/conversations/show/' . $request['uuid']);
     }
-
-    /**
-     * Faire la liste de tous les messages dont je suis le receveur et l'envoyer.
-     * De chaque message, j'ai besoin de la relation du receveur et de l'envoyer (User)
-     * Je dois grouper ces messages en fonction de l'utilisateur qui n'est pas moi: 'conversation'
-     *
-     */
 }
