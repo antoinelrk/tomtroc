@@ -9,6 +9,7 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
+use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Services\ConversationService;
 use App\Services\UserService;
@@ -32,12 +33,16 @@ class ConversationsController extends Controller
 
         if ($conversation !== null) {
             Response::redirect('/conversations/show/' . $conversation->uuid);
+        } else {
+            Log::dd('aucun message');
         }
     }
 
     public function show(string $uuid)
     {
         $conversations = $this->conversationsManager->getConversations();
+
+        if ($conversations)
 
         $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
            return $conversation->uuid === $uuid;
