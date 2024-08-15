@@ -7,8 +7,8 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
-use App\Core\Validator;
 use App\Enum\EnumNotificationState;
+use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Services\ConversationService;
 use App\Services\UserService;
@@ -30,7 +30,9 @@ class ConversationsController extends Controller
     {
         $conversation = $this->conversationsManager->getFirstConversation();
 
-        if ($conversation !== null) {
+        if (empty($conversation)) {
+            Response::redirect('/conversations/no-message');
+        } else {
             Response::redirect('/conversations/show/' . $conversation->uuid);
         }
     }
@@ -60,6 +62,8 @@ class ConversationsController extends Controller
                 EnumNotificationState::ERROR->value
             );
             Response::redirect('/conversations/show');
+
+            return false;
         }
 
         $user = $this->userManager->getUserById($userId);
@@ -94,29 +98,10 @@ class ConversationsController extends Controller
             ->render();
     }
 
-    public function store(): bool
+    public function noMessage()
     {
-        $request = $_POST;
-
-        $isValid = Validator::check($request, [
-            'receiver_id' => [
-                'required' => true,
-            ],
-            'content' => [
-                'required' => true,
-            ],
-        ]);
-
-        if ($isValid !== true) {
-            Notification::push(
-                'L\'utilisateur et le contenu sont nécessaires !',
-                EnumNotificationState::ERROR->value
-            );
-
-            return false;
-        }
-
-        // $this->conversationsManager->createConversation($request);
-        return false;
+        return View::layout('layouts.app')
+            ->view('pages.conversations.no-message')
+            ->render();
     }
 }

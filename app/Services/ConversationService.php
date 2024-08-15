@@ -118,14 +118,6 @@ class ConversationService
             $data['receiver_id']
         );
 
-        // On créé le message
-        $this->messagesManager->create([
-            'conversation_id' => $conversationId,
-            'sender_id' => $data['sender_id'],
-            'receiver_id' => $data['receiver_id'],
-            'content' => $data['content'],
-        ]);
-
         return $this->getLastConversation($conversationId);
     }
 
