@@ -63,6 +63,8 @@ class MessagesController extends Controller
             'content' => $request['content'],
         ]);
 
+        $this->conversationManager->refresh($conversation->id ?? $request['conversation_id']);
+
         $uuid = $request['uuid'] ?? $conversation->uuid;
 
         Response::redirect('/conversations/show/' . $uuid);
