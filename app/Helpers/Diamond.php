@@ -19,6 +19,17 @@ class Diamond
         return date($format ?? DEFAULT_DATE_FORMAT);
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function format(string $date = null, string $format = null): string
+    {
+        return date(
+            $format ?? DEFAULT_DATE_FORMAT,
+            (new DateTime($date))->getTimestamp() ?? new DateTime(),
+        );
+    }
+
     public static function diffForHumans(string $date, bool $prefixed = false): string
     {
         try {

@@ -24,13 +24,24 @@
                                          class="mini-profile-picture image-cover">
                                     <span class="date"><?= \App\Helpers\Diamond::diffForHumans($message->created_at, true) ?></span>
                                 </div>
-                                <p class="message-content">
-                                    <?= $message->content ?>
-                                </p>
+
+                                <div class="message-wrapper">
+                                    <p class="message-content">
+                                        <?= $message->content ?>
+                                    </p>
+
+                                    <span class="message-date">
+                                        <?= \App\Helpers\Diamond::format($message->created_at, 'd/m/Y à h:i') ?>
+                                    </span>
+                                </div>
                             <?php else: ?>
+                            <div class="message-wrapper">
                                 <p class="message-content collapsed">
                                     <?= $message->content ?>
                                 </p>
+
+                                <span class="message-date"><?= $message->created_at ?></span>
+                            </div>
                             <?php endif; ?>
 
                         </li>

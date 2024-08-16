@@ -137,11 +137,22 @@ main.conversations-page {
                                 margin-left: auto;
                             }
 
-                            p.message-content {
+                            .message-wrapper {
                                 background-color: #d3f0ff;
+                                display: flex;
+                                flex-direction: column;
+                                row-gap: .5em;
 
-                                &.collapsed {
-                                    margin-top: -1.8em;
+                                p.message-content {
+                                    &.collapsed {
+                                        margin-top: -1.8em;
+                                    }
+                                }
+
+                                .message-date {
+                                    margin-left: auto;
+                                    font-size: 10px;
+                                    color: #9db5c3;
                                 }
                             }
                         }
@@ -160,14 +171,22 @@ main.conversations-page {
                             }
                         }
 
-                        p.message-content {
+                        .message-wrapper {
+                            background-color: #fff;
                             border-radius: .25em;
                             padding: 10px 18px;
-                            background-color: #fff;
                             font-family: sans-serif;
 
-                            &.collapsed {
-                                margin-top: -2em;
+                            p.message-content {
+
+                                &.collapsed {
+                                    margin-top: -2em;
+                                }
+                            }
+
+                            .message-data {
+                                text-align: right;
+                                background-color: red;
                             }
                         }
                     }

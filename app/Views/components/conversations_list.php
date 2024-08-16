@@ -30,7 +30,7 @@
                 <li>
                     <a class="conversation-selector" href="/conversations/show/<?= $conversation->uuid ?>">
                         <img
-                            src="<?= \App\Helpers\File::get($conversation->relations['messages'][0]->relations['receiver']->avatar,'avatars') ?>"
+                            src="<?= \App\Helpers\File::get($conversation->relations['receiver']->avatar,'avatars') ?>"
                             alt=""
                             class="profile-picture"
                         >
@@ -38,7 +38,7 @@
                         <div class="user-conversation-list-infos">
                             <div class="top-user-infos">
                                 <span>
-                                    <?= $conversation->relations['messages'][0]->relations['receiver']->username ?>
+                                    <?= $conversation->relations['receiver']->username ?>
                                 </span>
                                 <span>
                                     <?= \App\Helpers\Diamond::diffForHumans($conversation->updated_at, true) ?>
