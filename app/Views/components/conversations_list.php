@@ -4,8 +4,8 @@
             Messagerie
         </h1>
     </div>
-    <?php if(empty($conversations)): ?>
-        <span>Vous n'avez aucun message</span>
+    <?php if(empty($conversations) && !isset($user)): ?>
+        <span class="centered-no-message">Vous n'avez aucun message</span>
     <?php else: ?>
         <ul>
             <?php if (isset($user)): ?>
