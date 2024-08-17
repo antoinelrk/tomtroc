@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\ArrayHelper;
+use App\Helpers\Log;
 use App\Models\Message;
 use PDO;
 
@@ -107,5 +108,21 @@ class MessagesService
             $messages,
             $receiver
         ];
+    }
+
+    public function countUnreadMessages(int $userId = null)
+    {
+        $query = "SELECT COUNT(*) AS unread_messages ";
+        $query .= "FROM messages ";
+        $query .= "WHERE receiver_id = :receiver_id ";
+        $query .= "AND readed = :readed ";
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindValue(':receiver_id', $userId ?? Auth::user()->id);
+        $statement->bindValue(':readed', 0);
+        $statement->execute();
+        $messagesRaw = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $messagesRaw['unread_messages'];
     }
 }

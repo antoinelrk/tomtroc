@@ -58,10 +58,7 @@
                                         </figure>
                                     </div>
                                     Messagerie
-                                    <span>
-                                        <!-- TODO: Ajouter un système de message non-lu -->
-                                    0
-                              </span>
+                                    <span><?= (new \App\Services\MessagesService())->countUnreadMessages(); ?></span>
                                 </a>
                             </li>
 
