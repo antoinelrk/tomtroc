@@ -11,24 +11,28 @@ use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Services\ConversationService;
+use App\Services\MessagesService;
 use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
-    protected ConversationService $conversationsManager;
-    protected UserService $userManager;
+    protected ConversationService $conversationService;
+    protected UserService $userService;
+    
+    protected MessagesService $messagesService;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->conversationsManager = new ConversationService();
-        $this->userManager = new UserService();
+        $this->conversationService = new ConversationService();
+        $this->userService = new UserService();
+        $this->messagesService = new MessagesService();
     }
 
     public function index()
     {
-        $conversation = $this->conversationsManager->getFirstConversation();
+        $conversation = $this->conversationService->getFirstConversation();
 
         if (empty($conversation)) {
             Response::redirect('/conversations/no-message');
@@ -39,11 +43,13 @@ class ConversationsController extends Controller
 
     public function show(string $uuid)
     {
-        $conversations = $this->conversationsManager->getConversations();
+        $conversations = $this->conversationService->getConversations();
 
         $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
            return $conversation->uuid === $uuid;
         }));
+        
+        $this->messagesService->readMessages($selectedConversation[0]->id);
 
         return View::layout('layouts.app')
             ->withData([
@@ -66,7 +72,7 @@ class ConversationsController extends Controller
             return false;
         }
 
-        $user = $this->userManager->getUserById($userId);
+        $user = $this->userService->getUserById($userId);
 
         if ($user === null) {
             Notification::push(
@@ -79,7 +85,7 @@ class ConversationsController extends Controller
         }
 
         // On récupère la liste des conversations
-        $conversations = $this->conversationsManager->getConversations();
+        $conversations = $this->conversationService->getConversations();
 
         $likelyConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($userId) {
             return $conversation->relations['receiver']->id === $userId;
