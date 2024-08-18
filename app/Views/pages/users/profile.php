@@ -1,3 +1,8 @@
+<?php
+
+use App\Core\Auth\Auth;
+
+?>
 <main class="page-public-profile">
     <section class="profile centered">
         <aside>
@@ -21,10 +26,11 @@
                 </div>
             </div>
 
-            <!-- TODO: Le lien vers la messagerie doit pouvoir créer automaiquement une instance d'un message vers l'utilisateur -->
-            <a href="" class="write-message">
-                Écrire un message
-            </a>
+            <?php if ($user->id !== Auth::user()->id): ?>
+                <a href="/conversations/create/<?= $user->id ?>" class="write-message">
+                    Écrire un message
+                </a>
+            <?php endif; ?>
         </aside>
 
         <article>

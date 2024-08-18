@@ -133,7 +133,6 @@ body {
                             }
 
                             li {
-
                                 a {
                                     column-gap: .5em;
                                     align-items: center;
@@ -157,6 +156,11 @@ body {
                                         background-color: #292929;
                                         color: #f5f3ef;
                                     }
+                                }
+
+
+                                form button {
+                                    font-size: 14px;
                                 }
                             }
                         }

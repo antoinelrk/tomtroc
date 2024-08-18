@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Auth\Auth;
 use App\Core\Database;
 use App\Helpers\ArrayHelper;
+use App\Helpers\Log;
 use App\Models\Message;
 use PDO;
 
@@ -25,13 +26,14 @@ class MessagesService
         if (!isset($data['content'])) return false;
 
         $query = "INSERT INTO messages ";
-        $query .= "(`conversation_id`, `sender_id`, `receiver_id`, `content`, `created_at`, `updated_at`) ";
-        $query .= "VALUES (:conversation_id, :sender_id, :receiver_id, :content, :created_at, :updated_at);";
+        $query .= "(`conversation_id`, `sender_id`, `receiver_id`, `content`, `readed`, `created_at`, `updated_at`) ";
+        $query .= "VALUES (:conversation_id, :sender_id, :receiver_id, :content, :readed, :created_at, :updated_at);";
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':conversation_id', $data['conversation_id']);
         $statement->bindValue(':sender_id', $data['sender_id']);
         $statement->bindValue(':receiver_id', $data['receiver_id']);
         $statement->bindValue(':content', $data['content']);
+        $statement->bindValue(':readed', 0);
         $statement->bindValue(':created_at', date('Y-m-d H:i:s'));
         $statement->bindValue(':updated_at', date('Y-m-d H:i:s'));
 
@@ -55,6 +57,7 @@ class MessagesService
             m.content AS message_content,
             m.sender_id AS message_sender_id,
             m.receiver_id AS message_receiver_id,
+            m.readed AS message_readed,
             m.created_at AS message_created_at,
             m.updated_at AS message_updated_at, ";
 
@@ -107,5 +110,35 @@ class MessagesService
             $messages,
             $receiver
         ];
+    }
+
+    public function countUnreadMessages(int $userId = null)
+    {
+        $query = "SELECT COUNT(*) AS unread_messages ";
+        $query .= "FROM messages ";
+        $query .= "WHERE receiver_id = :receiver_id ";
+        $query .= "AND readed = :readed ";
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindValue(':receiver_id', $userId ?? Auth::user()->id);
+        $statement->bindValue(':readed', 0);
+        $statement->execute();
+        $messagesRaw = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $messagesRaw['unread_messages'];
+    }
+
+    public function readMessages(int $conversationId, int $userId = null): void
+    {
+        $query = "UPDATE messages ";
+        $query .= "SET readed = :readed ";
+        $query .= "WHERE conversation_id = :conversation_id ";
+        $query .= "AND receiver_id = :receiver_id ";
+
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':readed', 1);
+        $statement->bindValue(':receiver_id', $userId ?? Auth::user()->id);
+        $statement->bindValue(':conversation_id', $conversationId);
+        $statement->execute();
     }
 }

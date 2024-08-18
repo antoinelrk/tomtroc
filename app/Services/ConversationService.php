@@ -40,7 +40,8 @@ class ConversationService
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
-        $query .= "WHERE cu.user_id = :authenticated_id";
+        $query .= "WHERE cu.user_id = :authenticated_id ";
+        $query .= "ORDER BY c.updated_at DESC";
 
         $statement = $this->connection->prepare($query);
         $statement->bindValue(':authenticated_id', Auth::user()->id);
@@ -118,14 +119,6 @@ class ConversationService
             $data['receiver_id']
         );
 
-        // On créé le message
-        $this->messagesManager->create([
-            'conversation_id' => $conversationId,
-            'sender_id' => $data['sender_id'],
-            'receiver_id' => $data['receiver_id'],
-            'content' => $data['content'],
-        ]);
-
         return $this->getLastConversation($conversationId);
     }
 
@@ -173,5 +166,16 @@ class ConversationService
         );
 
         return $conversation;
+    }
+
+    public function refresh(int $conversationId): void
+    {
+        $query = "UPDATE conversations SET ";
+        $query .= "updated_at = :updated_at ";
+        $query .= "WHERE id = :conversation_id ";
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue(':updated_at', date('Y-m-d H:i:s'));
+        $statement->bindValue(':conversation_id', $conversationId);
+        $statement->execute();
     }
 }

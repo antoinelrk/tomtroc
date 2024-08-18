@@ -35,9 +35,9 @@
             </div>
 
             <form
-                    class="message-sender"
-                    action="/messages"
-                    method="POST"
+                class="message-sender"
+                action="/messages/store"
+                method="POST"
             >
                 <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">
                 <input type="hidden" name="uuid" value="<?= $selectedConversation->uuid ?>">

@@ -9,6 +9,7 @@ use App\Enum\EnumNotificationState;
 use App\Helpers\File;
 use App\Helpers\Diamond;
 use App\Helpers\Hash;
+use App\Helpers\Log;
 use App\Models\User;
 use PDO;
 use Random\RandomException;
@@ -21,7 +22,7 @@ class UserService extends Service
     }
 
     // TODO: A REFACTOR
-    public function getUserByName(string $username)
+    public function getUserByName(string $username): ?User
     {
         $query = "SELECT * FROM users WHERE username = :username";
         $statement = $this->connection->prepare($query);
@@ -29,9 +30,18 @@ class UserService extends Service
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $user = new User($result);
+        if(is_bool($result)) {
+            Notification::push(
+                'L\'utilisateur ' . $username . ' n\'existe pas',
+                EnumNotificationState::ERROR->value
+            );
 
-        return $user->withoutPassword();
+            return null;
+        } else {
+            $user = new User($result);
+
+            return $user->withoutPassword();
+        }
     }
 
     public function getUserById($id)

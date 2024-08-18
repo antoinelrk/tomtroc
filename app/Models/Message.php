@@ -10,6 +10,7 @@ class Message extends Model
         'content',
         'sender_id',
         'receiver_id',
+        'readed',
         'created_at',
         'updated_at',
     ];

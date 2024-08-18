@@ -17,14 +17,4 @@ class User extends Model
         unset($this->properties['password']);
         return $this;
     }
-
-    // ---------- RELATIONS ----------
-
-    public function books(): self
-    {
-        $books = (new BookService())->getUserBook($this);
-        $this->relations['books'] = $books;
-
-        return $this;
-    }
 }

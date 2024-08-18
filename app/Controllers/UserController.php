@@ -8,14 +8,15 @@ use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Enum\EnumNotificationState;
+use App\Helpers\Log;
 use App\Services\BookService;
-use App\Models\User;
 use App\Services\UserService;
 
 class UserController extends Controller
 {
     public function __construct(
-        protected UserService $userService = new UserService()
+        protected UserService $userService = new UserService(),
+        protected BookService $bookService = new BookService()
     )
     {
         parent::__construct();
@@ -46,7 +47,8 @@ class UserController extends Controller
 
     public function show($username): void
     {
-        $user = $this->userService->getUserByName($username)->books();
+        $user = $this->userService->getUserByName($username);
+        $user->relations['books'] = $this->bookService->getUserBook($user);
 
         View::layout('layouts.app')
             ->withData([
