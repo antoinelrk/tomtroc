@@ -38,8 +38,6 @@ class ConversationsController extends Controller
             Response::redirect('/conversations/no-message');
         } else {
             Response::redirect('/conversations/show/' . $conversation->uuid);
-        } else {
-            Log::dd('aucun message');
         }
     }
 
