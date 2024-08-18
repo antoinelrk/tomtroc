@@ -58,7 +58,7 @@ class Errors
      */
     protected static function render(string $message, int $code): ?View
     {
-        return View::layout('layouts.empty')
+        return View::layout('layouts.app')
             ->withData([
                 'error' => [
                     'code' => $code,

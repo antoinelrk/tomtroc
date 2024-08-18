@@ -2,9 +2,12 @@
 @import './root.css';
 @import './default.css';
 
+@import './notifications.css';
 @import './pages/home.css';
 @import './pages/auth/register.css';
 @import './pages/messages/index.css';
 @import './pages/me.css';
 @import './pages/books/index.css';
+@import './pages/books/show.css';
+@import './pages/books/create.css';
 @import './pages/users/public-profile.css';

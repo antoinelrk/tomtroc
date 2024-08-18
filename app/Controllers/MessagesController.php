@@ -5,52 +5,68 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
-use App\Models\Conversation;
+use App\Helpers\Str;
+use App\Services\ConversationService;
+use App\Services\MessagesService;
 
 class MessagesController extends Controller
 {
-    public function index()
+    public function __construct(
+        protected MessagesService $messagesManager = new MessagesService(),
+        protected ConversationService $conversationManager = new ConversationService()
+    )
     {
-        $user = Auth::user();
-        $conversations = (new Conversation())
-            ->users('display_name')
-            ->whereTest('id', $user['id'], 'users')
-            ->orderBy('updated_at', 'DESC')
-            ->first();
-
-        if ($conversations !== null) {
-            Response::redirect('messages/' . $conversations['uuid']);
-        }
+        parent::__construct();
     }
 
-    /**
-     * TODO: Return conversations with authenticated user only.
-     *
-     * @return ?View
-     */
-    public function show($uuid): ?View
+    public function store()
     {
-        $conversations = (new Conversation())->getConversationsNew();
+        $request = $_POST;
 
-        // Si l'uuid n'est pas défini on retourne la premiere
-        if (!$uuid) {
-            $currentConversation = $conversations[0];
-        } else {
-            // Sur cette liste de conversation on récupère uniquement celle qui correspond à l'UUID passé en paramètre.
+        $isValid = [
+            'receiver_id' => [
+                'required' => true,
+            ]
+        ];
 
-            $currentConversation = array_values(array_filter($conversations, function ($conversation) use ($uuid) {
-                return $conversation['uuid'] === $uuid;
-            }));
+        if (!$isValid) {
+            Notification::push(
+                'Le contact cible n\'existe pas !',
+                EnumNotificationState::ERROR->value
+            );
+
+            Response::referer();
+            return;
         }
 
-        return View::layout('layouts.app')
-            ->withData([
-                'conversations' => $conversations,
-                'currentConversation' => $currentConversation[0],
-            ])
-            ->view('pages.messages.index')
-            ->render();
+        if (!isset($request['conversation_id']) && !isset($request['uuid'])) {
+            $conversation = $this->conversationManager->create([
+                'receiver_id' => $request['receiver_id'],
+                'sender_id' => Auth::user()->id,
+                'uuid' => Str::uuid(),
+                'archived' => 0,
+                'content' => $request['content'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        $this->messagesManager->create([
+            'conversation_id' => $conversation->id ?? $request['conversation_id'],
+            'uuid' => $request['uuid'],
+            'receiver_id' => $request['receiver_id'],
+            'sender_id' => Auth::user()->id,
+            'content' => $request['content'],
+        ]);
+
+        $this->conversationManager->refresh($conversation->id ?? $request['conversation_id']);
+
+        $uuid = $request['uuid'] ?? $conversation->uuid;
+
+        Response::redirect('/conversations/show/' . $uuid);
     }
 }

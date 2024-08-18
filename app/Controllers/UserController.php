@@ -5,75 +5,81 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
-use App\Helpers\Errors;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
-use App\Models\Book;
-use App\Models\User;
+use App\Services\BookService;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-    /**
-     * Return list of users, just for API tests.
-     *
-     * @return void
-     */
-    public function index(): void
+    public function __construct(
+        protected UserService $userService = new UserService(),
+        protected BookService $bookService = new BookService()
+    )
     {
-        $users = (new User())->all();
-
-        Response::json($users, Response::HTTP_OK);
+        parent::__construct();
     }
 
     /**
      * Return private profil page.
-     * TODO: Passe auth-user data here..
      *
      * @return void
      */
     public function me(): void
     {
-        $relatedBooks = (new Book())
-            ->users(
-                'display_name',
-                'avatar'
-            )
-            ->whereTest('user_id', Auth::user()['id'])
-            ->get();
+        $user = Auth::user();
+
+        $books = new BookService();
+        $books = $books->getUserBook(Auth::user());
 
         View::layout('layouts.app')
             ->withData([
                 'title' => 'Mon compte',
-                'user' => Auth::user(),
-                'books' => $relatedBooks,
-                'quantity' => count($relatedBooks),
+                'user' => $user,
+                'books' => $books,
+                'quantity' => count($books),
             ])
             ->view('pages.me')
             ->render();
     }
 
-    public function show($username)
+    public function show($username): void
     {
-        $user = (new User())->whereTest('username', $username)->first();
+        $user = $this->userService->getUserByName($username);
+        $user->relations['books'] = $this->bookService->getUserBook($user);
 
-        $relatedBooks = (new Book())
-            ->users(
-                'display_name',
-                'avatar'
-            )
-            ->whereTest('user_id', $user['id'])
-            ->get();
+        View::layout('layouts.app')
+            ->withData([
+                'user' => $user,
+                'books' => $user->relations['books'],
+            ])
+            ->view('pages.users.profile')
+            ->render();
+    }
 
-        if ($user) {
-            View::layout('layouts.app')
-                ->withData([
-                    'user' => $user,
-                    'books' => $relatedBooks,
-                ])
-                ->view('pages.users.profile')
-                ->render();
-        } else {
-            return Errors::notFound();
+    public function update($userId): void
+    {
+        $user = $this->userService->getUserById($userId);
+        $request = $_POST;
+
+        if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $request['avatar'] = $_FILES['avatar'];
         }
+
+        if ($this->userService->update($user, $request)) {
+            Notification::push(
+                'Profil édité avec succès',
+                EnumNotificationState::SUCCESS->value
+            );
+        } else {
+            Notification::push(
+                'Impossible de mettre à jour le profil, contactez un administrateur.',
+                EnumNotificationState::ERROR->value
+            );
+        }
+
+        Response::redirect('/me');
     }
 }

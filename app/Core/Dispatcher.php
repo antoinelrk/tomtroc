@@ -44,8 +44,6 @@ readonly class Dispatcher
                     [$controller, $action],
                     $controllerAction['parameters'] ?? []
                 );
-
-                // $controller->$action();
             }
         } else {
             return Errors::notFound();

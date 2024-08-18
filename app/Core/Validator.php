@@ -36,7 +36,11 @@ class Validator
                 }
             }
         }
-        return empty(self::$errors);
+        if (self::$errors) {
+            return self::errors();
+        }
+
+        return true;
     }
 
     /**

@@ -4,6 +4,9 @@ namespace App\Core\Facades;
 
 use App\Core\ViewRenderer;
 
+/**
+ * @method static layout(string $string)
+ */
 class View {
     /**
      * @var ViewRenderer

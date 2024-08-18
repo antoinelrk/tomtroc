@@ -5,12 +5,19 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="./../css/app.css">
-    <script src="./../js/app.js" defer></script>
+    <link rel="stylesheet" href="/css/app.css">
     <title><?= $title ?></title>
 </head>
 <body>
 <div id="app">
+    <?php if (App\Core\Notification::as()) : ?>
+    <ul class="notifications">
+        <?php foreach (\App\Core\Notification::all() as $key => $notification) ?>
+        <li class="notification <?= $notification['state'] ?>" id="<?= $key ?>">
+            <?= $notification['message'] ?>
+        </li>
+    </ul>
+    <?php endif; ?>
     <header>
         <div class="centered">
             <div class="left">
@@ -42,7 +49,7 @@
                         <li></li>
                         <?php if(\App\Core\Auth\Auth::check()): ?>
                             <li>
-                                <a href="/messages">
+                                <a href="/conversations/show">
                                     <div class="icon">
                                         <figure>
                                             <svg width="100%" height="100%" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,9 +58,7 @@
                                         </figure>
                                     </div>
                                     Messagerie
-                                    <span>
-                                    0
-                              </span>
+                                    <span><?= (new \App\Services\MessagesService())->countUnreadMessages(); ?></span>
                                 </a>
                             </li>
 
@@ -113,7 +118,7 @@
             </li>
 
             <li>
-                <a href="">
+                <a href="/">
                     TomTroc ©
                 </a>
             </li>
@@ -132,4 +137,41 @@
     </footer>
 </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let chatDiv = document.querySelector('.conversations-messages');
+        if (chatDiv !== null) {
+            chatDiv.scrollTop = chatDiv?.scrollHeight;
+        }
+    });
+
+    const deletableLinks = document.querySelectorAll('.deletable-link')
+    deletableLinks.forEach((deletableLink) => {
+        deletableLink.addEventListener('click', (event) => {
+            event.preventDefault()
+            if (confirm('Voulez vous vraiment supprimer le livre ?')) {
+                window.location = deletableLink.href
+            }
+        })
+    })
+
+    function showPopups() {
+        let popups = document.querySelectorAll('.notification');
+        popups.forEach(function(popup) {
+            popup.style.display = 'flex';
+        });
+
+        setTimeout(function() {
+            popups.forEach(async function (popup) {
+                await fetch(`/notifications/drop/${popup.id}`, {
+                    method: 'POST'
+                })
+
+                popup.remove()
+            })
+        }, 3000);
+    }
+
+    showPopups();
+</script>
 </html>
