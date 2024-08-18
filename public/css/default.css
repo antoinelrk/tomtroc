@@ -24,6 +24,9 @@ button {
     cursor: pointer;
 }
 
+.book-cover, .image-cover {
+    object-fit: cover;
+}
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
@@ -59,6 +62,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 .text-normal {
     font-size: var(--title-6);
+}
+
+.centered {
+    width: var(--centered) !important;
 }
 
 body {
@@ -126,7 +133,6 @@ body {
                             }
 
                             li {
-
                                 a {
                                     column-gap: .5em;
                                     align-items: center;
@@ -150,6 +156,11 @@ body {
                                         background-color: #292929;
                                         color: #f5f3ef;
                                     }
+                                }
+
+
+                                form button {
+                                    font-size: 14px;
                                 }
                             }
                         }
@@ -185,7 +196,6 @@ body {
         main {
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: var(--page-size);
             width: 100%;
         }

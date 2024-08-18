@@ -92,6 +92,7 @@ main.our-books {
                         img {
                             height: 200px;
                             aspect-ratio: 1/1;
+                            object-fit: cover;
                         }
 
                         .book-info {

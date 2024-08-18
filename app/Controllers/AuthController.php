@@ -5,19 +5,25 @@ namespace App\Controllers;
 use App\Core\Auth\Auth;
 use App\Core\Controller;
 use App\Core\Facades\View;
+use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
-use App\Helpers\Diamond;
+use App\Enum\EnumNotificationState;
 use App\Helpers\Hash;
-use App\Models\User;
+use App\Services\UserService;
+use Random\RandomException;
 
 class AuthController extends Controller
 {
-    /**
-     * Login method.
-     *
-     * @return ?View
-     */
+    protected UserService $userManager;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userManager = new UserService();
+    }
+
     public function loginForm(): ?View
     {
         return View::layout('layouts.app')
@@ -29,28 +35,29 @@ class AuthController extends Controller
     }
 
     /**
-     * Login a user.
-     *
-     * @return void
+     * @throws RandomException
      */
     public function login(): void
     {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if (Auth::attempt($email, $password)) {
+        if ($user = Auth::attempt($email, $password)) {
+            Notification::push(
+                "Heureux de vous revoir $user->username !",
+                EnumNotificationState::SUCCESS->value
+            );
             Response::redirect('/me');
             exit;
         }
 
+        Notification::push(
+            'Erreur dans la combinaison email/password',
+            EnumNotificationState::ERROR->value
+        );
         Response::redirectToLogin();
     }
 
-    /**
-     * Registering method.
-     *
-     * @return ?View
-     */
     public function registerForm(): ?View
     {
         return View::layout('layouts.app')
@@ -62,18 +69,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a new user.
-     *
-     * @return void
+     * @throws RandomException
      */
     public function register(): void
     {
         $request = $_POST;
 
-        /*
-         * TODO: Wip, Add checking password/confirmation and create new object for retrieve validatedData to push in
-         * TODO: model creation.
-         */
         $isValidate = Validator::check($request, [
             'username' => [
                 'string' => true,
@@ -82,6 +83,7 @@ class AuthController extends Controller
             'password' => [
                 'string' => true,
                 'required' => true,
+                'min' => 8,
             ],
             'email' => [
                 'email' => true,
@@ -89,27 +91,37 @@ class AuthController extends Controller
             ],
         ]);
 
-        (new User())->create([
+        if (!$isValidate) {
+            Notification::push(
+                'Des informations ne sont pas valides',
+                EnumNotificationState::ERROR->value
+            );
+
+            Response::redirect('/register');
+        }
+
+        $displayName = ucfirst($request['username']);
+
+        $this->userManager->create([
             'username' => $request['username'],
-            'display_name' => ucfirst($request['username']),
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'created_at' => Diamond::now(),
-            'updated_at' => Diamond::now(),
         ]);
+
+        Notification::push(
+            "Bienvenue sur TomTroc $displayName !",
+            EnumNotificationState::SUCCESS->value
+        );
+
+        Auth::attempt($request['email'], $request['password']);
 
         Response::redirect('/');
     }
 
-    /**
-     * Log out the user and redirect to log in form.
-     *
-     * @return void
-     */
     public function logout(): void
     {
         Auth::logout();
 
-        Response::redirect('/auth/login');
+        Response::redirect('/');
     }
 }

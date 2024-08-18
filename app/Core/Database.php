@@ -40,7 +40,7 @@ class Database
         // TODO: Wait slack response for using dotenv
         $this->pdo = new PDO($dsn, $config['username'], $config['password']);
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
 
     /**
@@ -80,5 +80,20 @@ class Database
         } catch (PDOException $e) {
             Log::dd("Connection failed: " . $e->getMessage());
         }
+    }
+
+    public static function query(string $sql, string $classname)
+    {
+        $statement = self::getConnection()->query($sql);
+
+        return $statement;
+    }
+
+    public static function prepare(string $sql)
+    {
+        $statement = self::getConnection()->prepare($sql);
+        $statement->execute();
+
+        return $statement;
     }
 }

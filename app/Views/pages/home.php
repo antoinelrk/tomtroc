@@ -30,61 +30,24 @@
 
             <div class="last-books-wrapper">
                 <ul class="grid-of-last-books">
+                    <?php foreach ($books as $book): ?>
                     <li>
                         <article>
-                            <img src="./img/books/alabaster-co-UtRyYXcbK6A-unsplash.webp" alt="Image de livre carré">
+                            <img class="book-cover" src="<?= \App\Helpers\File::get($book->cover, \App\Enum\EnumFileCategory::BOOK->value) ?>" alt="Image de livre carré">
                             <div class="book-info">
-                                <h2>Esther</h2>
-                                <h3>Alabaster</h3>
+                                <h2><?= $book->title ?></h2>
+                                <h3><?= $book->author ?></h3>
                                 <p>
-                                    Vendu par: CamilleClubLit
+                                    Vendu par: <?= $book->relations['user']->username ?>
                                 </p>
                             </div>
                         </article>
                     </li>
-
-                    <li>
-                        <article>
-                            <img src="./img/books/frosty-ilze-tfYL1j1jKNo-unsplash.webp" alt="Image de livre carré">
-                            <div class="book-info">
-                                <h2>The Kinfolk Table</h2>
-                                <h3>Nathan Williams</h3>
-                                <p>
-                                    Vendu par: Nathalire
-                                </p>
-                            </div>
-                        </article>
-                    </li>
-
-                    <li>
-                        <article>
-                            <img src="./img/books/annie-spratt-ZT4_d3-vyUg-unsplash.webp" alt="Image de livre carré">
-                            <div class="book-info">
-                                <h2>Wabi Sabi</h2>
-                                <h3>Beth Kempton</h3>
-                                <p>
-                                    Vendu par: Alexlecture
-                                </p>
-                            </div>
-                        </article>
-                    </li>
-
-                    <li>
-                        <article>
-                            <img src="./img/books/sincerely-media-CXYPfveiuis-unsplash.webp" alt="Image de livre carré">
-                            <div class="book-info">
-                                <h2>Milk & Honey</h2>
-                                <h3>Rupi Kaur</h3>
-                                <p>
-                                    Vendu par: Hugo1990_12
-                                </p>
-                            </div>
-                        </article>
-                    </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
-            <a class="more-books" href="#">Voir tous les livres</a>
+            <a class="more-books" href="/our-books">Voir tous les livres</a>
         </section>
     </section>
 

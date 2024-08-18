@@ -1,64 +1,33 @@
 <main class="conversations-page">
     <div class="centered">
-        <section class="conversations-list">
-            <div class="section-title">
-                <h1>
-                    Messagerie
-                </h1>
-            </div>
-            <ul>
-                <?php foreach ($conversations as $conversation): ?>
-                    <li>
-                        <!-- <pre><?php var_dump($conversation); ?></pre> -->
-                        <a href="/messages/<?= $conversation['uuid'] ?>">
-                            <img src="<?= $conversation['users']['target']['avatar'] ?>" alt="" class="profile-picture">
-
-                            <div class="user-conversation-list-infos">
-                                <div class="top-user-infos">
-                                    <span>
-                                        <?= $conversation['users']['target']['display_name'] ?>
-                                    </span>
-                                    <span>
-                                        <!-- TODO: Formatter la date en fonction de l'offset (Si c'est encore aujourd'hui on mets l'heure, sinon hier) -->
-                                        <?= $conversation['updated_at'] ?>
-                                    </span>
-                                </div>
-                                <p>
-                                    <!-- TODO: Ne laisser passer qu'un certains nombre de mots et ajouter les ...-->
-                                    Lorem ipsum dolor sit amet...
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
+        <?php require('../app/Views/components/conversations_list.php'); ?>
 
         <section class="conversation-wrapper">
             <div class="header">
                 <div class="user-infos">
-                    <img src="<?= $currentConversation['users']['target']['avatar'] ?>" alt=""
+                    <img src="<?= $selectedConversation->relations['user']->avatar ?>" alt=""
                          class="profile-picture">
                     <span>
-                        <?= $currentConversation['users']['target']['display_name'] ?>
+                        <?= $selectedConversation->relations['user']->username ?>
                     </span>
                 </div>
             </div>
 
             <div class="conversations-messages">
                 <ul class="messages-list">
-                    <?php foreach ($currentConversation['messages'] as $key => $message): ?>
-                        <li class="message <?= \App\Core\Auth\Auth::user()['id'] === $message['user']['id'] ? 'me' : '' ?>">
+                    <?php foreach ($selectedConversation->relations[0]['messages'] as $key => $message): ?>
+                        <li class="message <?= \App\Core\Auth\Auth::user()->id === $message->relations[0]['user']->id ? 'me' : '' ?>">
                             <!-- Si le message précédent contient le même user tu mets pas ce bloc -->
-                            <?php if ($currentConversation['messages'][$key]['user']['id'] === $message['user']['id']): ?>
+                            <?php if ($key === 0 || ($key > 0 && $selectedConversation->relations[0]['messages'][$key - 1]->receiver_id === $message->user_id)): ?>
                                 <div class="metadata">
-                                    <img src="<?= $message['user']['avatar'] ?>" alt=""
+                                    <img src="<?= $message->relations[0]['user']->avatar ?>" alt=""
                                          class="mini-profile-picture">
-                                    <span class="date">21.08 15:48</span>
+                                    <span class="date"><?= \App\Helpers\Diamond::diffForHumans($message->created_at, true) ?></span>
                                 </div>
                             <?php endif; ?>
+
                             <p class="message-content">
-                                <?= $message['content'] ?>
+                                <?= $message->content ?>
                             </p>
                         </li>
                     <?php endforeach; ?>
@@ -66,12 +35,16 @@
             </div>
 
             <form
-                    class="message-sender"
-                    action="/messages"
-                    method="POST"
+                class="message-sender"
+                action="/messages/store"
+                method="POST"
             >
+                <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">
+                <input type="hidden" name="uuid" value="<?= $selectedConversation->uuid ?>">
+                <input type="hidden" name="receiver_id" value="<?= $selectedConversation->relations[0]['user']->id ?>">
+
                 <label>
-                    <input type="text" placeholder="Taper votre message ici">
+                    <input type="text" name="content" placeholder="Taper votre message ici" autofocus>
                 </label>
 
                 <button class="btn btn-send">Envoyer</button>

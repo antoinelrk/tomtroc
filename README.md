@@ -1,23 +1,12 @@
-# Customer relationship Website
 
-*Projet en développement*
+## Setup
 
-Todolist:
+Créer la base de donnée et remplir la configuration
 
-- ✅ Mettre le router en place 
-- ✅ Mettre le dispatcher en place
-- ✅ Mettre le système de view/layout
-- ✅ Finir le système de facades
-- ✅ Création de compte
-- ✅ Mettre l'ORM en place (Connection & Création)
-- ⬜ Middlework refacto
-- ⬜ Authentification
-- ⬜ Ajout des FileRequests
-- ⬜ Mettre l'ORM en place (Fetching & Relations)
-- ⬜ Ajout des profils utilisateurs
-- ⬜ Gestion des livres
-- ⬜ Système de messagerie
+Pour faciliter les tests, le fichier ``docker-compose.yml`` possède toute une stack complète pour faire fonctionner l'application.
 
-### Hors MVP
-- ⬜ Installer pest
-- ⬜ Mettre le système de migration automatisée en place
+
+## Se connecter à l'application
+
+- ``napoleon71@example.com``
+- ``P@ss1234``

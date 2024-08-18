@@ -3,6 +3,7 @@ main.page-public-profile {
     background-color: var(--bg-100);
     padding-bottom: 80px;
     row-gap: 2em;
+    align-items: center;
 
     section.profile {
         display: flex;
@@ -22,10 +23,11 @@ main.page-public-profile {
             padding: 4em 0;
             row-gap: 5em;
 
-            img {
-                width: 40%;
+            img.profile-picture {
+                width: 50%;
                 aspect-ratio: 1/1;
                 border-radius: 9999px;
+                object-fit: cover;
             }
 
             .separator {
@@ -89,6 +91,12 @@ main.page-public-profile {
             width: 70%;
             background-color: var(--white);
             border-radius: 2em;
+
+            h1.no-product {
+                margin: auto;
+                font-family: "PlayfairDisplay Regular", sans-serif;
+                font-size: 1.5em;
+            }
 
             table.list-of-books {
                 display: flex;

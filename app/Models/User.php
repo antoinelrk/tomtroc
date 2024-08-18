@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Core\Model;
-
+/**
+ * @property mixed $id
+ * @property mixed $avatar
+ */
 class User extends Model
 {
-    /**
-     * @var string $table
-     */
-    protected string $table = 'users';
+    public function __construct(
+        public array $properties = []
+    ) {}
 
-    /**
-     * @var array|string[] $hidden
-     */
-    protected array $hidden = [
-        'password'
-    ];
+    public function withoutPassword(): User
+    {
+        unset($this->properties['password']);
+        return $this;
+    }
 }
