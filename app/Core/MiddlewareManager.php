@@ -39,14 +39,17 @@ class MiddlewareManager
      */
     public function handle($request): mixed
     {
-        if ($this->index < count($this->middlewares)) {
+        if ($this->index < count($this->middlewares))
+        {
             $middleware = $this->middlewares[$this->index];
             $this->index++;
 
-            return $middleware->handle($request, function($request) {
+            return $middleware->handle($request, function($request)
+            {
                 return $this->handle($request);
             });
         }
+
         return $request;
     }
 }

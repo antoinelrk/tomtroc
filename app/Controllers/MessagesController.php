@@ -23,7 +23,7 @@ class MessagesController extends Controller
         parent::__construct();
     }
 
-    public function store()
+    public function store(): void
     {
         $request = $_POST;
 
@@ -33,7 +33,8 @@ class MessagesController extends Controller
             ]
         ];
 
-        if (!$isValid) {
+        if (!$isValid)
+        {
             Notification::push(
                 'Le contact cible n\'existe pas !',
                 EnumNotificationState::ERROR->value
@@ -43,7 +44,8 @@ class MessagesController extends Controller
             return;
         }
 
-        if (!isset($request['conversation_id']) && !isset($request['uuid'])) {
+        if (!isset($request['conversation_id']) && !isset($request['uuid']))
+        {
             $conversation = $this->conversationManager->create([
                 'receiver_id' => $request['receiver_id'],
                 'sender_id' => Auth::user()->id,

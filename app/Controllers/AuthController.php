@@ -42,7 +42,8 @@ class AuthController extends Controller
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if ($user = Auth::attempt($email, $password)) {
+        if ($user = Auth::attempt($email, $password))
+        {
             Notification::push(
                 "Heureux de vous revoir $user->username !",
                 EnumNotificationState::SUCCESS->value
@@ -91,7 +92,8 @@ class AuthController extends Controller
             ],
         ]);
 
-        if (!$isValidate) {
+        if (!$isValidate)
+        {
             Notification::push(
                 'Des informations ne sont pas valides',
                 EnumNotificationState::ERROR->value

@@ -7,7 +7,8 @@ use App\Core\ViewRenderer;
 /**
  * @method static layout(string $string)
  */
-class View {
+class View
+{
     /**
      * @var ViewRenderer
      */
@@ -33,7 +34,8 @@ class View {
      *
      * @return mixed
      */
-    public static function __callStatic($name, $arguments) {
+    public static function __callStatic($name, $arguments): mixed
+    {
         return self::$view->$name(...$arguments);
     }
 }
