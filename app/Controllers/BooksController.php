@@ -79,14 +79,18 @@ class BooksController extends Controller
             ]
         ]);
 
-        if ($isValid) {
+        if ($isValid)
+        {
             $book = $this->bookService->create($data);
 
-            if ($book === false) {
+            if ($book === false)
+            {
                 Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
 
                 Response::redirect('/books/create');
-            } else {
+            }
+            else
+            {
                 Notification::push(
                     'Votre nouveau livre a été ajouté',
                     EnumNotificationState::SUCCESS->value
@@ -134,7 +138,8 @@ class BooksController extends Controller
             ]
         ]);
 
-        if (!$isValid) {
+        if (!$isValid)
+        {
             Notification::push(
                 'Certaines informations ne sont pas valides',
                 EnumNotificationState::ERROR->value
@@ -143,13 +148,17 @@ class BooksController extends Controller
             Response::redirect('/register');
         }
 
-        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE)
+        {
             $request['cover'] = $_FILES['cover'];
         }
 
-        if ($this->bookService->update($book, $request)) {
+        if ($this->bookService->update($book, $request))
+        {
             Notification::push('Livre édité avec succès', 'success');
-        } else {
+        }
+        else
+        {
             Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
         }
 
@@ -159,7 +168,9 @@ class BooksController extends Controller
     public function delete(string $slug): void
     {
         $book = $this->bookService->getBook($slug);
-        if ($this->bookService->delete($book)) {
+
+        if ($this->bookService->delete($book))
+        {
             Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
             Response::redirect('/me');
         }

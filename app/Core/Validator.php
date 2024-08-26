@@ -17,26 +17,36 @@ class Validator
      * @param array $data
      * @param array $rules
      *
-     * @return bool
+     * @return array|true
      */
-    public static function check(array $data, array $rules): bool
+    public static function check(array $data, array $rules): array|true
     {
         self::$errors = [];
-        foreach ($rules as $field => $fieldRules) {
-            if (!is_array($fieldRules)) {
+
+        foreach ($rules as $field => $fieldRules)
+        {
+            if (!is_array($fieldRules))
+            {
                 self::$errors[$field][] = 'Invalid rules format for this field';
                 continue;
             }
-            foreach ($fieldRules as $rule => $ruleValue) {
+
+            foreach ($fieldRules as $rule => $ruleValue)
+            {
                 $methodName = 'validate' . ucfirst($rule);
-                if (method_exists(__CLASS__, $methodName)) {
+                if (method_exists(__CLASS__, $methodName))
+                {
                     self::$methodName($field, $data, $ruleValue);
-                } else {
+                }
+                else
+                {
                     self::$errors[$field][] = "Validation rule '$rule' does not exist";
                 }
             }
         }
-        if (self::$errors) {
+
+        if (self::$errors)
+        {
             return self::errors();
         }
 
@@ -64,7 +74,8 @@ class Validator
      */
     private static function validateRequired($field, $data, $value): void
     {
-        if ($value && empty($data[$field])) {
+        if ($value && empty($data[$field]))
+        {
             self::$errors[$field][] = 'This field is required';
         }
     }
@@ -80,7 +91,8 @@ class Validator
      */
     private static function validateEmail($field, $data, $value): void
     {
-        if ($value && !filter_var($data[$field], FILTER_VALIDATE_EMAIL)) {
+        if ($value && !filter_var($data[$field], FILTER_VALIDATE_EMAIL))
+        {
             self::$errors[$field][] = 'Invalid email format';
         }
     }
@@ -96,7 +108,8 @@ class Validator
      */
     private static function validateMin($field, $data, $length): void
     {
-        if (strlen($data[$field]) < $length) {
+        if (strlen($data[$field]) < $length)
+        {
             self::$errors[$field][] = "Minimum length is $length characters";
         }
     }
@@ -112,7 +125,8 @@ class Validator
      */
     private static function validateMax($field, $data, $length): void
     {
-        if (strlen($data[$field]) > $length) {
+        if (strlen($data[$field]) > $length)
+        {
             self::$errors[$field][] = "Maximum length is $length characters";
         }
     }
@@ -128,7 +142,8 @@ class Validator
      */
     private static function validateString($field, $data, $value): void
     {
-        if ($value && !is_string($data[$field])) {
+        if ($value && !is_string($data[$field]))
+        {
             self::$errors[$field][] = 'This field must be a string';
         }
     }

@@ -10,10 +10,13 @@ class NotificationsController extends Controller
 {
     public function drop($id): void
     {
-        if (isset($id)) {
+        if (isset($id))
+        {
             Notification::drop($id);
             Response::json(null, Response::HTTP_NO_CONTENT);
-        } else {
+        }
+        else
+        {
             Response::json(null, Response::HTTP_BAD_REQUEST);
         }
     }

@@ -31,21 +31,25 @@ class BookService extends Service
 
     public function getBooks(?bool $available = null): array
     {
-        if ($available) {
+        if ($available)
+        {
             $query = "SELECT * FROM books WHERE available = :available ORDER BY created_at DESC;";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
-            $statement->execute();
-        } else {
+        }
+        else
+        {
             $query = "SELECT * FROM books";
             $statement = $this->connection->prepare($query);
-            $statement->execute();
         }
+
+        $statement->execute();
 
         $booksRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
         $books = [];
 
-        foreach ($booksRaw as $bookRaw) {
+        foreach ($booksRaw as $bookRaw)
+        {
             $book = new Book($bookRaw);
 
             $user = $this->userService->getUserById($bookRaw['user_id']);
@@ -62,12 +66,15 @@ class BookService extends Service
     {
         $books = [];
 
-        if ($available) {
+        if ($available)
+        {
             $query = "SELECT * FROM books WHERE available = :available AND user_id = :user_id";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
             $statement->bindValue(':user_id', $user->id, PDO::PARAM_INT);
-        } else {
+        }
+        else
+        {
             $query = "SELECT * FROM books WHERE user_id = :user_id";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':user_id', $user->id, PDO::PARAM_INT);
@@ -76,7 +83,8 @@ class BookService extends Service
         $statement->execute();
         $booksRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($booksRaw as $bookRaw) {
+        foreach ($booksRaw as $bookRaw)
+        {
             $book = new Book($bookRaw);
             $books[] = $book;
         }
@@ -101,12 +109,15 @@ class BookService extends Service
 
     public function getBook(string $slug, ?bool $available = null): Book
     {
-        if ($available) {
+        if ($available)
+        {
             $query = "SELECT * FROM books WHERE slug = :slug AND available = :available";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':slug', $slug);
             $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
-        } else {
+        }
+        else
+        {
             $query = "SELECT * FROM books WHERE slug = :slug";
             $statement = $this->connection->prepare($query);
             $statement->bindValue(':slug', $slug);
@@ -141,13 +152,15 @@ class BookService extends Service
         $sql .= " VALUES ($keys);";
         $statement = $this->connection->prepare($sql);
 
-        foreach ($map as $item) {
+        foreach ($map as $item)
+        {
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
         $result = $statement->execute();
 
-        if (!$result) {
+        if (!$result)
+        {
             return false;
         }
 
@@ -161,10 +174,12 @@ class BookService extends Service
         $sql = "UPDATE books SET ";
         $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
 
-        if (isset($data['cover'])) {
+        if (isset($data['cover']))
+        {
             $filename = $this->setCover($book, $data['cover']);
 
-            if (!is_bool($filename)) {
+            if (!is_bool($filename))
+            {
                 $data['cover'] = $filename;
             }
         }
@@ -174,7 +189,8 @@ class BookService extends Service
 
         $statement = $this->connection->prepare($sql);
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $statement->bindValue(":$key", $value);
         }
 
@@ -185,22 +201,27 @@ class BookService extends Service
 
     private function setCover(Book $book, array $cover): bool|string
     {
-        if ($cover['error'] !== UPLOAD_ERR_OK) {
+        if ($cover['error'] !== UPLOAD_ERR_OK)
+        {
             Notification::push('L\'image n\'est pas valide', EnumNotificationState::ERROR->value);
             return false;
         }
 
-        if ($cover['size'] > 5000000) {
+        if ($cover['size'] > 5000000)
+        {
             Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
             return false;
         }
 
-        if ($book->cover !== null) {
+        if ($book->cover !== null)
+        {
             File::delete($book->cover, EnumFileCategory::BOOK->value);
         }
 
-        if ($cover['type'] === 'image/jpeg' || $cover['type'] === 'image/png') {
-            if (($filename = File::store(EnumFileCategory::BOOK->value, $cover))) {
+        if ($cover['type'] === 'image/jpeg' || $cover['type'] === 'image/png')
+        {
+            if (($filename = File::store(EnumFileCategory::BOOK->value, $cover)))
+            {
                 return $filename;
             }
 
@@ -210,7 +231,7 @@ class BookService extends Service
         return false;
     }
 
-    public function delete(Book $book)
+    public function delete(Book $book): bool
     {
         $this->connection->beginTransaction();
 

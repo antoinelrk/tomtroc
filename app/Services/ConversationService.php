@@ -23,7 +23,7 @@ class ConversationService
         $this->usersManager = new UserService();
     }
 
-    public function getConversationByUuid(string $uuid)
+    public function getConversationByUuid(string $uuid): array
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
@@ -51,7 +51,8 @@ class ConversationService
 
         $conversations = [];
 
-        foreach ($results as $result) {
+        foreach ($results as $result)
+        {
             $conversation = new Conversation($result);
 
             [$messages, $receiver] = $this->messagesManager->getMessages($conversation->id);
@@ -72,18 +73,19 @@ class ConversationService
         return $conversations;
     }
 
-    public function getFirstConversation()
+    public function getFirstConversation(): array
     {
         $conversation = $this->getConversations();
 
-        if (!empty($conversation)) {
+        if (!empty($conversation))
+        {
             return $conversation[0];
         }
 
         return [];
     }
 
-    public function getConversationByUserId(int $userId)
+    public function getConversationByUserId(int $userId): array
     {
         $query = "SELECT c.* FROM conversations c ";
         $query .= "INNER JOIN conversation_user cu ON c.id = cu.conversation_id ";
@@ -106,7 +108,8 @@ class ConversationService
         $sql .= " VALUES ($keys);";
         $statement = $this->connection->prepare($sql);
 
-        foreach ($map as $item) {
+        foreach ($map as $item)
+        {
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
@@ -155,6 +158,7 @@ class ConversationService
         $conversation = new Conversation($result);
 
         [$messages, $receiver] = $this->messagesManager->getMessages($conversation->id);
+
         $conversation->addRelations(
             'messages',
             $messages

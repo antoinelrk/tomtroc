@@ -45,7 +45,11 @@ class ConversationsController extends Controller
     {
         $conversations = $this->conversationService->getConversations();
 
-        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+        // TODO: Wut?!
+        if ($conversations)
+
+        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid)
+        {
            return $conversation->uuid === $uuid;
         }));
         
@@ -62,7 +66,8 @@ class ConversationsController extends Controller
 
     public function create(int $userId): bool
     {
-        if ($userId === Auth::user()->id) {
+        if ($userId === Auth::user()->id)
+        {
             Notification::push(
                 'Vous ne pouvez pas vous envoyer un message à vous même !',
                 EnumNotificationState::ERROR->value
@@ -74,7 +79,8 @@ class ConversationsController extends Controller
 
         $user = $this->userService->getUserById($userId);
 
-        if ($user === null) {
+        if ($user === null)
+        {
             Notification::push(
                 'L\'utilisateur n\'existe pas !',
                 EnumNotificationState::ERROR->value
@@ -91,7 +97,8 @@ class ConversationsController extends Controller
             return $conversation->relations['receiver']->id === $userId;
         }));
 
-        if (!empty($likelyConversation)) {
+        if (!empty($likelyConversation))
+        {
             Response::redirect('/conversations/show/' . $likelyConversation[0]->uuid);
         }
 

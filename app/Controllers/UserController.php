@@ -64,16 +64,20 @@ class UserController extends Controller
         $user = $this->userService->getUserById($userId);
         $request = $_POST;
 
-        if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE)
+        {
             $request['avatar'] = $_FILES['avatar'];
         }
 
-        if ($this->userService->update($user, $request)) {
+        if ($this->userService->update($user, $request))
+        {
             Notification::push(
                 'Profil édité avec succès',
                 EnumNotificationState::SUCCESS->value
             );
-        } else {
+        }
+        else
+        {
             Notification::push(
                 'Impossible de mettre à jour le profil, contactez un administrateur.',
                 EnumNotificationState::ERROR->value

@@ -50,7 +50,8 @@ class Database
      */
     public static function getInstance(): ?Database
     {
-        if (self::$instance === null) {
+        if (self::$instance === null)
+        {
             self::$instance = new self();
         }
 
@@ -74,22 +75,25 @@ class Database
      */
     public static function debug(): void
     {
-        try {
+        try
+        {
             $db = self::getInstance()->getConnection();
             Log::dd('Connection successfully!');
-        } catch (PDOException $e) {
+        }
+        catch (PDOException $e)
+        {
             Log::dd("Connection failed: " . $e->getMessage());
         }
     }
 
-    public static function query(string $sql, string $classname)
+    public static function query(string $sql, string $classname): false|\PDOStatement
     {
         $statement = self::getConnection()->query($sql);
 
         return $statement;
     }
 
-    public static function prepare(string $sql)
+    public static function prepare(string $sql): false|\PDOStatement
     {
         $statement = self::getConnection()->prepare($sql);
         $statement->execute();
