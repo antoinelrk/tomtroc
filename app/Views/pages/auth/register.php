@@ -7,7 +7,7 @@
                 </h1>
 
                 <form action="" method="POST">
-                    <!-- TODO: Add xsrf protection in hidden input -->
+                    <?= \App\Core\Http\Csrf::template() ?>
 
                     <div class="form-group">
                         <label for="username">Pseudo</label>

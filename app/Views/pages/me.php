@@ -1,10 +1,9 @@
 <main class="private-account">
     <h1>Mon compte</h1>
     <form action="/users/update/<?= $user->id ?>" method="post" enctype="multipart/form-data" class="form-hero">
-        <!-- TODO: Ajouter une vérification des tokens CSRF -->
+        <?= \App\Core\Http\Csrf::template() ?>
         <section class="form-section left">
             <div class="profile-picture">
-                <!-- TODO: Faire un script pour afficher la PP -->
                 <img src="<?= \App\Helpers\File::get($user->avatar, 'avatars') ?>" alt="">
 
                 <div class="form-group">

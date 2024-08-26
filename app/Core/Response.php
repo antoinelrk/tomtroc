@@ -48,6 +48,7 @@ class Response
     const int HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
     const int HTTP_EXPECTATION_FAILED = 417;
     const int HTTP_I_AM_A_TEAPOT = 418;
+    const int PAGE_EXPIRED = 419;
     const int HTTP_UNPROCESSABLE_ENTITY = 422;
     const int HTTP_LOCKED = 423;
     const int HTTP_FAILED_DEPENDENCY = 424;

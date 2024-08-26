@@ -21,6 +21,8 @@
                     action="/messages/store"
                     method="POST"
             >
+                <?= \App\Core\Http\Csrf::template() ?>
+
                 <input type="hidden" name="receiver_id" value="<?= $user->id ?>">
 
                 <label>

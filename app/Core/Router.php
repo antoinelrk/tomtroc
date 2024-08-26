@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Helpers\Log;
+use App\Middlewares\CsrfMiddleware;
 
 class Router
 {
@@ -25,7 +25,10 @@ class Router
     {
         $this->routes[$method][$route] = [
             'controllerAction' => $controllerAction,
-            'middlewares' => $middlewares,
+            'middlewares' => [
+                ...$middlewares,
+                ...$this->globalMiddlewares()
+            ],
             'parameters' => [],
         ];
     }
@@ -68,5 +71,12 @@ class Router
             return $matches;
         }
         return false;
+    }
+
+    private function globalMiddlewares(): array
+    {
+        return [
+            CsrfMiddleware::class,
+        ];
     }
 }

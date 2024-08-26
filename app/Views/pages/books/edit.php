@@ -11,6 +11,8 @@
             method="POST"
             enctype="multipart/form-data"
         >
+            <?= \App\Core\Http\Csrf::template() ?>
+
             <aside>
                 <img class="cover-book" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Couverture du livre <?= $book->title ?>">
                 <input type="file" id="cover" name="cover">

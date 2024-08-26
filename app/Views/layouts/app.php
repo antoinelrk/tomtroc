@@ -81,6 +81,8 @@
 
                             <li>
                                 <form action="/auth/logout" method="POST">
+                                    <?= \App\Core\Http\Csrf::template() ?>
+
                                     <button type="submit">
                                         Logout
                                     </button>

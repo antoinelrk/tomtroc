@@ -39,6 +39,7 @@
                 action="/messages/store"
                 method="POST"
             >
+                <?= \App\Core\Http\Csrf::template() ?>
                 <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">
                 <input type="hidden" name="uuid" value="<?= $selectedConversation->uuid ?>">
                 <input type="hidden" name="receiver_id" value="<?= $selectedConversation->relations[0]['user']->id ?>">
