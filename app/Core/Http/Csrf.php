@@ -14,7 +14,7 @@ class Csrf
      */
     public static function token(): string
     {
-        Session::createIfNotExist();
+        // Session::createIfNotExist();
 
         return $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
@@ -27,8 +27,6 @@ class Csrf
      */
     public static function validate(string $token): bool
     {
-        Session::createIfNotExist();
-
         return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
     }
 

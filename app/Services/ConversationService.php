@@ -73,7 +73,7 @@ class ConversationService
         return $conversations;
     }
 
-    public function getFirstConversation(): array
+    public function getFirstConversation(): ?Conversation
     {
         $conversation = $this->getConversations();
 
@@ -82,7 +82,7 @@ class ConversationService
             return $conversation[0];
         }
 
-        return [];
+        return null;
     }
 
     public function getConversationByUserId(int $userId): array
