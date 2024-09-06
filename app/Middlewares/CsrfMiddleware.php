@@ -27,6 +27,8 @@ class CsrfMiddleware implements Middleware
             }
         }
 
+        unset($_POST['csrf_token']);
+
         return $next($request);
     }
 }
