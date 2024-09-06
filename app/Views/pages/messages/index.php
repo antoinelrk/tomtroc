@@ -8,7 +8,7 @@
                     <img src="<?= $selectedConversation->relations['user']->avatar ?>" alt=""
                          class="profile-picture">
                     <span>
-                        <?= $selectedConversation->relations['user']->username ?>
+                        <?= htmlspecialchars($selectedConversation->relations['user']->username) ?>
                     </span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             <?php endif; ?>
 
                             <p class="message-content">
-                                <?= $message->content ?>
+                                <?= htmlspecialchars($message->content) ?>
                             </p>
                         </li>
                     <?php endforeach; ?>

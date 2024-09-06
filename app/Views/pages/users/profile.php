@@ -11,7 +11,7 @@ use App\Core\Auth\Auth;
             <div class="separator"></div>
 
             <div class="flex column items-center user-info">
-                <p class="text-medium serif"><?= $user->username ?></p>
+                <p class="text-medium serif"><?= htmlspecialchars($user->username) ?></p>
                 <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user->created_at) ?></p>
                 <h4 class="secondary-title">Bibliothèque</h4>
                 <div class="text-with-icon">
@@ -53,15 +53,15 @@ use App\Core\Auth\Auth;
                                 <img class="book-icon" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="">
                             </td>
                             <td>
-                                <?= $book->title ?>
+                                <?= htmlspecialchars($book->title) ?>
                             </td>
                             <td>
-                                <?= $book->author ?>
+                                <?= htmlspecialchars($book->author) ?>
                             </td>
 
                             <td class="text">
                                 <p>
-                                    <?= $book->description ?>
+                                    <?= htmlspecialchars($book->description) ?>
                                 </p>
                             </td>
                         </tr>

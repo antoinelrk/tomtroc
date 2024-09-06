@@ -8,7 +8,7 @@
                     <img src="<?= \App\Helpers\File::get($selectedConversation->relations['receiver']->avatar, \App\Enum\EnumFileCategory::AVATAR->value) ?>" alt=""
                          class="profile-picture image-cover">
                     <span>
-                        <?= $selectedConversation->relations['receiver']->username ?>
+                        <?= htmlspecialchars($selectedConversation->relations['receiver']->username) ?>
                     </span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
 
                                 <div class="message-wrapper">
                                     <p class="message-content">
-                                        <?= $message->content ?>
+                                        <?= htmlspecialchars($message->content) ?>
                                     </p>
 
                                     <span class="message-date">
@@ -37,7 +37,7 @@
                             <?php else: ?>
                                 <div class="message-wrapper collapsed">
                                     <p class="message-content">
-                                        <?= $message->content ?>
+                                        <?= htmlspecialchars($message->content) ?>
                                     </p>
 
                                     <span class="message-date">

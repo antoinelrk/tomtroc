@@ -8,7 +8,7 @@
                     <img src="<?= \App\Helpers\File::get($user->avatar, \App\Enum\EnumFileCategory::AVATAR->value) ?>" alt=""
                          class="profile-picture image-cover">
                     <span>
-                        <?= $user->username ?>
+                        <?= htmlspecialchars($user->username) ?>
                     </span>
                 </div>
             </div>

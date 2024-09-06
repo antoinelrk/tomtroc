@@ -35,10 +35,10 @@
                         <article>
                             <img class="book-cover" src="<?= \App\Helpers\File::get($book->cover, \App\Enum\EnumFileCategory::BOOK->value) ?>" alt="Image de livre carré">
                             <div class="book-info">
-                                <h2><?= $book->title ?></h2>
-                                <h3><?= $book->author ?></h3>
+                                <h2><?= htmlspecialchars($book->title) ?></h2>
+                                <h3><?= htmlspecialchars($book->author) ?></h3>
                                 <p>
-                                    Vendu par: <?= $book->relations['user']->username ?>
+                                    Vendu par: <?= htmlspecialchars($book->relations['user']->username) ?>
                                 </p>
                             </div>
                         </article>

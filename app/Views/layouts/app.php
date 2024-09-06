@@ -14,7 +14,7 @@
     <ul class="notifications">
         <?php foreach (\App\Core\Notification::all() as $key => $notification) ?>
         <li class="notification <?= $notification['state'] ?>" id="<?= $key ?>">
-            <?= $notification['message'] ?>
+            <?= htmlspecialchars($notification['message']) ?>
         </li>
     </ul>
     <?php endif; ?>
@@ -166,7 +166,10 @@
         setTimeout(function() {
             popups.forEach(async function (popup) {
                 await fetch(`/notifications/drop/${popup.id}`, {
-                    method: 'POST'
+                    method: 'POST',
+                    body: JSON.stringify({
+                        csrf_token: <?= \App\Core\Http\Csrf::getToken() ?>
+                    })
                 })
 
                 popup.remove()

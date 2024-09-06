@@ -14,7 +14,7 @@
             <?= \App\Core\Http\Csrf::template() ?>
 
             <aside>
-                <img class="cover-book" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Couverture du livre <?= $book->title ?>">
+                <img class="cover-book" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Couverture du livre <?= htmlspecialchars($book->title) ?>">
                 <input type="file" id="cover" name="cover">
                 <label for="cover" class="cover-input">modifier</label>
             </aside>
@@ -22,12 +22,12 @@
             <div class="left-form-part">
                 <div class="form-group">
                     <label for="title">Titre</label>
-                    <input type="text" name="title" id="title" value="<?= $book->title ?>"/>
+                    <input type="text" name="title" id="title" value="<?= htmlspecialchars($book->title) ?>"/>
                 </div>
 
                 <div class="form-group">
                     <label for="author">Auteur</label>
-                    <input type="text" name="author" id="author" value="<?= $book->author ?>"/>
+                    <input type="text" name="author" id="author" value="<?= htmlspecialchars($book->author) ?>"/>
                 </div>
 
                 <div class="form-group">
@@ -38,7 +38,7 @@
                         cols="30"
                         rows="10"
                         placeholder="Votre commentaire"
-                    ><?= $book->description ?></textarea>
+                    ><?= htmlspecialchars($book->description) ?></textarea>
                 </div>
 
                 <div class="form-group">
