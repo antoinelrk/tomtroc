@@ -167,9 +167,6 @@
             popups.forEach(async function (popup) {
                 await fetch(`/notifications/drop/${popup.id}`, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        csrf_token: <?= \App\Core\Http\Csrf::getToken() ?>
-                    })
                 })
 
                 popup.remove()
