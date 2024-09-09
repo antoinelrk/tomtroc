@@ -3,6 +3,7 @@
 @import './default.css';
 
 @import './notifications.css';
+@import './pages/errors.css';
 @import './pages/home.css';
 @import './pages/auth/register.css';
 @import './pages/messages/index.css';

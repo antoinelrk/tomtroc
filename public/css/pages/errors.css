@@ -1,0 +1,10 @@
+.errors-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1.error-code {
+        font-size: 8em;
+    }
+}
