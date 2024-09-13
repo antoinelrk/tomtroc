@@ -8,6 +8,8 @@ use Random\RandomException;
 
 class Notification
 {
+    private const int MAX_NOTIFICATIONS = 10;
+
     public static function as(): bool
     {
         if (count(self::all()) > 0)
@@ -43,6 +45,10 @@ class Notification
      */
     public static function push(string $message, ?string $state = null): array
     {
+        if (count($_SESSION['notifications']) === self::MAX_NOTIFICATIONS) {
+            array_pop($_SESSION['notifications']);
+        }
+
         $_SESSION['notifications']["n" . Str::basicId()] = [
             'message' => $message,
             'state' => $state ?? EnumNotificationState::INFO->value,

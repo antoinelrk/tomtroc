@@ -22,7 +22,7 @@ class ViewRenderer
      * @var array $data
      */
     protected static array $data = [
-        'title' => 'Tomtroc'
+        'title' => 'TomTroc'
     ];
 
     /**

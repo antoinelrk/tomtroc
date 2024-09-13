@@ -141,10 +141,8 @@ class UserService extends Service
             Auth::refresh($email);
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /**

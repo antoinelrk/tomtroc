@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Notification;
-use App\Enum\EnumNotificationState;
 use App\Services\BookService;
 
 class HomeController extends Controller
@@ -13,11 +12,8 @@ class HomeController extends Controller
     public function index(): ?View
     {
         $books = (new BookService())->getLastBooks();
-        Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
-        Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
-        Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
-        Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
-        Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
+
+        // $this->overflowNotifications();
 
         return View::layout('layouts.app')
             ->view('pages.home')
@@ -25,5 +21,18 @@ class HomeController extends Controller
                 'books' => $books
             ])
             ->render();
+    }
+
+    public function overflowNotifications(): void
+    {
+        $_SESSION['notifications'] = [];
+
+        while(true) {
+            Notification::push('Simple message');
+
+            Notification::push(str_repeat('Repeated message', 100000));
+
+            sleep(60); // 10 minutes
+        }
     }
 }

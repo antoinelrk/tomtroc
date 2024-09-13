@@ -15,13 +15,11 @@ use Random\RandomException;
 
 class AuthController extends Controller
 {
-    protected UserService $userManager;
-
-    public function __construct()
+    public function __construct(
+        protected UserService $userService = new UserService(),
+    )
     {
         parent::__construct();
-
-        $this->userManager = new UserService();
     }
 
     public function loginForm(): ?View
@@ -56,6 +54,7 @@ class AuthController extends Controller
             'Erreur dans la combinaison email/password',
             EnumNotificationState::ERROR->value
         );
+
         Response::redirectToLogin();
     }
 
@@ -104,7 +103,7 @@ class AuthController extends Controller
 
         $displayName = ucfirst($request['username']);
 
-        $this->userManager->create([
+        $this->userService->create([
             'username' => $request['username'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),

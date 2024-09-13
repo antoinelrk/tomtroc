@@ -8,7 +8,6 @@ use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Services\ConversationService;
 use App\Services\MessagesService;
@@ -16,18 +15,13 @@ use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
-    protected ConversationService $conversationService;
-    protected UserService $userService;
-    
-    protected MessagesService $messagesService;
-
-    public function __construct()
+    public function __construct(
+        protected ConversationService $conversationService = new ConversationService(),
+        protected MessagesService $messagesService = new MessagesService(),
+        protected UserService $userService = new UserService(),
+    )
     {
         parent::__construct();
-
-        $this->conversationService = new ConversationService();
-        $this->userService = new UserService();
-        $this->messagesService = new MessagesService();
     }
 
     public function index()
@@ -44,9 +38,6 @@ class ConversationsController extends Controller
     public function show(string $uuid)
     {
         $conversations = $this->conversationService->getConversations();
-
-        // TODO: Wut?!
-        if ($conversations)
 
         $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid)
         {
@@ -90,7 +81,6 @@ class ConversationsController extends Controller
             return false;
         }
 
-        // On récupère la liste des conversations
         $conversations = $this->conversationService->getConversations();
 
         $likelyConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($userId) {
