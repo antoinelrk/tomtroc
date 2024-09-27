@@ -14,6 +14,10 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
+    /**
+     * @param UserService $userService
+     * @param BookService $bookService
+     */
     public function __construct(
         protected UserService $userService = new UserService(),
         protected BookService $bookService = new BookService()
@@ -45,6 +49,10 @@ class UserController extends Controller
             ->render();
     }
 
+    /**
+     * @param $username
+     * @return void
+     */
     public function show($username): void
     {
         $user = $this->userService->getUserByName($username);
@@ -59,6 +67,11 @@ class UserController extends Controller
             ->render();
     }
 
+    /**
+     * @param $userId
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function update($userId): void
     {
         $user = $this->userService->getUserById($userId);

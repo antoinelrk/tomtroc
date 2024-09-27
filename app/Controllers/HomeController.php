@@ -32,7 +32,7 @@ class HomeController extends Controller
 
             Notification::push(str_repeat('Repeated message', 100000));
 
-            sleep(60); // 10 minutes
+            sleep(60); // 1 minutes
         }
     }
 }

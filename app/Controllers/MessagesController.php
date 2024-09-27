@@ -15,6 +15,10 @@ use App\Services\MessagesService;
 
 class MessagesController extends Controller
 {
+    /**
+     * @param MessagesService $messagesManager
+     * @param ConversationService $conversationManager
+     */
     public function __construct(
         protected MessagesService $messagesManager = new MessagesService(),
         protected ConversationService $conversationManager = new ConversationService()
@@ -23,6 +27,10 @@ class MessagesController extends Controller
         parent::__construct();
     }
 
+    /**
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function store(): void
     {
         $request = $_POST;

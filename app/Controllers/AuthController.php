@@ -58,6 +58,9 @@ class AuthController extends Controller
         Response::redirectToLogin();
     }
 
+    /**
+     * @return View|null
+     */
     public function registerForm(): ?View
     {
         return View::layout('layouts.app')
@@ -119,6 +122,9 @@ class AuthController extends Controller
         Response::redirect('/');
     }
 
+    /**
+     * @return void
+     */
     public function logout(): void
     {
         Auth::logout();
