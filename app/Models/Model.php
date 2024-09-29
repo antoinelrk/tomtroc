@@ -19,6 +19,12 @@ abstract class Model implements Serializable
     public array $relations = [];
 
     // ---------- GETTER / SETTER ATTRIBUTES ----------
+
+    /**
+     * @param string $model
+     * @param mixed $relation
+     * @return void
+     */
     public function addRelations(string $model, mixed $relation): void
     {
         $this->relations[$model] = $relation;

@@ -23,6 +23,10 @@ class ConversationService
         $this->usersManager = new UserService();
     }
 
+    /**
+     * @param string $uuid
+     * @return array
+     */
     public function getConversationByUuid(string $uuid): array
     {
         $query = "SELECT c.* FROM conversations c ";
@@ -36,6 +40,9 @@ class ConversationService
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return array
+     */
     public function getConversations(): array
     {
         $query = "SELECT c.* FROM conversations c ";
@@ -73,6 +80,9 @@ class ConversationService
         return $conversations;
     }
 
+    /**
+     * @return Conversation|null
+     */
     public function getFirstConversation(): ?Conversation
     {
         $conversation = $this->getConversations();
@@ -85,6 +95,10 @@ class ConversationService
         return null;
     }
 
+    /**
+     * @param int $userId
+     * @return array
+     */
     public function getConversationByUserId(int $userId): array
     {
         $query = "SELECT c.* FROM conversations c ";
@@ -98,6 +112,10 @@ class ConversationService
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @param array $data
+     * @return Conversation|bool
+     */
     public function create(array $data): Conversation|bool
     {
         $map = (new Conversation())->map;
@@ -125,6 +143,12 @@ class ConversationService
         return $this->getLastConversation($conversationId);
     }
 
+    /**
+     * @param int $conversationId
+     * @param int $senderId
+     * @param int $receiverId
+     * @return void
+     */
     protected function attachUsersToConversation(int $conversationId, int $senderId, int $receiverId): void
     {
         $sql = "INSERT INTO conversation_user (conversation_id, user_id) VALUES (:conversation_id, :user_id)";
@@ -142,6 +166,10 @@ class ConversationService
         $statement->execute();
     }
 
+    /**
+     * @param $id
+     * @return Conversation
+     */
     public function getLastConversation($id): Conversation
     {
         $query = "SELECT c.* FROM conversations c ";
@@ -172,6 +200,10 @@ class ConversationService
         return $conversation;
     }
 
+    /**
+     * @param int $conversationId
+     * @return void
+     */
     public function refresh(int $conversationId): void
     {
         $query = "UPDATE conversations SET ";

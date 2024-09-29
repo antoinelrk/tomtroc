@@ -8,6 +8,7 @@ use App\Core\Response;
 use App\Enum\EnumNotificationState;
 use App\Models\User;
 use PDO;
+use Random\RandomException;
 
 class Auth
 {
@@ -50,6 +51,7 @@ class Auth
      * @param $password
      *
      * @return bool|User
+     * @throws RandomException
      */
     public static function attempt($email, $password): bool|User
     {
@@ -65,6 +67,11 @@ class Auth
         return false;
     }
 
+    /**
+     * @param string|null $email
+     * @return void
+     * @throws \Random\RandomException
+     */
     public static function refresh(string $email = null): void
     {
         if (isset($_SESSION['user']))
@@ -87,6 +94,11 @@ class Auth
         return true;
     }
 
+    /**
+     * @param string $email
+     * @return User
+     * @throws \Random\RandomException
+     */
     private static function rawUser(string $email): User
     {
         $statement = Database::getInstance()

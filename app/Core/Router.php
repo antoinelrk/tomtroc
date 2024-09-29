@@ -58,6 +58,11 @@ class Router
         return $this->routes[$method][$route] ?? [];
     }
 
+    /**
+     * @param string $definedRoute
+     * @param string $requestedRoute
+     * @return false|array
+     */
     private function match(string $definedRoute, string $requestedRoute): false|array
     {
         // Extraire les clés des accolades
@@ -78,6 +83,9 @@ class Router
         return false;
     }
 
+    /**
+     * @return array
+     */
     private function globalMiddlewares(): array
     {
         return [

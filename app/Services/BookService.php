@@ -199,6 +199,12 @@ class BookService extends Service
         return $statement->execute();
     }
 
+    /**
+     * @param Book $book
+     * @param array $cover
+     * @return bool|string
+     * @throws \Random\RandomException
+     */
     private function setCover(Book $book, array $cover): bool|string
     {
         if ($cover['error'] !== UPLOAD_ERR_OK)
@@ -231,6 +237,10 @@ class BookService extends Service
         return false;
     }
 
+    /**
+     * @param Book $book
+     * @return bool
+     */
     public function delete(Book $book): bool
     {
         $this->connection->beginTransaction();
@@ -254,6 +264,10 @@ class BookService extends Service
         return false;
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     private function prepareData(array $data): array
     {
         $slug = Str::slug($data['title']);

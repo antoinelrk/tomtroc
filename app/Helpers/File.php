@@ -6,6 +6,11 @@ use App\Core\File\Image;
 
 class File
 {
+    /**
+     * @param string|null $filename
+     * @param string $type
+     * @return string
+     */
     public static function get(?string $filename, string $type): string
     {
         if ($filename !== NULL)
@@ -16,6 +21,14 @@ class File
         return "/../storage/$type/default.svg";
     }
 
+    /**
+     * @param string $path
+     * @param array $file
+     * @param string|null $filename
+     * @param int|null $resolution
+     * @return bool|string
+     * @throws \Random\RandomException
+     */
     public static function store(string $path, array $file, string $filename = null, int $resolution = null): bool|string
     {
         $filename = $filename ?? Str::basicId(16);
@@ -43,6 +56,11 @@ class File
         return false;
     }
 
+    /**
+     * @param string $filename
+     * @param string $type
+     * @return void
+     */
     public static function delete(string $filename, string $type): void
     {
         unlink("storage/$type/$filename");

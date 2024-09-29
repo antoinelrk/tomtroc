@@ -13,14 +13,15 @@ class MessagesService
 {
     protected PDO $connection;
 
-    protected UserService $userManager;
-
-    public function __construct()
+    public function __construct(protected $userService = new UserService())
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->userManager = new UserService();
     }
 
+    /**
+     * @param array $data
+     * @return Message|bool
+     */
     public function create(array $data): Message|bool
     {
         if (!isset($data['content'])) return false;
@@ -42,11 +43,15 @@ class MessagesService
         return true;
     }
 
+    /**
+     * @param int|null $conversationId
+     * @return array
+     */
     public function getMessages(?int $conversationId = null): array
     {
         $messages = [];
 
-        $query = "SELECT " ;
+        $query = "SELECT ";
         $query .= "m.id AS message_id,
             m.parent_id AS message_parent_id,
             m.content AS message_content,
@@ -71,8 +76,7 @@ class MessagesService
 
         $query .= "WHERE m.conversation_id = :conversation_id ";
 
-        if ($conversationId !== null)
-        {
+        if ($conversationId !== null) {
             $query .= "AND m.conversation_id = :conversation_id ";
         }
 
@@ -84,22 +88,18 @@ class MessagesService
         $statement->execute();
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($messagesRaw as $messageRaw)
-        {
+        foreach ($messagesRaw as $messageRaw) {
             $message = new Message(ArrayHelper::map(ArrayHelper::normalize($messageRaw, 'message_'), Message::class));
 
-            $message->addRelations('receiver', $this->userManager->getUserById($message->receiver_id));
-            $message->addRelations('sender', $this->userManager->getUserById($message->sender_id));
+            $message->addRelations('receiver', $this->userService->getUserById($message->receiver_id));
+            $message->addRelations('sender', $this->userService->getUserById($message->sender_id));
 
             $messages[] = $message;
         }
 
-        if ($messages[0]->relations['sender']->id !== Auth::user()->id)
-        {
+        if ($messages[0]->relations['sender']->id !== Auth::user()->id) {
             $receiver = $messages[0]->relations['sender'];
-        }
-        else
-        {
+        } else {
             $receiver = $messages[0]->relations['receiver'];
         }
 
@@ -109,6 +109,10 @@ class MessagesService
         ];
     }
 
+    /**
+     * @param int|null $userId
+     * @return int
+     */
     public function countUnreadMessages(int $userId = null): int
     {
         $query = "SELECT COUNT(*) AS unread_messages ";
@@ -125,6 +129,11 @@ class MessagesService
         return intval($messagesRaw['unread_messages']);
     }
 
+    /**
+     * @param int $conversationId
+     * @param int|null $userId
+     * @return void
+     */
     public function readMessages(int $conversationId, int $userId = null): void
     {
         $query = "UPDATE messages ";

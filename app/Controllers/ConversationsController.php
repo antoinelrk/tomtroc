@@ -118,6 +118,9 @@ class ConversationsController extends Controller
             ->render();
     }
 
+    /**
+     * @return mixed
+     */
     public function noMessage()
     {
         return View::layout('layouts.app')

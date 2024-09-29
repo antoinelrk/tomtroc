@@ -22,7 +22,6 @@ class Database
      */
     private function __construct()
     {
-        // TODO: Wait slack response for using dotenv
         $config = [
             'driver'    => 'mysql',
             'host'      => 'database',
@@ -34,10 +33,8 @@ class Database
             'prefix'    => '',
         ];
 
-        // TODO: Optimize this
         $dsn = "{$config['driver']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";
 
-        // TODO: Wait slack response for using dotenv
         $this->pdo = new PDO($dsn, $config['username'], $config['password']);
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -86,6 +83,11 @@ class Database
         }
     }
 
+    /**
+     * @param string $sql
+     * @param string $classname
+     * @return false|\PDOStatement
+     */
     public static function query(string $sql, string $classname): false|\PDOStatement
     {
         $statement = self::getConnection()->query($sql);
@@ -93,6 +95,10 @@ class Database
         return $statement;
     }
 
+    /**
+     * @param string $sql
+     * @return false|\PDOStatement
+     */
     public static function prepare(string $sql): false|\PDOStatement
     {
         $statement = self::getConnection()->prepare($sql);

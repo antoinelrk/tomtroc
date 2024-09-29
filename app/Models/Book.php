@@ -17,6 +17,9 @@ class Book extends Model
         'updated_at',
     ];
 
+    /**
+     * @param array $properties
+     */
     public function __construct(
         public array $properties = []
     ) {}
