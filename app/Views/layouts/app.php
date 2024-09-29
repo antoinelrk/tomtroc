@@ -14,7 +14,7 @@
     <ul class="notifications">
         <?php foreach (\App\Core\Notification::all() as $key => $notification) ?>
         <li class="notification <?= $notification['state'] ?>" id="<?= $key ?>">
-            <?= $notification['message'] ?>
+            <?= htmlspecialchars($notification['message']) ?>
         </li>
     </ul>
     <?php endif; ?>
@@ -81,6 +81,8 @@
 
                             <li>
                                 <form action="/auth/logout" method="POST">
+                                    <?= \App\Core\Http\Csrf::template() ?>
+
                                     <button type="submit">
                                         Logout
                                     </button>
@@ -164,7 +166,7 @@
         setTimeout(function() {
             popups.forEach(async function (popup) {
                 await fetch(`/notifications/drop/${popup.id}`, {
-                    method: 'POST'
+                    method: 'POST',
                 })
 
                 popup.remove()

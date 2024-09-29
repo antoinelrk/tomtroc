@@ -7,6 +7,7 @@ use App\Core\Middleware;
 use App\Core\Notification;
 use App\Core\Response;
 use Closure;
+use Random\RandomException;
 
 class AuthMiddleware implements Middleware
 {
@@ -17,6 +18,7 @@ class AuthMiddleware implements Middleware
      * @param Closure $next
      *
      * @return mixed
+     * @throws RandomException
      */
     public function handle($request, Closure $next): mixed
     {

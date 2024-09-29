@@ -8,7 +8,7 @@
                     <img src="<?= \App\Helpers\File::get($user->avatar, \App\Enum\EnumFileCategory::AVATAR->value) ?>" alt=""
                          class="profile-picture image-cover">
                     <span>
-                        <?= $user->username ?>
+                        <?= htmlspecialchars($user->username) ?>
                     </span>
                 </div>
             </div>
@@ -21,6 +21,8 @@
                     action="/messages/store"
                     method="POST"
             >
+                <?= \App\Core\Http\Csrf::template() ?>
+
                 <input type="hidden" name="receiver_id" value="<?= $user->id ?>">
 
                 <label>

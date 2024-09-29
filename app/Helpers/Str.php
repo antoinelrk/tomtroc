@@ -7,7 +7,12 @@ use ReflectionClass;
 
 class Str
 {
-    public static function uuid() {
+    /**
+     * @return string
+     * @throws RandomException
+     */
+    public static function uuid(): string
+    {
         $data = random_bytes(16);
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
@@ -15,6 +20,10 @@ class Str
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    /**
+     * @param string $text
+     * @return string
+     */
     public static function slug(string $text): string
     {
         $text = self::transliterate($text);
@@ -30,6 +39,7 @@ class Str
 
         return $text;
     }
+
     /**
      * @throws RandomException
      */
@@ -38,6 +48,10 @@ class Str
         return substr(bin2hex(random_bytes($length)), 0, $length);
     }
 
+    /**
+     * @param $classname
+     * @return string
+     */
     public static function setDatatable($classname): string
     {
         $result = "";
@@ -48,27 +62,44 @@ class Str
                 ->getShortName();
             $result = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $classname));
 
-            if (str_ends_with($result, 'y')) {
+            if (str_ends_with($result, 'y'))
+            {
                 $result = substr($result, 0, -1) . 'ies';
-            } elseif (str_ends_with($result, 's')) {
+            }
+            elseif (str_ends_with($result, 's'))
+            {
                 $result .= 'es';
-            } else {
+            }
+            else
+            {
                 $result .= 's';
             }
-        } catch (\ReflectionException $exception) {}
+        }
+        catch (\ReflectionException $exception) {}
 
         return $result;
     }
 
+    /**
+     * @param $string
+     * @param $length
+     * @return string
+     */
     public static function trunc($string, $length): string
     {
-        if (strlen($string) <= $length) {
+        if (strlen($string) <= $length)
+        {
             return $string;
         }
         return substr($string, 0, $length) . ' ...';
     }
 
-    public static function transliterate($text) {
+    /**
+     * @param $text
+     * @return string
+     */
+    public static function transliterate($text): string
+    {
         $transliterationTable = [
             'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
             'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
@@ -80,18 +111,28 @@ class Str
             'ő' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y',
             'þ' => 'th', 'ÿ' => 'y'
         ];
+
         return strtr($text, $transliterationTable);
     }
 
+    /**
+     * @param int $number
+     * @param string $text
+     * @return string
+     */
     public static function plurialize(int $number, string $text): string
     {
-        if ($number === 0) {
+        if ($number === 0)
+        {
             return "Aucun(e) $text";
         }
 
-        if ($number > 1) {
+        if ($number > 1)
+        {
             return "$number {$text}s";
-        } else {
+        }
+        else
+        {
             return "$number $text";
         }
     }

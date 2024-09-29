@@ -12,6 +12,9 @@ use App\Services\BookService;
 
 class BooksController extends Controller
 {
+    /**
+     * @param BookService $bookService
+     */
     public function __construct(
         protected BookService $bookService = new BookService(),
     )
@@ -19,6 +22,9 @@ class BooksController extends Controller
         parent::__construct();
     }
 
+    /**
+     * @return View|null
+     */
     public function index(): ?View
     {
         $books = $this->bookService->getBooks(true);
@@ -31,6 +37,10 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @param string $slug
+     * @return View|null
+     */
     public function show(string $slug): ?View
     {
         $book = $this->bookService->getBook($slug);
@@ -43,6 +53,9 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @return View|null
+     */
     public function create(): ?View
     {
         return View::layout('layouts.app')
@@ -50,6 +63,10 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function store(): void
     {
         $data = [
@@ -79,14 +96,18 @@ class BooksController extends Controller
             ]
         ]);
 
-        if ($isValid) {
+        if ($isValid)
+        {
             $book = $this->bookService->create($data);
 
-            if ($book === false) {
+            if ($book === false)
+            {
                 Notification::push('Une erreur est survenue', EnumNotificationState::ERROR->value);
 
                 Response::redirect('/books/create');
-            } else {
+            }
+            else
+            {
                 Notification::push(
                     'Votre nouveau livre a été ajouté',
                     EnumNotificationState::SUCCESS->value
@@ -97,6 +118,10 @@ class BooksController extends Controller
         }
     }
 
+    /**
+     * @param string $slug
+     * @return View|null
+     */
     public function edit(string $slug): ?View
     {
         $book = $this->bookService->getBook($slug);
@@ -109,6 +134,11 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @param string $slug
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function update(string $slug): void
     {
         $book = $this->bookService->getBook($slug);
@@ -134,7 +164,8 @@ class BooksController extends Controller
             ]
         ]);
 
-        if (!$isValid) {
+        if (!$isValid)
+        {
             Notification::push(
                 'Certaines informations ne sont pas valides',
                 EnumNotificationState::ERROR->value
@@ -143,23 +174,34 @@ class BooksController extends Controller
             Response::redirect('/register');
         }
 
-        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE)
+        {
             $request['cover'] = $_FILES['cover'];
         }
 
-        if ($this->bookService->update($book, $request)) {
+        if ($this->bookService->update($book, $request))
+        {
             Notification::push('Livre édité avec succès', 'success');
-        } else {
+        }
+        else
+        {
             Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
         }
 
         Response::redirect('/books/show/' . $slug);
     }
 
+    /**
+     * @param string $slug
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function delete(string $slug): void
     {
         $book = $this->bookService->getBook($slug);
-        if ($this->bookService->delete($book)) {
+
+        if ($this->bookService->delete($book))
+        {
             Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
             Response::redirect('/me');
         }

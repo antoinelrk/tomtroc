@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Helpers\Log;
+use App\Middlewares\CsrfMiddleware;
 
 class Router
 {
@@ -25,7 +25,10 @@ class Router
     {
         $this->routes[$method][$route] = [
             'controllerAction' => $controllerAction,
-            'middlewares' => $middlewares,
+            'middlewares' => [
+                ...$middlewares,
+                ...$this->globalMiddlewares()
+            ],
             'parameters' => [],
         ];
     }
@@ -40,8 +43,10 @@ class Router
      */
     public function getControllerAction(string $method, string $route): array
     {
-        foreach ($this->routes[$method] as $definedRoute => $action) {
-            if ($parameters = $this->match($definedRoute, $route)) {
+        foreach ($this->routes[$method] as $definedRoute => $action)
+        {
+            if ($parameters = $this->match($definedRoute, $route))
+            {
                 return [
                     'controllerAction' => $action['controllerAction'],
                     'middlewares' => $action['middlewares'],
@@ -49,10 +54,16 @@ class Router
                 ];
             }
         }
+
         return $this->routes[$method][$route] ?? [];
     }
 
-    private function match(string $definedRoute, string $requestedRoute)
+    /**
+     * @param string $definedRoute
+     * @param string $requestedRoute
+     * @return false|array
+     */
+    private function match(string $definedRoute, string $requestedRoute): false|array
     {
         // Extraire les clés des accolades
         /*
@@ -62,11 +73,23 @@ class Router
 
         $pattern = preg_replace('/\{[^}]+}/', '([^/]+)', $definedRoute);
         $pattern = "@^{$pattern}$@";
-        if (preg_match($pattern, $requestedRoute, $matches)) {
+
+        if (preg_match($pattern, $requestedRoute, $matches))
+        {
             array_shift($matches); // Remove the full match
 
             return $matches;
         }
         return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function globalMiddlewares(): array
+    {
+        return [
+            CsrfMiddleware::class,
+        ];
     }
 }

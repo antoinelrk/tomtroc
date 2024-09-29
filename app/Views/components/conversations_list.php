@@ -38,14 +38,14 @@
                         <div class="user-conversation-list-infos">
                             <div class="top-user-infos">
                                 <span>
-                                    <?= $conversation->relations['receiver']->username ?>
+                                    <?= htmlspecialchars($conversation->relations['receiver']->username) ?>
                                 </span>
                                 <span>
                                     <?= \App\Helpers\Diamond::diffForHumans($conversation->updated_at, true) ?>
                                 </span>
                             </div>
                             <p>
-                                <?= \App\Helpers\Str::trunc(end($conversation->relations['messages'])->content, 20) ?>
+                                <?=  htmlspecialchars(\App\Helpers\Str::trunc(end($conversation->relations['messages'])->content, 20)) ?>
                             </p>
                         </div>
                     </a>
