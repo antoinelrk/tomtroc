@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Core\Facades\View;
+use App\Core\Response;
 
 class Errors
 {
@@ -31,7 +32,7 @@ class Errors
     {
         return self::render(
             'Not found',
-            404
+            Response::HTTP_NOT_FOUND
         );
     }
 
@@ -40,11 +41,11 @@ class Errors
      *
      * @return View|null
      */
-    public function expired(): ?View
+    public static function expired(): ?View
     {
         return self::render(
             'Page expired',
-            419
+            Response::PAGE_EXPIRED
         );
     }
 

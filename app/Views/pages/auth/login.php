@@ -6,6 +6,8 @@
                     Connection
                 </h1>
                 <form action="/auth/login" method="POST" enctype="multipart/form-data">
+                    <?= \App\Core\Http\Csrf::template() ?>
+
                     <div class="form-group">
                         <label for="email">Adresse email</label>
                         <input type="email" name="email" id="email">

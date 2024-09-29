@@ -30,21 +30,30 @@ class UserService extends Service
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if(is_bool($result)) {
+        if(is_bool($result))
+        {
             Notification::push(
                 'L\'utilisateur ' . $username . ' n\'existe pas',
                 EnumNotificationState::ERROR->value
             );
 
             return null;
-        } else {
+        }
+        else
+        {
             $user = new User($result);
 
             return $user->withoutPassword();
         }
     }
 
-    public function getUserById($id)
+    /**
+     * Return one user by ID
+     *
+     * @param $id
+     * @return User|null
+     */
+    public function getUserById($id): ?User
     {
         $query = "SELECT * FROM users WHERE id = :id";
         $statement = $this->connection->prepare($query);
@@ -52,7 +61,8 @@ class UserService extends Service
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($result !== false) {
+        if ($result !== false)
+        {
             $user = new User($result);
 
             return $user->withoutPassword();
@@ -61,6 +71,7 @@ class UserService extends Service
         return null;
     }
     // TODO END
+
     public function create(array $data): User
     {
         $query = "INSERT INTO users ";
@@ -91,10 +102,12 @@ class UserService extends Service
 
         $setParts = array_map(fn($key) => "$key = :$key", array_keys($data));
 
-        if (isset($data['avatar'])) {
+        if (isset($data['avatar']))
+        {
             $filename = $this->setAvatar($user, $data['avatar']);
 
-            if (!is_bool($filename)) {
+            if (!is_bool($filename))
+            {
                 $setParts[] = "avatar = :avatar";
                 $data['avatar'] = $filename;
             }
@@ -106,11 +119,14 @@ class UserService extends Service
 
         $statement = $this->connection->prepare($sql);
 
-        foreach ($data as $key => $value) {
-            if ($key === "password") {
+        foreach ($data as $key => $value)
+        {
+            if ($key === "password")
+            {
                 $statement->bindValue(":$key", Hash::make($value));
             }
-            else {
+            else
+            {
                 $statement->bindValue(":$key", $value);
             }
         }
@@ -119,13 +135,14 @@ class UserService extends Service
 
         $state = $statement->execute();
 
-        if ($state) {
+        if ($state)
+        {
             $email = $data['email'] ?? null;
             Auth::refresh($email);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -133,22 +150,27 @@ class UserService extends Service
      */
     public function setAvatar(User $user, array $avatar): bool|string
     {
-        if ($avatar['error'] !== UPLOAD_ERR_OK) {
+        if ($avatar['error'] !== UPLOAD_ERR_OK)
+        {
             Notification::push('L\'image n\'est pas valide', EnumNotificationState::ERROR->value);
             return false;
         }
 
-        if ($avatar['size'] > 5000000) {
+        if ($avatar['size'] > 5000000)
+        {
             Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
             return false;
         }
 
-        if ($user->avatar !== null) {
+        if ($user->avatar !== null)
+        {
             File::delete($user->avatar, EnumFileCategory::AVATAR->value);
         }
 
-        if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
-            if (($filename = File::store('avatars', $avatar))) {
+        if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png')
+        {
+            if (($filename = File::store('avatars', $avatar)))
+            {
                 return $filename;
             }
 

@@ -8,7 +8,7 @@
                     <img src="<?= $selectedConversation->relations['user']->avatar ?>" alt=""
                          class="profile-picture">
                     <span>
-                        <?= $selectedConversation->relations['user']->username ?>
+                        <?= htmlspecialchars($selectedConversation->relations['user']->username) ?>
                     </span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             <?php endif; ?>
 
                             <p class="message-content">
-                                <?= $message->content ?>
+                                <?= htmlspecialchars($message->content) ?>
                             </p>
                         </li>
                     <?php endforeach; ?>
@@ -39,6 +39,7 @@
                 action="/messages/store"
                 method="POST"
             >
+                <?= \App\Core\Http\Csrf::template() ?>
                 <input type="hidden" name="conversation_id" value="<?= $selectedConversation->id ?>">
                 <input type="hidden" name="uuid" value="<?= $selectedConversation->uuid ?>">
                 <input type="hidden" name="receiver_id" value="<?= $selectedConversation->relations[0]['user']->id ?>">

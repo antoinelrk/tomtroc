@@ -8,7 +8,6 @@ use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
 use App\Enum\EnumNotificationState;
-use App\Helpers\Log;
 use App\Models\Conversation;
 use App\Services\ConversationService;
 use App\Services\MessagesService;
@@ -16,21 +15,24 @@ use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
-    protected ConversationService $conversationService;
-    protected UserService $userService;
-    
-    protected MessagesService $messagesService;
-
-    public function __construct()
+    /**
+     * @param ConversationService $conversationService
+     * @param MessagesService $messagesService
+     * @param UserService $userService
+     */
+    public function __construct(
+        protected ConversationService $conversationService = new ConversationService(),
+        protected MessagesService $messagesService = new MessagesService(),
+        protected UserService $userService = new UserService(),
+    )
     {
         parent::__construct();
-
-        $this->conversationService = new ConversationService();
-        $this->userService = new UserService();
-        $this->messagesService = new MessagesService();
     }
 
-    public function index()
+    /**
+     * @return void
+     */
+    public function index(): void
     {
         $conversation = $this->conversationService->getFirstConversation();
 
@@ -41,13 +43,16 @@ class ConversationsController extends Controller
         }
     }
 
-    public function show(string $uuid)
+    /**
+     * @param string $uuid
+     * @return mixed
+     */
+    public function show(string $uuid): mixed
     {
         $conversations = $this->conversationService->getConversations();
 
-        if ($conversations)
-
-        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid) {
+        $selectedConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($uuid)
+        {
            return $conversation->uuid === $uuid;
         }));
         
@@ -62,9 +67,15 @@ class ConversationsController extends Controller
             ->render();
     }
 
+    /**
+     * @param int $userId
+     * @return bool
+     * @throws \Random\RandomException
+     */
     public function create(int $userId): bool
     {
-        if ($userId === Auth::user()->id) {
+        if ($userId === Auth::user()->id)
+        {
             Notification::push(
                 'Vous ne pouvez pas vous envoyer un message à vous même !',
                 EnumNotificationState::ERROR->value
@@ -76,7 +87,8 @@ class ConversationsController extends Controller
 
         $user = $this->userService->getUserById($userId);
 
-        if ($user === null) {
+        if ($user === null)
+        {
             Notification::push(
                 'L\'utilisateur n\'existe pas !',
                 EnumNotificationState::ERROR->value
@@ -86,14 +98,14 @@ class ConversationsController extends Controller
             return false;
         }
 
-        // On récupère la liste des conversations
         $conversations = $this->conversationService->getConversations();
 
         $likelyConversation = array_values(array_filter($conversations, function (Conversation $conversation) use ($userId) {
             return $conversation->relations['receiver']->id === $userId;
         }));
 
-        if (!empty($likelyConversation)) {
+        if (!empty($likelyConversation))
+        {
             Response::redirect('/conversations/show/' . $likelyConversation[0]->uuid);
         }
 
@@ -106,6 +118,9 @@ class ConversationsController extends Controller
             ->render();
     }
 
+    /**
+     * @return mixed
+     */
     public function noMessage()
     {
         return View::layout('layouts.app')

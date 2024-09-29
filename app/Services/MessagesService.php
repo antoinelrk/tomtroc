@@ -13,14 +13,15 @@ class MessagesService
 {
     protected PDO $connection;
 
-    protected UserService $userManager;
-
-    public function __construct()
+    public function __construct(protected $userService = new UserService())
     {
         $this->connection = Database::getInstance()->getConnection();
-        $this->userManager = new UserService();
     }
 
+    /**
+     * @param array $data
+     * @return Message|bool
+     */
     public function create(array $data): Message|bool
     {
         if (!isset($data['content'])) return false;
@@ -39,19 +40,18 @@ class MessagesService
 
         $statement->execute();
 
-//        $statement = $this->connection->prepare("SELECT m.* FROM messages m ORDER BY created_at DESC LIMIT 1");
-//        $statement->execute();
-//        $statement->fetch(PDO::FETCH_ASSOC);
-
         return true;
     }
 
+    /**
+     * @param int|null $conversationId
+     * @return array
+     */
     public function getMessages(?int $conversationId = null): array
     {
-        $user = Auth::user();
         $messages = [];
 
-        $query = "SELECT " ;
+        $query = "SELECT ";
         $query .= "m.id AS message_id,
             m.parent_id AS message_parent_id,
             m.content AS message_content,
@@ -88,14 +88,11 @@ class MessagesService
         $statement->execute();
         $messagesRaw = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $receiver = null;
-
         foreach ($messagesRaw as $messageRaw) {
-
             $message = new Message(ArrayHelper::map(ArrayHelper::normalize($messageRaw, 'message_'), Message::class));
 
-            $message->addRelations('receiver', $this->userManager->getUserById($message->receiver_id));
-            $message->addRelations('sender', $this->userManager->getUserById($message->sender_id));
+            $message->addRelations('receiver', $this->userService->getUserById($message->receiver_id));
+            $message->addRelations('sender', $this->userService->getUserById($message->sender_id));
 
             $messages[] = $message;
         }
@@ -112,7 +109,11 @@ class MessagesService
         ];
     }
 
-    public function countUnreadMessages(int $userId = null)
+    /**
+     * @param int|null $userId
+     * @return int
+     */
+    public function countUnreadMessages(int $userId = null): int
     {
         $query = "SELECT COUNT(*) AS unread_messages ";
         $query .= "FROM messages ";
@@ -125,9 +126,14 @@ class MessagesService
         $statement->execute();
         $messagesRaw = $statement->fetch(PDO::FETCH_ASSOC);
 
-        return $messagesRaw['unread_messages'];
+        return intval($messagesRaw['unread_messages']);
     }
 
+    /**
+     * @param int $conversationId
+     * @param int|null $userId
+     * @return void
+     */
     public function readMessages(int $conversationId, int $userId = null): void
     {
         $query = "UPDATE messages ";

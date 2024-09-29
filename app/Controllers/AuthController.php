@@ -15,13 +15,11 @@ use Random\RandomException;
 
 class AuthController extends Controller
 {
-    protected UserService $userManager;
-
-    public function __construct()
+    public function __construct(
+        protected UserService $userService = new UserService(),
+    )
     {
         parent::__construct();
-
-        $this->userManager = new UserService();
     }
 
     public function loginForm(): ?View
@@ -42,7 +40,8 @@ class AuthController extends Controller
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if ($user = Auth::attempt($email, $password)) {
+        if ($user = Auth::attempt($email, $password))
+        {
             Notification::push(
                 "Heureux de vous revoir $user->username !",
                 EnumNotificationState::SUCCESS->value
@@ -55,9 +54,13 @@ class AuthController extends Controller
             'Erreur dans la combinaison email/password',
             EnumNotificationState::ERROR->value
         );
+
         Response::redirectToLogin();
     }
 
+    /**
+     * @return View|null
+     */
     public function registerForm(): ?View
     {
         return View::layout('layouts.app')
@@ -91,7 +94,8 @@ class AuthController extends Controller
             ],
         ]);
 
-        if (!$isValidate) {
+        if (!$isValidate)
+        {
             Notification::push(
                 'Des informations ne sont pas valides',
                 EnumNotificationState::ERROR->value
@@ -102,7 +106,7 @@ class AuthController extends Controller
 
         $displayName = ucfirst($request['username']);
 
-        $this->userManager->create([
+        $this->userService->create([
             'username' => $request['username'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
@@ -118,6 +122,9 @@ class AuthController extends Controller
         Response::redirect('/');
     }
 
+    /**
+     * @return void
+     */
     public function logout(): void
     {
         Auth::logout();

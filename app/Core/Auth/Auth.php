@@ -8,6 +8,7 @@ use App\Core\Response;
 use App\Enum\EnumNotificationState;
 use App\Models\User;
 use PDO;
+use Random\RandomException;
 
 class Auth
 {
@@ -28,13 +29,15 @@ class Auth
      */
     public static function user(): ?User
     {
-        if (!isset($_SESSION['user'])) {
+        if (!isset($_SESSION['user']))
+        {
             return null;
         }
 
         $user = unserialize($_SESSION['user']);
 
-        if (isset($user)) {
+        if (isset($user))
+        {
             return $user;
         }
 
@@ -48,12 +51,14 @@ class Auth
      * @param $password
      *
      * @return bool|User
+     * @throws RandomException
      */
     public static function attempt($email, $password): bool|User
     {
         $user = self::rawUser($email);
 
-        if ($user && password_verify($password, $user->password)) {
+        if ($user && password_verify($password, $user->password))
+        {
             $_SESSION['user'] = serialize($user->withoutPassword());
 
             return $user;
@@ -62,9 +67,15 @@ class Auth
         return false;
     }
 
+    /**
+     * @param string|null $email
+     * @return void
+     * @throws \Random\RandomException
+     */
     public static function refresh(string $email = null): void
     {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['user']))
+        {
             $oldUser = unserialize($_SESSION['user']);
             $newUser = self::rawUser($email ?? $oldUser->email);
             $_SESSION['user'] = serialize($newUser);
@@ -83,6 +94,11 @@ class Auth
         return true;
     }
 
+    /**
+     * @param string $email
+     * @return User
+     * @throws \Random\RandomException
+     */
     private static function rawUser(string $email): User
     {
         $statement = Database::getInstance()
@@ -92,7 +108,8 @@ class Auth
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$result)
+        {
             Notification::push(
                 'Vos informations sont incorrects',
                 EnumNotificationState::ERROR->value

@@ -1,6 +1,5 @@
 services:
   crw_app:
-    # image: registry.akela.app/laravel:10-alpine
     build:
       context: ./
       dockerfile: ./docker/Dockerfile
