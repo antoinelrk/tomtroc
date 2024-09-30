@@ -15,6 +15,11 @@ use App\Services\UserService;
 
 class ConversationsController extends Controller
 {
+    /**
+     * @param ConversationService $conversationService
+     * @param MessagesService $messagesService
+     * @param UserService $userService
+     */
     public function __construct(
         protected ConversationService $conversationService = new ConversationService(),
         protected MessagesService $messagesService = new MessagesService(),
@@ -24,7 +29,10 @@ class ConversationsController extends Controller
         parent::__construct();
     }
 
-    public function index()
+    /**
+     * @return void
+     */
+    public function index(): void
     {
         $conversation = $this->conversationService->getFirstConversation();
 
@@ -35,7 +43,11 @@ class ConversationsController extends Controller
         }
     }
 
-    public function show(string $uuid)
+    /**
+     * @param string $uuid
+     * @return mixed
+     */
+    public function show(string $uuid): mixed
     {
         $conversations = $this->conversationService->getConversations();
 
@@ -55,6 +67,11 @@ class ConversationsController extends Controller
             ->render();
     }
 
+    /**
+     * @param int $userId
+     * @return bool
+     * @throws \Random\RandomException
+     */
     public function create(int $userId): bool
     {
         if ($userId === Auth::user()->id)
@@ -101,6 +118,9 @@ class ConversationsController extends Controller
             ->render();
     }
 
+    /**
+     * @return mixed
+     */
     public function noMessage()
     {
         return View::layout('layouts.app')

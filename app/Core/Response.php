@@ -86,11 +86,18 @@ class Response
         echo json_encode($data);
     }
 
+    /**
+     * @param string $path
+     * @return void
+     */
     public static function redirect(string $path): void
     {
         header('Location: ' . $path);
     }
 
+    /**
+     * @return void
+     */
     public static function referer(): void
     {
         header('Location: ' . $_SERVER['HTTP_REFERER']);

@@ -10,6 +10,9 @@ class Notification
 {
     private const int MAX_NOTIFICATIONS = 10;
 
+    /**
+     * @return bool
+     */
     public static function as(): bool
     {
         if (count(self::all()) > 0)
@@ -20,6 +23,9 @@ class Notification
         return false;
     }
 
+    /**
+     * @return void
+     */
     public static function init(): void
     {
         if (!isset($_SESSION['notifications']))
@@ -28,6 +34,9 @@ class Notification
         }
     }
 
+    /**
+     * @return array
+     */
     public static function all(): array
     {
         self::init();
@@ -35,6 +44,9 @@ class Notification
         return $_SESSION['notifications'];
     }
 
+    /**
+     * @return void
+     */
     public static function reset(): void
     {
         $_SESSION['notifications'] = [];
@@ -57,6 +69,10 @@ class Notification
         return self::all();
     }
 
+    /**
+     * @param $notificationId
+     * @return array
+     */
     public static function drop($notificationId): array
     {
         if ($notificationId)

@@ -7,6 +7,10 @@ use ReflectionClass;
 
 class Str
 {
+    /**
+     * @return string
+     * @throws RandomException
+     */
     public static function uuid(): string
     {
         $data = random_bytes(16);
@@ -16,6 +20,10 @@ class Str
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    /**
+     * @param string $text
+     * @return string
+     */
     public static function slug(string $text): string
     {
         $text = self::transliterate($text);
@@ -40,6 +48,10 @@ class Str
         return substr(bin2hex(random_bytes($length)), 0, $length);
     }
 
+    /**
+     * @param $classname
+     * @return string
+     */
     public static function setDatatable($classname): string
     {
         $result = "";
@@ -68,6 +80,11 @@ class Str
         return $result;
     }
 
+    /**
+     * @param $string
+     * @param $length
+     * @return string
+     */
     public static function trunc($string, $length): string
     {
         if (strlen($string) <= $length)
@@ -77,6 +94,10 @@ class Str
         return substr($string, 0, $length) . ' ...';
     }
 
+    /**
+     * @param $text
+     * @return string
+     */
     public static function transliterate($text): string
     {
         $transliterationTable = [
@@ -94,6 +115,11 @@ class Str
         return strtr($text, $transliterationTable);
     }
 
+    /**
+     * @param int $number
+     * @param string $text
+     * @return string
+     */
     public static function plurialize(int $number, string $text): string
     {
         if ($number === 0)

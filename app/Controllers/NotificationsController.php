@@ -8,6 +8,12 @@ use App\Core\Response;
 
 class NotificationsController extends Controller
 {
+    /**
+     * Drop the notification
+     *
+     * @param $id
+     * @return void
+     */
     public function drop($id): void
     {
         if (isset($id))

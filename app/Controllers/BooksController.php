@@ -12,6 +12,9 @@ use App\Services\BookService;
 
 class BooksController extends Controller
 {
+    /**
+     * @param BookService $bookService
+     */
     public function __construct(
         protected BookService $bookService = new BookService(),
     )
@@ -19,6 +22,9 @@ class BooksController extends Controller
         parent::__construct();
     }
 
+    /**
+     * @return View|null
+     */
     public function index(): ?View
     {
         $books = $this->bookService->getBooks(true);
@@ -31,6 +37,10 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @param string $slug
+     * @return View|null
+     */
     public function show(string $slug): ?View
     {
         $book = $this->bookService->getBook($slug);
@@ -43,6 +53,9 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @return View|null
+     */
     public function create(): ?View
     {
         return View::layout('layouts.app')
@@ -50,6 +63,10 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function store(): void
     {
         $data = [
@@ -101,6 +118,10 @@ class BooksController extends Controller
         }
     }
 
+    /**
+     * @param string $slug
+     * @return View|null
+     */
     public function edit(string $slug): ?View
     {
         $book = $this->bookService->getBook($slug);
@@ -113,6 +134,11 @@ class BooksController extends Controller
             ->render();
     }
 
+    /**
+     * @param string $slug
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function update(string $slug): void
     {
         $book = $this->bookService->getBook($slug);
@@ -165,6 +191,11 @@ class BooksController extends Controller
         Response::redirect('/books/show/' . $slug);
     }
 
+    /**
+     * @param string $slug
+     * @return void
+     * @throws \Random\RandomException
+     */
     public function delete(string $slug): void
     {
         $book = $this->bookService->getBook($slug);

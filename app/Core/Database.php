@@ -83,11 +83,20 @@ class Database
         }
     }
 
+    /**
+     * @param string $sql
+     * @param string $classname
+     * @return false|\PDOStatement
+     */
     public static function query(string $sql, string $classname): false|\PDOStatement
     {
         return (new Database)->getConnection()->query($sql);
     }
 
+    /**
+     * @param string $sql
+     * @return false|\PDOStatement
+     */
     public static function prepare(string $sql): false|\PDOStatement
     {
         $statement = (new Database)->getConnection()->prepare($sql);

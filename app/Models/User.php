@@ -12,6 +12,9 @@ class User extends Model
         public array $properties = []
     ) {}
 
+    /**
+     * @return $this
+     */
     public function withoutPassword(): User
     {
         unset($this->properties['password']);

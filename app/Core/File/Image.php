@@ -6,6 +6,13 @@ use App\Helpers\Log;
 
 class Image
 {
+    /**
+     * @param array $ofile
+     * @param string $fullpath
+     * @param int $max_resolution
+     * @param string $type
+     * @return void
+     */
     public function crop(array $ofile, string $fullpath, int $max_resolution, string $type): void
     {
         if ($ofile['type'] == 'image/jpeg') {
