@@ -23,11 +23,11 @@ class Database
     private function __construct()
     {
         $config = [
-            'driver'    => 'mysql',
-            'host'      => 'database',
-            'database'  => 'tomtroc',
-            'username'  => 'root',
-            'password'  => 'local',
+            'driver'    => DB_DRIVER,
+            'host'      => DB_HOST,
+            'database'  => DB_NAME,
+            'username'  => DB_USERNAME,
+            'password'  => DB_PASSWORD,
             'charset'   => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
@@ -90,9 +90,7 @@ class Database
      */
     public static function query(string $sql, string $classname): false|\PDOStatement
     {
-        $statement = self::getConnection()->query($sql);
-
-        return $statement;
+        return (new Database)->getConnection()->query($sql);
     }
 
     /**
@@ -101,7 +99,7 @@ class Database
      */
     public static function prepare(string $sql): false|\PDOStatement
     {
-        $statement = self::getConnection()->prepare($sql);
+        $statement = (new Database)->getConnection()->prepare($sql);
         $statement->execute();
 
         return $statement;
