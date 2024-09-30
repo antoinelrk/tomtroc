@@ -8,7 +8,7 @@
 
 1. Créer la base de donnée
 2. Insérer la structure avec le fichier ``dump.sql``
-3. Ajouter la configuration de la base de donnée dans le fichier ``config.php``
+3. **Copier** puis renommer le fichier ``config.php.example`` en ``config.php`` puis remplir les informations.
 
 ### Docker
 

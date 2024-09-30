@@ -13,6 +13,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../app/Core/Constants.php';
+require_once __DIR__ . '/../config.php';
 $router = require_once __DIR__ . '/../bootstrap/routes.php';
 
 $dispatcher = new Dispatcher($router);
