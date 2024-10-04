@@ -24,6 +24,8 @@ php83-fpm \
 php83-pdo \
 php83-iconv \
 php83-pdo_mysql \
+php83-dev \
+php83-pear \
 php83-sodium \
 php83-mbstring \
 php83-xml \
