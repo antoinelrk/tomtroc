@@ -33,6 +33,7 @@ class MessagesController extends Controller
      */
     public function store(): void
     {
+        if (!isset($_POST)) return;
         $request = $_POST;
 
         $isValid = [

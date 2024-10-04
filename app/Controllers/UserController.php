@@ -74,8 +74,9 @@ class UserController extends Controller
      */
     public function update($userId): void
     {
-        $user = $this->userService->getUserById($userId);
+        if (!isset($_POST)) return;
         $request = $_POST;
+        $user = $this->userService->getUserById($userId);
 
         if($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE)
         {

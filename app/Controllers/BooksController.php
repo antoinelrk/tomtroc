@@ -69,11 +69,14 @@ class BooksController extends Controller
      */
     public function store(): void
     {
+        if (!isset($_POST)) return;
+        $request = $_POST;
+
         $data = [
-            'title' => $_POST['title'],
-            'author' => $_POST['author'],
-            'description' => $_POST['description'],
-            'available' => $_POST['available'] ? 1 : 0,
+            'title' => $request['title'],
+            'author' => $request['author'],
+            'description' => $request['description'],
+            'available' => $request['available'] ? 1 : 0,
         ];
 
         $isValid = Validator::check($data, [
@@ -141,8 +144,9 @@ class BooksController extends Controller
      */
     public function update(string $slug): void
     {
-        $book = $this->bookService->getBook($slug);
+        if (!isset($_POST)) return;
         $request = $_POST;
+        $book = $this->bookService->getBook($slug);
 
         $isValid = Validator::check($request, [
             'title' => [
