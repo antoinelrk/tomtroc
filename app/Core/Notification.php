@@ -15,8 +15,7 @@ class Notification
      */
     public static function as(): bool
     {
-        if (count(self::all()) > 0)
-        {
+        if (count(self::all()) > 0) {
             return true;
         }
 
@@ -28,8 +27,7 @@ class Notification
      */
     public static function init(): void
     {
-        if (!isset($_SESSION['notifications']))
-        {
+        if (!isset($_SESSION['notifications'])) {
             $_SESSION['notifications'] = [];
         }
     }
@@ -75,10 +73,8 @@ class Notification
      */
     public static function drop($notificationId): array
     {
-        if ($notificationId)
-        {
-            if (isset($_SESSION['notifications'][$notificationId]))
-            {
+        if ($notificationId) {
+            if (isset($_SESSION['notifications'][$notificationId])) {
                 unset($_SESSION['notifications'][$notificationId]);
             }
         }

@@ -17,6 +17,8 @@ class Session
      */
     public static function createIfNotExist(): void
     {
-        if (!self::exist()) session_start();
+        if (!self::exist()) {
+            session_start();
+        }
     }
 }

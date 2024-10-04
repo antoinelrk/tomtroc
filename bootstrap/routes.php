@@ -5,7 +5,6 @@ use App\Controllers\ConversationsController;
 use App\Controllers\MessagesController;
 use App\Controllers\NotificationsController;
 use App\Core\Router;
-
 use App\Controllers\AuthController;
 use App\Controllers\HomeController;
 use App\Controllers\PostController;
@@ -16,7 +15,7 @@ $router = new Router();
 
 // ---------- DEFAULT ----------
 
-$router->addRoute('GET','/', [HomeController::class, 'index']);
+$router->addRoute('GET', '/', [HomeController::class, 'index']);
 
 // ---------- AUTHENTICATION ----------
 
@@ -62,7 +61,7 @@ $router->addRoute('GET', '/conversations/create/{id}', [ConversationsController:
 $router->addRoute('GET', '/conversations/show', [ConversationsController::class, 'index']);
 $router->addRoute('GET', '/conversations/show/{uuid}', [ConversationsController::class, 'show']);
 $router->addRoute('GET', '/conversations/no-message', [ConversationsController::class, 'noMessage']);
-$router->addRoute('POST', '/messages/store', [MessagesController::class, 'store'],);
+$router->addRoute('POST', '/messages/store', [MessagesController::class, 'store'], );
 
 $router->addRoute(
     'GET',
@@ -78,7 +77,8 @@ $router->addRoute(
     [NotificationsController::class, 'drop']
 );
 
-$router->addRoute('GET',
+$router->addRoute(
+    'GET',
     '/' . API_PREFIX . '/users',
     [UserController::class, 'index'],
     [AuthMiddleware::class]

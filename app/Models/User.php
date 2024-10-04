@@ -10,7 +10,8 @@ class User extends Model
 {
     public function __construct(
         public array $properties = []
-    ) {}
+    ) {
+    }
 
     /**
      * @return $this

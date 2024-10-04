@@ -12,7 +12,8 @@ readonly class Dispatcher
      */
     public function __construct(
         private Router $router
-    ) {}
+    ) {
+    }
 
     /**
      * Dispatch routes methods.
@@ -25,22 +26,19 @@ readonly class Dispatcher
         $method = $_SERVER['REQUEST_METHOD'];
         $controllerAction = $this->router->getControllerAction($method, $url);
 
-        if (!empty($controllerAction))
-        {
+        if (!empty($controllerAction)) {
             [$controllerClass, $action] = $controllerAction['controllerAction'];
             $middlewares = $controllerAction['middlewares'];
 
             $middlewareManager = new MiddlewareManager();
 
-            foreach ($middlewares as $middleware)
-            {
-                $middlewareManager->add(new $middleware);
+            foreach ($middlewares as $middleware) {
+                $middlewareManager->add(new $middleware());
             }
 
             $processedRequest = $middlewareManager->handle($url);
 
-            if ($processedRequest)
-            {
+            if ($processedRequest) {
                 $controller = new $controllerClass();
 
                 call_user_func_array(
@@ -48,9 +46,7 @@ readonly class Dispatcher
                     $controllerAction['parameters'] ?? []
                 );
             }
-        }
-        else
-        {
+        } else {
             return Errors::notFound();
         }
 

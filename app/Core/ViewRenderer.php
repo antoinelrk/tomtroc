@@ -7,7 +7,6 @@ use Exception;
 
 class ViewRenderer
 {
-
     /**
      * @var string $layout
      */
@@ -91,24 +90,18 @@ class ViewRenderer
         $layoutFile = $this->parseTemplate(self::$layout) ?? '';
         $viewFile = $this->parseTemplate(self::$view);
 
-        if (file_exists($viewFile))
-        {
+        if (file_exists($viewFile)) {
             ob_start();
             extract(self::$data);
             require $viewFile;
             $content = ob_get_clean();
 
-            if (file_exists($layoutFile))
-            {
+            if (file_exists($layoutFile)) {
                 require $layoutFile;
-            }
-            else
-            {
+            } else {
                 echo $content;
             }
-        }
-        else
-        {
+        } else {
             throw new Exception("View file not found.");
         }
     }

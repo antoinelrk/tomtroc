@@ -12,7 +12,7 @@
                 <li>
                     <div class="conversation-selector selected">
                         <img
-                            src="<?= \App\Helpers\File::get($user->avatar,'avatars') ?>"
+                            src="<?= \App\Helpers\File::get($user->avatar, 'avatars') ?>"
                             alt=""
                             class="profile-picture"
                         >
@@ -30,7 +30,7 @@
                 <li>
                     <a class="conversation-selector" href="/conversations/show/<?= $conversation->uuid ?>">
                         <img
-                            src="<?= \App\Helpers\File::get($conversation->relations['receiver']->avatar,'avatars') ?>"
+                            src="<?= \App\Helpers\File::get($conversation->relations['receiver']->avatar, 'avatars') ?>"
                             alt=""
                             class="profile-picture"
                         >

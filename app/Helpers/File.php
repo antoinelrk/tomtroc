@@ -13,8 +13,7 @@ class File
      */
     public static function get(?string $filename, string $type): string
     {
-        if ($filename !== NULL)
-        {
+        if ($filename !== null) {
             return "/../storage/$type/$filename";
         }
 
@@ -36,10 +35,8 @@ class File
         $filename = "$filename.$extension";
         $fullpath = "./storage/$path/$filename";
 
-        if (move_uploaded_file($file['tmp_name'], $fullpath))
-        {
-            if (file_exists($fullpath))
-            {
+        if (move_uploaded_file($file['tmp_name'], $fullpath)) {
+            if (file_exists($fullpath)) {
                 (new Image())->crop(
                     $file,
                     $fullpath,

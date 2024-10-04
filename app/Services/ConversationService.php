@@ -58,8 +58,7 @@ class ConversationService
 
         $conversations = [];
 
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             $conversation = new Conversation($result);
 
             [$messages, $receiver] = $this->messagesManager->getMessages($conversation->id);
@@ -87,8 +86,7 @@ class ConversationService
     {
         $conversation = $this->getConversations();
 
-        if (!empty($conversation))
-        {
+        if (!empty($conversation)) {
             return $conversation[0];
         }
 
@@ -126,8 +124,7 @@ class ConversationService
         $sql .= " VALUES ($keys);";
         $statement = $this->connection->prepare($sql);
 
-        foreach ($map as $item)
-        {
+        foreach ($map as $item) {
             $statement->bindParam(':' . $item, $data[$item]);
         }
 
