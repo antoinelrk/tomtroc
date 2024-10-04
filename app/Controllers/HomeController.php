@@ -22,17 +22,4 @@ class HomeController extends Controller
             ])
             ->render();
     }
-
-    public function overflowNotifications(): void
-    {
-        $_SESSION['notifications'] = [];
-
-        while(true) {
-            Notification::push('Simple message');
-
-            Notification::push(str_repeat('Repeated message', 100000));
-
-            sleep(60); // 1 minutes
-        }
-    }
 }
