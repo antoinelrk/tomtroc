@@ -37,8 +37,11 @@ class AuthController extends Controller
      */
     public function login(): void
     {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        if (!isset($_POST)) return;
+        $request = $_POST;
+
+        $email = $request['email'];
+        $password = $request['password'];
 
         if ($user = Auth::attempt($email, $password))
         {
@@ -76,6 +79,7 @@ class AuthController extends Controller
      */
     public function register(): void
     {
+        if (!isset($_POST)) return;
         $request = $_POST;
 
         $isValidate = Validator::check($request, [
