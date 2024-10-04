@@ -17,8 +17,7 @@ class AuthController extends Controller
 {
     public function __construct(
         protected UserService $userService = new UserService(),
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -37,14 +36,15 @@ class AuthController extends Controller
      */
     public function login(): void
     {
-        if (!isset($_POST)) return;
+        if (!isset($_POST)) {
+            return;
+        }
         $request = $_POST;
 
         $email = $request['email'];
         $password = $request['password'];
 
-        if ($user = Auth::attempt($email, $password))
-        {
+        if ($user = Auth::attempt($email, $password)) {
             Notification::push(
                 "Heureux de vous revoir $user->username !",
                 EnumNotificationState::SUCCESS->value
@@ -79,7 +79,9 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        if (!isset($_POST)) return;
+        if (!isset($_POST)) {
+            return;
+        }
         $request = $_POST;
 
         $isValidate = Validator::check($request, [
@@ -98,8 +100,7 @@ class AuthController extends Controller
             ],
         ]);
 
-        if (!$isValidate)
-        {
+        if (!$isValidate) {
             Notification::push(
                 'Des informations ne sont pas valides',
                 EnumNotificationState::ERROR->value

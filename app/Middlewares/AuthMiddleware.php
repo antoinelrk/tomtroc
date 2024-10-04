@@ -22,8 +22,7 @@ class AuthMiddleware implements Middleware
      */
     public function handle($request, Closure $next): mixed
     {
-        if (!Auth::user())
-        {
+        if (!Auth::user()) {
             Notification::push("Vous n'êtes pas autorisé à voir cette page !", 'error');
             Response::redirectToLogin();
             exit;

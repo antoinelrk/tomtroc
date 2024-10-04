@@ -13,7 +13,7 @@ class ArrayHelper
      */
     public static function map(array $values, string $model): array
     {
-        return array_combine((new $model)->map, $values);
+        return array_combine((new $model())->map, $values);
     }
 
     /**

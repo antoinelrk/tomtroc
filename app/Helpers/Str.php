@@ -56,26 +56,20 @@ class Str
     {
         $result = "";
 
-        try
-        {
+        try {
             $classname = (new ReflectionClass($classname))
                 ->getShortName();
             $result = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $classname));
 
-            if (str_ends_with($result, 'y'))
-            {
+            if (str_ends_with($result, 'y')) {
                 $result = substr($result, 0, -1) . 'ies';
-            }
-            elseif (str_ends_with($result, 's'))
-            {
+            } elseif (str_ends_with($result, 's')) {
                 $result .= 'es';
-            }
-            else
-            {
+            } else {
                 $result .= 's';
             }
+        } catch (\ReflectionException $exception) {
         }
-        catch (\ReflectionException $exception) {}
 
         return $result;
     }
@@ -87,8 +81,7 @@ class Str
      */
     public static function trunc($string, $length): string
     {
-        if (strlen($string) <= $length)
-        {
+        if (strlen($string) <= $length) {
             return $string;
         }
         return substr($string, 0, $length) . ' ...';
@@ -122,17 +115,13 @@ class Str
      */
     public static function plurialize(int $number, string $text): string
     {
-        if ($number === 0)
-        {
+        if ($number === 0) {
             return "Aucun(e) $text";
         }
 
-        if ($number > 1)
-        {
+        if ($number > 1) {
             return "$number {$text}s";
-        }
-        else
-        {
+        } else {
             return "$number $text";
         }
     }

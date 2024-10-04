@@ -17,12 +17,10 @@ class CsrfMiddleware implements Middleware
     public function handle($request, Closure $next): mixed
     {
         // WIP: Faire une class request ?
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !str_contains($_SERVER['REQUEST_URI'], 'notification'))
-        {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !str_contains($_SERVER['REQUEST_URI'], 'notification')) {
             $token = $_POST['csrf_token'] ?? '';
 
-            if (!$token || !Csrf::validate($token))
-            {
+            if (!$token || !Csrf::validate($token)) {
                 return Errors::expired();
             }
         }

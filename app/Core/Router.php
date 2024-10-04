@@ -43,10 +43,8 @@ class Router
      */
     public function getControllerAction(string $method, string $route): array
     {
-        foreach ($this->routes[$method] as $definedRoute => $action)
-        {
-            if ($parameters = $this->match($definedRoute, $route))
-            {
+        foreach ($this->routes[$method] as $definedRoute => $action) {
+            if ($parameters = $this->match($definedRoute, $route)) {
                 return [
                     'controllerAction' => $action['controllerAction'],
                     'middlewares' => $action['middlewares'],
@@ -74,8 +72,7 @@ class Router
         $pattern = preg_replace('/\{[^}]+}/', '([^/]+)', $definedRoute);
         $pattern = "@^{$pattern}$@";
 
-        if (preg_match($pattern, $requestedRoute, $matches))
-        {
+        if (preg_match($pattern, $requestedRoute, $matches)) {
             array_shift($matches); // Remove the full match
 
             return $matches;

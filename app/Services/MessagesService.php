@@ -24,7 +24,9 @@ class MessagesService
      */
     public function create(array $data): Message|bool
     {
-        if (!isset($data['content'])) return false;
+        if (!isset($data['content'])) {
+            return false;
+        }
 
         $query = "INSERT INTO messages ";
         $query .= "(`conversation_id`, `sender_id`, `receiver_id`, `content`, `readed`, `created_at`, `updated_at`) ";

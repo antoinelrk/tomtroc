@@ -29,15 +29,13 @@ class Auth
      */
     public static function user(): ?User
     {
-        if (!isset($_SESSION['user']))
-        {
+        if (!isset($_SESSION['user'])) {
             return null;
         }
 
         $user = unserialize($_SESSION['user']);
 
-        if (isset($user))
-        {
+        if (isset($user)) {
             return $user;
         }
 
@@ -57,8 +55,7 @@ class Auth
     {
         $user = self::rawUser($email);
 
-        if ($user && password_verify($password, $user->password))
-        {
+        if ($user && password_verify($password, $user->password)) {
             $_SESSION['user'] = serialize($user->withoutPassword());
 
             return $user;
@@ -74,8 +71,7 @@ class Auth
      */
     public static function refresh(string $email = null): void
     {
-        if (isset($_SESSION['user']))
-        {
+        if (isset($_SESSION['user'])) {
             $oldUser = unserialize($_SESSION['user']);
             $newUser = self::rawUser($email ?? $oldUser->email);
             $_SESSION['user'] = serialize($newUser);
@@ -108,8 +104,7 @@ class Auth
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result)
-        {
+        if (!$result) {
             Notification::push(
                 'Vos informations sont incorrects',
                 EnumNotificationState::ERROR->value
