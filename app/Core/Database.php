@@ -13,7 +13,7 @@ class Database
      */
     private static ?Database $instance = null;
     /**
-     * @var PDO 
+     * @var PDO
      */
     private PDO $pdo;
 
@@ -47,8 +47,7 @@ class Database
      */
     public static function getInstance(): ?Database
     {
-        if (self::$instance === null)
-        {
+        if (self::$instance === null) {
             self::$instance = new self();
         }
 
@@ -72,13 +71,10 @@ class Database
      */
     public static function debug(): void
     {
-        try
-        {
+        try {
             $db = self::getInstance()->getConnection();
             Log::dd('Connection successfully!');
-        }
-        catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             Log::dd("Connection failed: " . $e->getMessage());
         }
     }
@@ -90,7 +86,7 @@ class Database
      */
     public static function query(string $sql, string $classname): false|\PDOStatement
     {
-        return (new Database)->getConnection()->query($sql);
+        return (new Database())->getConnection()->query($sql);
     }
 
     /**
@@ -99,7 +95,7 @@ class Database
      */
     public static function prepare(string $sql): false|\PDOStatement
     {
-        $statement = (new Database)->getConnection()->prepare($sql);
+        $statement = (new Database())->getConnection()->prepare($sql);
         $statement->execute();
 
         return $statement;

@@ -22,5 +22,6 @@ class Book extends Model
      */
     public function __construct(
         public array $properties = []
-    ) {}
+    ) {
+    }
 }

@@ -5,13 +5,19 @@
             "App\\": "app/"
         }
     },
+    "scripts": {
+        "phpcs": "vendor/bin/php-cs-fixer fix ./"
+    },
     "authors": [
         {
             "name": "Antoine LRK"
         }
     ],
     "require": {
-      "ext-pdo": "*",
-      "ext-http": "*"
+      "ext-pdo": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpstan/phpstan": "^1.12"
     }
 }
