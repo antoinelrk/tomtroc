@@ -91,7 +91,7 @@ main.private-account {
                         color: var(--gray);
                     }
 
-                    h4.secondary-title {
+                    p.secondary-title {
                         margin: 1em 0;
                         text-transform: uppercase;
                         font-size: 10px;
@@ -116,7 +116,7 @@ main.private-account {
             &.right {
                 row-gap: 3em;
 
-                h3.section-title {
+                h2.section-title {
                     font-size: 1em;
                     width: 50%;
                     font-family: var(--s-serif), sans-serif;
