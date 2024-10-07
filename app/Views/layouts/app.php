@@ -18,7 +18,7 @@
     </ul>
     <?php endif; ?>
     <header>
-        <div class="centered">
+        <div class="wrapper">
             <div class="left">
                 <div class="app-logo">
                     <figure>
