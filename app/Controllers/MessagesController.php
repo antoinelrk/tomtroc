@@ -34,11 +34,19 @@ class MessagesController extends Controller
     public function store(): void
     {
         $request = [
+            'conversation_id' => filter_input(INPUT_POST, 'conversation_id', FILTER_VALIDATE_INT),
+            'uuid' => filter_input(INPUT_POST, 'uuid', FILTER_SANITIZE_SPECIAL_CHARS),
             'receiver_id' => filter_input(INPUT_POST, 'receiver_id', FILTER_VALIDATE_INT),
             'content' => filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS),
         ];
 
         $isValid = Validator::check($request, [
+            'conversation_id' => [
+                'required' => true,
+            ],
+            'uuid' => [
+                'required' => true,
+            ],
             'receiver_id' => [
                 'required' => true,
             ],
