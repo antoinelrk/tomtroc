@@ -76,11 +76,15 @@ main.auth-page {
                     }
                 }
 
-                p a:hover {
-                    text-decoration: underline;
+                p {
+                    font-family: "Inter", sans-serif;
+                    font-size: 14px;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
-
         }
     }
 }

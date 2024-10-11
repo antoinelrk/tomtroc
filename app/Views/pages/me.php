@@ -78,14 +78,13 @@
                     </td>
 
                     <td>
-                            <span class="tag <?= $book->available === 0 ? 'unavailable' : 'available' ?>">
-                                <?= $book->available === 0 ? 'unavailable' : 'available' ?>
-                            </span>
+                        <span class="tag <?= $book->available === 0 ? 'unavailable' : 'available' ?>">
+                            <?= $book->available === 0 ? 'Indisponible' : 'Disponible' ?>
+                        </span>
                     </td>
 
                     <td class="action">
                         <a href="/books/edit/<?= $book->slug ?>">Editer</a>
-                        <!-- TODO: Faire un alert en javascript -->
                         <a class="delete deletable-link" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
                     </td>
                 </tr>

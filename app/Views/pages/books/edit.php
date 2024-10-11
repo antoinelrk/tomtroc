@@ -13,11 +13,14 @@
         >
             <?= \App\Core\Http\Csrf::template() ?>
 
-            <aside>
+            <div class="picture-container">
+                <p class="label-photo">
+                    Photo
+                </p>
                 <img class="cover-book" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Couverture du livre <?= htmlspecialchars($book->title) ?>">
                 <input type="file" id="cover" name="cover">
                 <label for="cover" class="cover-input">modifier</label>
-            </aside>
+            </div>
 
             <div class="left-form-part">
                 <div class="form-group">
