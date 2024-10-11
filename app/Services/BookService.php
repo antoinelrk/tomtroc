@@ -159,9 +159,8 @@ class BookService extends Service
         $data = $this->prepareData($data);
 
         $sql = "UPDATE books SET ";
-        $setParts = array_map(fn ($key) => "$key = :$key", array_keys($data));
 
-        if (isset($data['cover'])) {
+        if ($data['cover'] !== null) {
             $filename = $this->setCover($book, $data['cover']);
 
             if (!$filename) {
@@ -171,7 +170,11 @@ class BookService extends Service
             }
 
             $data['cover'] = $filename;
+        } else {
+            unset($data['cover']);
         }
+
+        $setParts = array_map(fn ($key) => "$key = :$key", array_keys($data));
 
         $sql .= implode(', ', $setParts);
         $sql .= " WHERE id = :id;";

@@ -1,8 +1,10 @@
 <main class="books-show">
     <section class="red-line">
-        <a href="/our-books">Nos livres</a>
-        >
-        <a href="/books/<?= $book->slug ?>"><?= htmlspecialchars($book->title) ?></a>
+        <div class="wrapper">
+            <a href="/our-books">Nos livres</a>
+            >
+            <a href="/books/<?= $book->slug ?>"><?= htmlspecialchars($book->title) ?></a>
+        </div>
     </section>
 
     <section class="book">
@@ -13,7 +15,7 @@
         <article>
             <div class="book-head">
                 <h1><?= htmlspecialchars($book->title) ?></h1>
-                <span>par <?= htmlspecialchars($book->author) ?></span>
+                <span class="book-author">par <?= htmlspecialchars($book->author) ?></span>
             </div>
 
             <div class="book-content">

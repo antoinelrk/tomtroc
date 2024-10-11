@@ -13,7 +13,7 @@ use App\Core\Auth\Auth;
             <div class="flex column items-center user-info">
                 <p class="text-medium serif"><?= htmlspecialchars($user->username) ?></p>
                 <p class="title-secondary">Membre depuis <?= \App\Helpers\Diamond::diffForHumans($user->created_at) ?></p>
-                <h4 class="secondary-title">Bibliothèque</h4>
+                <p class="secondary-title">Bibliothèque</p>
                 <div class="text-with-icon">
                     <figure>
                         <svg width="100%" height="100%" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
 use App\Services\BookService;
@@ -73,10 +74,8 @@ class UserController extends Controller
      */
     public function update($userId): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
+        $request = Validator::user();
+
         $user = $this->userService->getUserById($userId);
 
         if ($_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
