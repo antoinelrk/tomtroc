@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Facades\View;
 use App\Core\Notification;
 use App\Core\Response;
+use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Log;
 use App\Helpers\Str;
@@ -32,16 +33,19 @@ class MessagesController extends Controller
      */
     public function store(): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
+        $request = [
+            'receiver_id' => filter_input(INPUT_POST, 'receiver_id', FILTER_VALIDATE_INT),
+            'content' => filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS),
+        ];
 
-        $isValid = [
+        $isValid = Validator::check($request, [
             'receiver_id' => [
                 'required' => true,
+            ],
+            'content' => [
+                'required' => true,
             ]
-        ];
+        ]);
 
         if (!$isValid) {
             Notification::push(

@@ -135,4 +135,18 @@ class Validator
             self::$errors[$field][] = 'This field must be a string';
         }
     }
+
+    /**
+     * Return user rules
+     *
+     * @return array
+     */
+    public static function user(): array
+    {
+        return [
+            'username' => filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS),
+            'email' => filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL),
+            'password' => filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS),
+        ];
+    }
 }

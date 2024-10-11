@@ -13,8 +13,6 @@ class HomeController extends Controller
     {
         $books = (new BookService())->getLastBooks();
 
-        // $this->overflowNotifications();
-
         return View::layout('layouts.app')
             ->view('pages.home')
             ->withData([
