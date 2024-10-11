@@ -150,6 +150,7 @@
         deletableLink.addEventListener('click', (event) => {
             event.preventDefault()
             if (confirm('Voulez vous vraiment supprimer le livre ?')) {
+              // TODO: Ajouter un data-url
                 window.location = deletableLink.href
             }
         })
