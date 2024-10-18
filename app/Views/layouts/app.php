@@ -147,11 +147,8 @@
 
     const deletableLinks = document.querySelectorAll('.deletable-link')
     deletableLinks.forEach((deletableLink) => {
-        deletableLink.addEventListener('click', (event) => {
-            event.preventDefault()
-            if (confirm('Voulez vous vraiment supprimer le livre ?')) {
-                window.location = deletableLink.href
-            }
+        deletableLink.addEventListener('click', () => {
+            return confirm('Voulez vous vraiment supprimer le livre ?')
         })
     })
 

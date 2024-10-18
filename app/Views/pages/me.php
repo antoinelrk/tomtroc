@@ -85,7 +85,13 @@
 
                     <td class="action">
                         <a href="/books/edit/<?= $book->slug ?>">Editer</a>
-                        <a class="delete deletable-link" href="/books/<?= $book->slug ?>/delete">Supprimer</a>
+
+                        <form action="/books/delete/<?= $book->slug ?>" class="delete-book" method="POST">
+                            <?= \App\Core\Http\Csrf::template(); ?>
+
+                            <label><input type="hidden" value="<?= $book->slug ?>"/></label>
+                            <button class="delete deletable-link">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

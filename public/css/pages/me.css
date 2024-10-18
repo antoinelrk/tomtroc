@@ -284,6 +284,18 @@ main.private-account {
                             column-gap: .75em;
                             font-size: 14px;
 
+                            form.delete-book {
+                                button {
+                                    font-size: 14px;
+                                    &.delete {
+                                        color: var(--red);
+                                    }
+                                    &:hover {
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+
                             a {
                                 &:hover {
                                     text-decoration: underline;

@@ -206,9 +206,12 @@ class BooksController extends Controller
     {
         $book = $this->bookService->getBook($slug);
 
-        if ($this->bookService->delete($book)) {
+        if (!$this->bookService->delete($book)) {
             Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
-            Response::redirect('/me');
+        } else {
+            Notification::push('Le livre a bien été supprimé.', EnumNotificationState::SUCCESS->value);
         }
+
+        Response::redirect('/me');
     }
 }

@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function login(): void
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password');
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($user = Auth::attempt($email, $password)) {
             Notification::push(
