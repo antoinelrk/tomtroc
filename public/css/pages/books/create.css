@@ -32,16 +32,24 @@ main.books-create {
         border-radius: 1em;
         background-color: #fff;
 
-        aside {
+        .picture-container {
             display: flex;
             flex-direction: column;
             width: 50%;
             aspect-ratio: 1/1;
 
+            p.label-photo {
+                font-family: "Inter", sans-serif;
+                color: gray;
+                font-size: 14px;
+            }
+
             img.cover-book {
+                margin-top: 8px;
                 height: 100%;
                 width: 100%;
                 object-fit: cover;
+                border-radius: 4px;
             }
 
             input[type=file] {
@@ -119,7 +127,6 @@ main.books-create {
                     }
                 }
             }
-
         }
     }
 }

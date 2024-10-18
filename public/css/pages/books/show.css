@@ -7,18 +7,24 @@ main.books-show {
 
     section.red-line {
         display: flex;
-        width: 1440px;
         padding: 1em 0;
+        width: 100%;
         color: #A6A6A6;
         font-size: 12px;
         font-weight: 300;
         column-gap: .5em;
+        background-color: #f5f3ef;
+        font-family: "Inter", sans-serif;
 
-        a:hover {
-            text-decoration: underline;
+        .wrapper {
+            width: 1400px;
+            margin: 0 auto;
+
+            a:hover {
+                text-decoration: underline;
+            }
         }
     }
-
 
     section.book {
         display: flex;
@@ -33,7 +39,6 @@ main.books-show {
 
             img.book-cover {
                 width: 100%;
-            //height: 100%;
                 object-position: center;
             }
         }
@@ -45,6 +50,7 @@ main.books-show {
             width: 100%;
             row-gap: 2em;
             padding: 4em 8em;
+            background-color: #faf9f7;
 
             .book-head {
                 position: relative;
@@ -61,6 +67,7 @@ main.books-show {
 
                 span {
                     color: #A6A6A6;
+                    font-family: 'Inter', sans-serif;
                 }
 
                 &:after {
@@ -86,9 +93,11 @@ main.books-show {
             }
 
             h2 {
-                font-size: .7em;
+                font-size: .6em;
+                letter-spacing: .2em;
                 text-transform: uppercase;
                 font-weight: 600;
+                font-family: 'Inter', sans-serif;
             }
 
             .book-footer {
@@ -106,6 +115,7 @@ main.books-show {
                     padding: .3em 1.2em .3em .3em;
                     column-gap: 1em;
                     font-size: 14px;
+                    font-family: 'Inter', sans-serif;
 
                     img {
                         width: 48px;

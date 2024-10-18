@@ -8,6 +8,7 @@ use App\Core\Notification;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
+use App\Helpers\Log;
 use App\Services\BookService;
 
 class BooksController extends Controller
@@ -68,10 +69,12 @@ class BooksController extends Controller
      */
     public function store(): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
+        $request = [
+            'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS),
+            'author' => filter_input(INPUT_POST, 'author', FILTER_SANITIZE_SPECIAL_CHARS),
+            'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS),
+            'available' => filter_input(INPUT_POST, 'available'),
+        ];
 
         $data = [
             'title' => $request['title'],
@@ -80,24 +83,24 @@ class BooksController extends Controller
             'available' => $request['available'] ? 1 : 0,
         ];
 
-        $isValid = Validator::check($data, [
-            'title' => [
-                'required' => true,
-                'min' => 2,
-                'max' => 128,
-            ],
-            'author' => [
-                'required' => true,
-                'min' => 2,
-                'max' => 32,
-            ],
-            'description' => [
-                'required' => true,
-                'min' => 2,
-            ],
-            'cover' => [
-                'required' => false,
-            ]
+        $isValid = Validator::check($data , [
+                'title' => [
+                    'required' => true,
+                    'min' => 2,
+                    'max' => 128,
+                ],
+                'author' => [
+                    'required' => true,
+                    'min' => 2,
+                    'max' => 32,
+                ],
+                'description' => [
+                    'required' => true,
+                    'min' => 2,
+                ],
+                'cover' => [
+                    'required' => false,
+                ]
         ]);
 
         if ($isValid) {
@@ -141,10 +144,15 @@ class BooksController extends Controller
      */
     public function update(string $slug): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
+        $request = [
+            'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS),
+            'author' => filter_input(INPUT_POST, 'author', FILTER_SANITIZE_SPECIAL_CHARS),
+            'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS),
+            'cover' => filter_input(INPUT_POST, 'cover'),
+        ];
+
+        $slug = filter_var($slug, FILTER_SANITIZE_SPECIAL_CHARS);
+
         $book = $this->bookService->getBook($slug);
 
         $isValid = Validator::check($request, [
@@ -180,13 +188,13 @@ class BooksController extends Controller
             $request['cover'] = $_FILES['cover'];
         }
 
-        if ($this->bookService->update($book, $request)) {
+        if ($newBook = $this->bookService->update($book, $request)) {
             Notification::push('Livre édité avec succès', 'success');
         } else {
             Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
         }
 
-        Response::redirect('/books/show/' . $slug);
+        Response::redirect('/books/show/' . $newBook->slug);
     }
 
     /**
@@ -198,9 +206,12 @@ class BooksController extends Controller
     {
         $book = $this->bookService->getBook($slug);
 
-        if ($this->bookService->delete($book)) {
+        if (!$this->bookService->delete($book)) {
             Notification::push('Le livre n\'existe pas', EnumNotificationState::ERROR->value);
-            Response::redirect('/me');
+        } else {
+            Notification::push('Le livre a bien été supprimé.', EnumNotificationState::SUCCESS->value);
         }
+
+        Response::redirect('/me');
     }
 }

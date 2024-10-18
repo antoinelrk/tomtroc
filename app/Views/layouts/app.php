@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/css/app.css">
     <title><?= $title ?></title>
@@ -19,7 +18,7 @@
     </ul>
     <?php endif; ?>
     <header>
-        <div class="centered">
+        <div class="wrapper">
             <div class="left">
                 <div class="app-logo">
                     <figure>
@@ -138,7 +137,6 @@
         </ul>
     </footer>
 </div>
-</body>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         let chatDiv = document.querySelector('.conversations-messages');
@@ -149,11 +147,8 @@
 
     const deletableLinks = document.querySelectorAll('.deletable-link')
     deletableLinks.forEach((deletableLink) => {
-        deletableLink.addEventListener('click', (event) => {
-            event.preventDefault()
-            if (confirm('Voulez vous vraiment supprimer le livre ?')) {
-                window.location = deletableLink.href
-            }
+        deletableLink.addEventListener('click', () => {
+            return confirm('Voulez vous vraiment supprimer le livre ?')
         })
     })
 
@@ -176,4 +171,5 @@
 
     showPopups();
 </script>
+</body>
 </html>

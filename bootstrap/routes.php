@@ -39,6 +39,7 @@ $router->addRoute('GET', '/books/create', [BooksController::class, 'create'], [A
 $router->addRoute('GET', '/books/edit/{slug}', [BooksController::class, 'edit'], [AuthMiddleware::class]);
 $router->addRoute('POST', '/books/store', [BooksController::class, 'store'], [AuthMiddleware::class]);
 $router->addRoute('POST', '/books/update/{id}', [BooksController::class, 'update'], [AuthMiddleware::class]);
+$router->addRoute('POST', '/books/delete/{id}', [BooksController::class, 'delete'], [AuthMiddleware::class]);
 
 // ---------- AUTHENTICATED ----------
 
