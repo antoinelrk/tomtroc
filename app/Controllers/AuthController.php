@@ -10,6 +10,7 @@ use App\Core\Response;
 use App\Core\Validator;
 use App\Enum\EnumNotificationState;
 use App\Helpers\Hash;
+use App\Helpers\Log;
 use App\Services\UserService;
 use Random\RandomException;
 
@@ -36,13 +37,8 @@ class AuthController extends Controller
      */
     public function login(): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
-
-        $email = $request['email'];
-        $password = $request['password'];
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($user = Auth::attempt($email, $password)) {
             Notification::push(
@@ -79,10 +75,7 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        if (!isset($_POST)) {
-            return;
-        }
-        $request = $_POST;
+        $request = Validator::user();
 
         $isValidate = Validator::check($request, [
             'username' => [

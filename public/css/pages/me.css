@@ -91,7 +91,7 @@ main.private-account {
                         color: var(--gray);
                     }
 
-                    h4.secondary-title {
+                    p.secondary-title {
                         margin: 1em 0;
                         text-transform: uppercase;
                         font-size: 10px;
@@ -116,7 +116,7 @@ main.private-account {
             &.right {
                 row-gap: 3em;
 
-                h3.section-title {
+                h2.section-title {
                     font-size: 1em;
                     width: 50%;
                     font-family: var(--s-serif), sans-serif;
@@ -262,7 +262,6 @@ main.private-account {
 
                         span.tag {
                             display: flex;
-                            margin: auto;
                             border-radius: 9999px;
                             color: var(--white);
                             font-size: 12px;
@@ -285,6 +284,18 @@ main.private-account {
                             column-gap: .75em;
                             font-size: 14px;
 
+                            form.delete-book {
+                                button {
+                                    font-size: 14px;
+                                    &.delete {
+                                        color: var(--red);
+                                    }
+                                    &:hover {
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+
                             a {
                                 &:hover {
                                     text-decoration: underline;
@@ -301,7 +312,7 @@ main.private-account {
                             height: 78px;
                             aspect-ratio: 1/1;
                             object-fit: cover;
-                            object-position: top center;
+                            object-position: center;
                         }
 
                         &.text {

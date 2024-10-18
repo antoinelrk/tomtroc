@@ -88,11 +88,12 @@ body {
             height: var(--header-sz);
             background-color: var(--bg-200);
             justify-content: center;
+            font-family: var(--s-serif), serif;
 
-            .centered {
+            .wrapper {
                 display: flex;
-                width: var(--centered);
-                font-family: var(--s-serif), serif;
+                width: 1400px;
+                margin: 0 auto;
 
                 .left {
                     display: flex;
