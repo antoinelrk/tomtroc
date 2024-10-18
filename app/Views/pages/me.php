@@ -90,7 +90,6 @@
                             <?= \App\Core\Http\Csrf::template(); ?>
 
                             <label><input type="hidden" value="<?= $book->slug ?>"/></label>
-                            <!-- TODO: Ajouter un data-url -->
                             <button class="delete deletable-link">Supprimer</button>
                         </form>
                     </td>
