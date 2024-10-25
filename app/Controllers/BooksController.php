@@ -149,6 +149,7 @@ class BooksController extends Controller
             'author' => filter_input(INPUT_POST, 'author', FILTER_SANITIZE_SPECIAL_CHARS),
             'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS),
             'cover' => filter_input(INPUT_POST, 'cover'),
+            'available' => filter_input(INPUT_POST, 'available'),
         ];
 
         $slug = filter_var($slug, FILTER_SANITIZE_SPECIAL_CHARS);
