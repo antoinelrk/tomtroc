@@ -182,7 +182,7 @@ class BooksController extends Controller
                 EnumNotificationState::ERROR->value
             );
 
-            Response::redirect('/register');
+            Response::referer();
         }
 
         if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -191,11 +191,13 @@ class BooksController extends Controller
 
         if ($newBook = $this->bookService->update($book, $request)) {
             Notification::push('Livre édité avec succès', 'success');
+
+            Response::redirect('/books/show/' . $newBook->slug);
         } else {
             Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
-        }
 
-        Response::redirect('/books/show/' . $newBook->slug);
+            Response::referer();
+        }
     }
 
     /**
