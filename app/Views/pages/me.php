@@ -25,7 +25,7 @@
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M3.27482 0.0648067H1.01496C0.454414 0.0648067 0 0.519224 0 1.07977V12.6342C0 13.1947 0.454416 13.6491 1.01496 13.6491H3.27482C3.83537 13.6491 4.28979 13.1947 4.28979 12.6342V1.07977C4.28979 0.519221 3.83537 0.0648067 3.27482 0.0648067ZM0.714965 1.07977C0.714965 0.914086 0.849279 0.779771 1.01496 0.779771H3.27482C3.44051 0.779771 3.57482 0.914086 3.57482 1.07977V12.6342C3.57482 12.7999 3.44051 12.9342 3.27482 12.9342H1.01496C0.849279 12.9342 0.714965 12.7999 0.714965 12.6342V1.07977Z" fill="#292929"/>
                         </svg>
                     </figure>
-                    <?= $quantity ?> livres
+                    <?= \App\Helpers\Str::plurialize($quantity, "livre") ?>
                 </div>
             </div>
         </section>
@@ -70,7 +70,7 @@
                     <td>
                         <img class="book-icon" src="<?= \App\Helpers\File::get($book?->cover, 'books') ?>" alt="">
                     </td>
-                    <td><?= htmlspecialchars($book->title) ?></td>
+                    <td><?= htmlspecialchars_decode($book->title) ?></td>
                     <td><?= htmlspecialchars($book->author) ?></td>
 
                     <td class="text">
