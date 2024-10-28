@@ -263,8 +263,9 @@ class BookService extends Service
 
             $this->connection->commit();
 
-            // TODO: Penser à changer toutes les variables statiques
-            File::delete($book->cover, EnumFileCategory::BOOK->value);
+            if ($this->cover !== null) {
+                File::delete($book->cover, EnumFileCategory::BOOK->value);
+            }
 
             return true;
         } catch (PDOException $e) {
