@@ -3,7 +3,7 @@
         <div class="wrapper">
             <a href="/our-books">Nos livres</a>
             >
-            <a href="/books/show/<?= $book->slug ?>"><?= htmlspecialchars($book->title) ?></a>
+            <a href="/books/show/<?= $book->slug ?>"><?= htmlspecialchars_decode($book->title) ?></a>
         </div>
     </section>
 
