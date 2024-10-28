@@ -92,6 +92,9 @@ class UserService extends Service
         return $user;
     }
 
+    /**
+     * @throws RandomException
+     */
     public function update(User $user, array $data): bool
     {
         $sql = "UPDATE users SET ";
@@ -101,10 +104,12 @@ class UserService extends Service
         if (isset($data['avatar'])) {
             $filename = $this->setAvatar($user, $data['avatar']);
 
-            if (!is_bool($filename)) {
-                $setParts[] = "avatar = :avatar";
-                $data['avatar'] = $filename;
+            if (is_bool($filename) && !$filename) {
+                return false;
             }
+
+            $setParts[] = "avatar = :avatar";
+            $data['avatar'] = $filename;
         }
 
         $sql .= implode(', ', $setParts);
@@ -113,6 +118,9 @@ class UserService extends Service
 
         $statement = $this->connection->prepare($sql);
 
+        /**
+         * TODO: Au lieu de supprimer le mot de passe, je devrais faire un check pour vérifier que le mot de passe est bon.
+         */
         foreach ($data as $key => $value) {
             if ($key === "password") {
                 $statement->bindValue(":$key", Hash::make($value));
@@ -149,15 +157,14 @@ class UserService extends Service
             return false;
         }
 
-        if ($user->avatar !== null) {
-            File::delete($user->avatar, EnumFileCategory::AVATAR->value);
-        }
-
         if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
             if (($filename = File::store('avatars', $avatar))) {
+                if ($user->avatar !== null) {
+                    File::delete($user->avatar, EnumFileCategory::AVATAR->value);
+                }
+
                 return $filename;
             }
-
             return false;
         }
 
