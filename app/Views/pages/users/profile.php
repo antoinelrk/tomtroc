@@ -53,15 +53,15 @@ use App\Core\Auth\Auth;
                                 <img class="book-icon" src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="">
                             </td>
                             <td>
-                                <?= htmlspecialchars($book->title) ?>
+                                <?= htmlspecialchars_decode($book->title) ?>
                             </td>
                             <td>
-                                <?= htmlspecialchars($book->author) ?>
+                                <?= htmlspecialchars_decode($book->author) ?>
                             </td>
 
                             <td class="text">
                                 <p>
-                                    <?= htmlspecialchars($book->description) ?>
+                                    <?= htmlspecialchars_decode($book->description) ?>
                                 </p>
                             </td>
                         </tr>

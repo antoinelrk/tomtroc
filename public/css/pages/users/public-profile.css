@@ -43,20 +43,22 @@ main.page-public-profile {
 
             .user-info {
                 display: flex;
+                align-items: center;
                 flex-direction: column;
+                row-gap: 0.5em;
 
-                .title-secondary {
+                p.title-secondary {
                     margin-top: 16px;
                     font-family: var(--s-serif), sans-serif;
                     font-size: 14px;
                     color: var(--gray);
                 }
 
-                h4.secondary-title {
+                p.secondary-title {
                     margin: 1em 0;
                     text-transform: uppercase;
                     font-size: 10px;
-                    font-family: var(--s-serif), sans-serif;
+                    font-family: var(--s-serif), sans-serif !important;
                     font-weight: 800;
                 }
 
@@ -144,6 +146,7 @@ main.page-public-profile {
                                 width: 78px;
                                 height: 78px;
                                 aspect-ratio: 1/1;
+                                object-fit: cover;
                             }
 
                             &.text {
