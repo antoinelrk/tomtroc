@@ -1,5 +1,5 @@
 {
-    "name": "antoinelrk/customer-relationship-website",
+    "name": "antoinelrk/tomtroc",
     "autoload": {
         "psr-4": {
             "App\\": "app/"
