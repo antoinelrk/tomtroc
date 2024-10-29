@@ -25,10 +25,10 @@
                                 <article>
                                     <img src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Image de livre carré">
                                     <div class="book-info">
-                                        <h2><?= htmlspecialchars_decode($book->title) ?></h2>
-                                        <h3><?= htmlspecialchars_decode($book->author) ?></h3>
+                                        <h2><?= htmlspecialchars($book->title) ?></h2>
+                                        <h3><?= htmlspecialchars($book->author) ?></h3>
                                         <p>
-                                            Vendu par: <?= htmlspecialchars_decode($book->relations['user']->username) ?>
+                                            Vendu par: <?= htmlspecialchars($book->relations['user']->username) ?>
                                         </p>
                                     </div>
                                 </article>

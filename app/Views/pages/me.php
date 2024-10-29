@@ -70,7 +70,7 @@
                     <td>
                         <img class="book-icon" src="<?= \App\Helpers\File::get($book?->cover, 'books') ?>" alt="">
                     </td>
-                    <td><?= htmlspecialchars_decode($book->title) ?></td>
+                    <td><?= htmlspecialchars($book->title) ?></td>
                     <td><?= htmlspecialchars($book->author) ?></td>
 
                     <td class="text">

@@ -53,9 +53,9 @@ class UserController extends Controller
      * @param $username
      * @return void
      */
-    public function show($username): void
+    public function show($id): void
     {
-        $user = $this->userService->getUserByName($username);
+        $user = $this->userService->getUserById($id);
         $user->relations['books'] = $this->bookService->getUserBook($user);
 
         View::layout('layouts.app')
