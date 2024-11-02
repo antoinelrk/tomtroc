@@ -26,19 +26,15 @@ class BookService extends Service
 
     public function getLastBooks($number = 4): array
     {
-        return array_slice($this->getBooks(true), 0, $number);
+        return array_slice($this->getAvailableBooks(), 0, $number);
     }
 
-    public function getBooks(?bool $available = null): array
+    public function getAvailableBooks($filter = null): array
     {
-        if ($available) {
-            $query = "SELECT * FROM books WHERE available = :available ORDER BY created_at DESC;";
-            $statement = $this->connection->prepare($query);
-            $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
-        } else {
-            $query = "SELECT * FROM books";
-            $statement = $this->connection->prepare($query);
-        }
+        $filter = isset($filter) ? "AND LOWER(title) LIKE '%" . strtolower($filter) . "%'" : "";
+
+        $query = "SELECT * FROM books WHERE available = 1 $filter ORDER BY created_at DESC;";
+        $statement = $this->connection->prepare($query);
 
         $statement->execute();
 

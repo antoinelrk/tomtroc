@@ -27,7 +27,9 @@ class BooksController extends Controller
      */
     public function index(): ?View
     {
-        $books = $this->bookService->getBooks(true);
+        $filter = $_GET['title'] ?? null;
+
+        $books = $this->bookService->getAvailableBooks($filter);
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
