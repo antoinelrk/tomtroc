@@ -97,6 +97,8 @@ class UserService extends Service
      */
     public function update(User $user, array $data): bool
     {
+        $this->connection->beginTransaction();
+
         $sql = "UPDATE users SET ";
 
         $setParts = array_map(fn ($key) => "$key = :$key", array_keys($data));
@@ -104,7 +106,9 @@ class UserService extends Service
         if (isset($data['avatar'])) {
             $filename = $this->setAvatar($user, $data['avatar']);
 
-            if (is_bool($filename) && !$filename) {
+            if (!$filename) {
+                $this->connection->rollBack();
+
                 return false;
             }
 
@@ -118,9 +122,6 @@ class UserService extends Service
 
         $statement = $this->connection->prepare($sql);
 
-        /**
-         * TODO: Au lieu de supprimer le mot de passe, je devrais faire un check pour vérifier que le mot de passe est bon.
-         */
         foreach ($data as $key => $value) {
             if ($key === "password") {
                 $statement->bindValue(":$key", Hash::make($value));
@@ -135,9 +136,15 @@ class UserService extends Service
 
         if ($state) {
             $email = $data['email'] ?? null;
+            $this->connection->commit();
             Auth::refresh($email);
+
+            Notification::push('Votre profil à été modifié avec succès', 'success');
+
             return true;
         }
+
+        $this->connection->rollBack();
 
         return false;
     }
@@ -152,6 +159,22 @@ class UserService extends Service
             return false;
         }
 
+        $mime = mime_content_type($avatar['tmp_name']);
+        $authorizedMimes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+        ];
+
+        if (!in_array($mime, $authorizedMimes)) {
+            Notification::push(
+                'L\'image doit être au format: jpeg, jpg ou png',
+                EnumNotificationState::ERROR->value
+            );
+
+            return false;
+        }
+
         if ($avatar['size'] > 5000000) {
             Notification::push('Le poids de l\'image ne doit pas dépasser 5Mo', EnumNotificationState::ERROR->value);
             return false;
@@ -159,14 +182,27 @@ class UserService extends Service
 
         if ($avatar['type'] === 'image/jpeg' || $avatar['type'] === 'image/png') {
             if (($filename = File::store('avatars', $avatar))) {
+
                 if ($user->avatar !== null) {
                     File::delete($user->avatar, EnumFileCategory::AVATAR->value);
                 }
 
                 return $filename;
             }
+
+            Notification::push(
+                'L\'image doit être au format: jpeg, jpg ou png',
+                EnumNotificationState::ERROR->value
+            );
+
             return false;
         }
+
+
+        Notification::push(
+            'Erreur inconnue: Veuillez contacter un administrateur',
+            EnumNotificationState::ERROR->value
+        );
 
         return false;
     }

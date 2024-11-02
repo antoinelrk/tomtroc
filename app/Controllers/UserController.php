@@ -82,18 +82,13 @@ class UserController extends Controller
             $request['avatar'] = $_FILES['avatar'];
         }
 
-        if ($this->userService->update($user, $request)) {
-            Notification::push(
-                'Profil édité avec succès',
-                EnumNotificationState::SUCCESS->value
-            );
+        $user = $this->userService->update($user, $request);
+
+        if ($user) {
+            Response::redirect('/me');
         } else {
-            Notification::push(
-                'Impossible de mettre à jour le profil, contactez un administrateur.',
-                EnumNotificationState::ERROR->value
-            );
+            Response::referer();
         }
 
-        Response::redirect('/me');
     }
 }
