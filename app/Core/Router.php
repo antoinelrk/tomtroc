@@ -43,12 +43,15 @@ class Router
      */
     public function getControllerAction(string $method, string $route): array
     {
+        $route = parse_url($route, PHP_URL_PATH);
+
         foreach ($this->routes[$method] as $definedRoute => $action) {
             if ($parameters = $this->match($definedRoute, $route)) {
                 return [
                     'controllerAction' => $action['controllerAction'],
                     'middlewares' => $action['middlewares'],
                     'parameters' => $parameters,
+                    'queryParams' => $_GET,
                 ];
             }
         }

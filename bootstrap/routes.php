@@ -30,6 +30,7 @@ $router->addRoute('POST', '/auth/logout', [AuthController::class, 'logout'], [ A
 // ---------- USERS ----------
 
 $router->addRoute('POST', '/users/update/{id}', [UserController::class, 'update'], [AuthMiddleware::class]);
+$router->addRoute('GET', '/users/{id}', [UserController::class, 'show'], [ AuthMiddleware::class ]);
 
 // ---------- BOOKS ----------
 
@@ -47,12 +48,6 @@ $router->addRoute(
     'GET',
     '/me',
     [UserController::class, 'me'],
-    [ AuthMiddleware::class ]
-);
-$router->addRoute(
-    'GET',
-    '/users/{username}',
-    [UserController::class, 'show'],
     [ AuthMiddleware::class ]
 );
 
