@@ -15,6 +15,7 @@ use App\Models\Book;
 use App\Models\User;
 use PDO;
 use PDOException;
+use Random\RandomException;
 
 class BookService extends Service
 {
@@ -148,6 +149,9 @@ class BookService extends Service
         return $this->getLastBook($this->connection->lastInsertId());
     }
 
+    /**
+     * @throws RandomException
+     */
     public function update(Book $book, array $data): Book|bool
     {
         $this->connection->beginTransaction();
