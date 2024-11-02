@@ -195,6 +195,8 @@ class BookService extends Service
 
         $this->connection->commit();
 
+        Notification::push('Livre édité avec succès', 'success');
+
         return $this->getLastBook($book->id);
     }
 
@@ -218,7 +220,7 @@ class BookService extends Service
             'image/png',
         ];
 
-        if ($mime && !in_array($mime, $authorizedMimes)) {
+        if (!in_array($mime, $authorizedMimes)) {
             Notification::push(
                 'L\'image doit être au format: jpeg, jpg ou png',
                 EnumNotificationState::ERROR->value
@@ -241,8 +243,18 @@ class BookService extends Service
                 return $filename;
             }
 
+            Notification::push(
+                'L\'image doit être au format: jpeg, jpg ou png',
+                EnumNotificationState::ERROR->value
+            );
+
             return false;
         }
+
+        Notification::push(
+            'Erreur inconnue: Veuillez contacter un administrateur',
+            EnumNotificationState::ERROR->value
+        );
 
         return false;
     }
