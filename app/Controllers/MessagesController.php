@@ -35,9 +35,9 @@ class MessagesController extends Controller
     {
         $request = [
             'conversation_id' => filter_input(INPUT_POST, 'conversation_id', FILTER_VALIDATE_INT),
-            'uuid' => filter_input(INPUT_POST, 'uuid', FILTER_SANITIZE_SPECIAL_CHARS),
+            'uuid' => filter_input(INPUT_POST, 'uuid'),
             'receiver_id' => filter_input(INPUT_POST, 'receiver_id', FILTER_VALIDATE_INT),
-            'content' => filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS),
+            'content' => filter_input(INPUT_POST, 'content'),
         ];
 
         $isValid = Validator::check($request, [

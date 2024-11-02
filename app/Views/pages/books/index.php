@@ -5,7 +5,11 @@
                 <h1>
                     Nos livres à l’échange
                 </h1>
-                <form action="">
+
+                <form
+                    action="/our-books"
+                    method="GET"
+                >
                     <label for="search">
                         <figure>
                             <svg width="100%" height="100%" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,29 +17,39 @@
                             </svg>
                         </figure>
                     </label>
-                    <input id="search" type="text" name="search" placeholder="Rechercher un livre">
+                    <input
+                        id="search"
+                        type="text"
+                        name="title"
+                        placeholder="Rechercher un livre"
+                        value="<?= $_GET['title'] ?? '' ?>"
+                    >
                 </form>
             </div>
 
             <div class="last-books-wrapper">
-                <ul class="grid-of-last-books">
-                    <?php foreach ($books as $book): ?>
-                        <li>
-                            <a href="/books/show/<?= $book->slug ?>">
-                                <article>
-                                    <img src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Image de livre carré">
-                                    <div class="book-info">
-                                        <h2><?= htmlspecialchars_decode($book->title) ?></h2>
-                                        <h3><?= htmlspecialchars_decode($book->author) ?></h3>
-                                        <p>
-                                            Vendu par: <?= htmlspecialchars_decode($book->relations['user']->username) ?>
-                                        </p>
-                                    </div>
-                                </article>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if (count($books) > 0): ?>
+                    <ul class="grid-of-last-books">
+                        <?php foreach ($books as $book): ?>
+                            <li>
+                                <a href="/books/show/<?= $book->slug ?>">
+                                    <article>
+                                        <img src="<?= \App\Helpers\File::get($book->cover, 'books') ?>" alt="Image de livre carré">
+                                        <div class="book-info">
+                                            <h2><?= htmlspecialchars($book->title) ?></h2>
+                                            <h3><?= htmlspecialchars($book->author) ?></h3>
+                                            <p>
+                                                Vendu par: <?= htmlspecialchars($book->relations['user']->username) ?>
+                                            </p>
+                                        </div>
+                                    </article>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <span>Aucun livre ne correspond à la recherche</span>
+                <?php endif; ?>
             </div>
         </section>
     </section>

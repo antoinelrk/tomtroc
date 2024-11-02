@@ -27,7 +27,9 @@ class BooksController extends Controller
      */
     public function index(): ?View
     {
-        $books = $this->bookService->getBooks(true);
+        $filter = $_GET['title'] ?? null;
+
+        $books = $this->bookService->getAvailableBooks($filter);
 
         return View::layout('layouts.app')
             ->view('pages.books.index')
@@ -70,9 +72,9 @@ class BooksController extends Controller
     public function store(): void
     {
         $request = [
-            'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS),
-            'author' => filter_input(INPUT_POST, 'author', FILTER_SANITIZE_SPECIAL_CHARS),
-            'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS),
+            'title' => filter_input(INPUT_POST, 'title'),
+            'author' => filter_input(INPUT_POST, 'author'),
+            'description' => filter_input(INPUT_POST, 'description'),
             'available' => filter_input(INPUT_POST, 'available'),
         ];
 
@@ -145,9 +147,9 @@ class BooksController extends Controller
     public function update(string $slug): void
     {
         $request = [
-            'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS),
-            'author' => filter_input(INPUT_POST, 'author', FILTER_SANITIZE_SPECIAL_CHARS),
-            'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS),
+            'title' => filter_input(INPUT_POST, 'title'),
+            'author' => filter_input(INPUT_POST, 'author'),
+            'description' => filter_input(INPUT_POST, 'description'),
             'cover' => filter_input(INPUT_POST, 'cover'),
             'available' => filter_input(INPUT_POST, 'available'),
         ];
@@ -183,20 +185,21 @@ class BooksController extends Controller
             );
 
             Response::referer();
-        }
-
-        if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $request['cover'] = $_FILES['cover'];
-        }
-
-        if ($newBook = $this->bookService->update($book, $request)) {
-            Notification::push('Livre édité avec succès', 'success');
-
-            Response::redirect('/books/show/' . $newBook->slug);
         } else {
-            Notification::push('Impossible de modifier la ressource, contactez un administrateur', EnumNotificationState::ERROR->value);
+            if ($_FILES['cover']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $request['cover'] = $_FILES['cover'];
 
-            Response::referer();
+                $newBook = $this->bookService->update($book, $request);
+
+                if (!is_bool($newBook)) {
+                    Response::redirect('/books/show/' . $newBook->slug);
+                } else {
+                    Response::referer();
+                }
+            } else {
+                Notification::push('BookController error', EnumNotificationState::ERROR->value);
+                Response::referer();
+            }
         }
     }
 

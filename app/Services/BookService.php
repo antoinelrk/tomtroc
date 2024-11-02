@@ -26,19 +26,15 @@ class BookService extends Service
 
     public function getLastBooks($number = 4): array
     {
-        return array_slice($this->getBooks(true), 0, $number);
+        return array_slice($this->getAvailableBooks(), 0, $number);
     }
 
-    public function getBooks(?bool $available = null): array
+    public function getAvailableBooks($filter = null): array
     {
-        if ($available) {
-            $query = "SELECT * FROM books WHERE available = :available ORDER BY created_at DESC;";
-            $statement = $this->connection->prepare($query);
-            $statement->bindValue(':available', $available, PDO::PARAM_BOOL);
-        } else {
-            $query = "SELECT * FROM books";
-            $statement = $this->connection->prepare($query);
-        }
+        $filter = isset($filter) ? "AND LOWER(title) LIKE '%" . strtolower($filter) . "%'" : "";
+
+        $query = "SELECT * FROM books WHERE available = 1 $filter ORDER BY created_at DESC;";
+        $statement = $this->connection->prepare($query);
 
         $statement->execute();
 
@@ -195,6 +191,8 @@ class BookService extends Service
 
         $this->connection->commit();
 
+        Notification::push('Livre édité avec succès', 'success');
+
         return $this->getLastBook($book->id);
     }
 
@@ -218,7 +216,7 @@ class BookService extends Service
             'image/png',
         ];
 
-        if ($mime && !in_array($mime, $authorizedMimes)) {
+        if (!in_array($mime, $authorizedMimes)) {
             Notification::push(
                 'L\'image doit être au format: jpeg, jpg ou png',
                 EnumNotificationState::ERROR->value
@@ -241,8 +239,18 @@ class BookService extends Service
                 return $filename;
             }
 
+            Notification::push(
+                'L\'image doit être au format: jpeg, jpg ou png',
+                EnumNotificationState::ERROR->value
+            );
+
             return false;
         }
+
+        Notification::push(
+            'Erreur inconnue: Veuillez contacter un administrateur',
+            EnumNotificationState::ERROR->value
+        );
 
         return false;
     }
