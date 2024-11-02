@@ -5,7 +5,15 @@
                 <h1>
                     Nos livres à l’échange
                 </h1>
-                <form action="">
+
+                <?php if (isset($_GET['search'])): ?>
+                    <?php var_dump($_GET['search']); ?>
+                <?php endif; ?>
+
+                <form
+                    action="/our-books"
+                    method="GET"
+                >
                     <label for="search">
                         <figure>
                             <svg width="100%" height="100%" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
